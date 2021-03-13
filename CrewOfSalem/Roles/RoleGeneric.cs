@@ -1,7 +1,5 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using UnityEngine;
-using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles
 {

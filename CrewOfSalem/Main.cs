@@ -53,7 +53,7 @@ namespace CrewOfSalem
         // Crew Protective
         // Doctor
         public static readonly CustomNumberOption OptionDoctorCooldown = GetCooldownOption<Doctor>();
-        public static readonly CustomStringOption OptionDoctorShowShieldedPlayer = CustomOption.AddString(nameof(Doctor) + ": Show Shielded Player", new[] { "Target&Doctor", "Target", "Doctor", "Everyone" });
+        public static readonly CustomStringOption OptionDoctorShowShieldedPlayer = CustomOption.AddString(nameof(Doctor) + ": Show Shielded Player", new[] { "Doctor", "Target", "Doctor & Target", "Everyone" });
 
         // Crew Support
         // Escort

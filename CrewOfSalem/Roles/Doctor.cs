@@ -1,7 +1,6 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
-using System;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -83,30 +82,31 @@ namespace CrewOfSalem.Roles
             killButton.SetTarget(ShieldedPlayer == null ? PlayerTools.FindClosestTarget(Player) : null);
         }
 
-        public void ShowShieldedPlayer()
+        public void CheckShowShieldedPlayer()
         {
             if (ShieldedPlayer == null) return;
 
             int showShielded = ShowShieldedPlayerOption;
 
-            if (showShielded == 3)
+            if ((showShielded == 0 || showShielded == 2) && PlayerControl.LocalPlayer == Player)
             {
-                ShieldedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.shieldedColor);
-                ShieldedPlayer.myRend.material.SetFloat("_Outline", 1F);
-                ShieldedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.shieldedColor);
+                ShowShieldedPlayer();
             }
-            else if (PlayerControl.LocalPlayer == ShieldedPlayer && (showShielded == 0 || showShielded == 2))
+            else if ((showShielded == 1 || showShielded == 2) && PlayerControl.LocalPlayer == ShieldedPlayer)
             {
-                ShieldedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.shieldedColor);
-                ShieldedPlayer.myRend.material.SetFloat("_Outline", 1F);
-                ShieldedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.shieldedColor);
+                ShowShieldedPlayer();
             }
-            else if (PlayerControl.LocalPlayer == Player && (showShielded == 1 || showShielded == 2))
+            else if (showShielded == 3)
             {
-                ShieldedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.shieldedColor);
-                ShieldedPlayer.myRend.material.SetFloat("_Outline", 1F);
-                ShieldedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.shieldedColor);
+                ShowShieldedPlayer();
             }
+        }
+
+        private void ShowShieldedPlayer()
+        {
+            ShieldedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.shieldedColor);
+            ShieldedPlayer.myRend.material.SetFloat("_Outline", 1F);
+            ShieldedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.shieldedColor);
         }
 
     }

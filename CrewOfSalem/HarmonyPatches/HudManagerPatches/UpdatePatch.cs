@@ -55,7 +55,7 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
             {
-                doctorKvp.Value.ShowShieldedPlayer();
+                doctorKvp.Value.CheckShowShieldedPlayer();
             }
 
             bool jesterCanSeeImpostor = false;
