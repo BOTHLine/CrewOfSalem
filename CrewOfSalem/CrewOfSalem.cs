@@ -13,9 +13,10 @@ namespace CrewOfSalem
         // Fields
         public static Sprite DefaultKillButton;
 
-        public static Sprite InvestigatorButton; // Investigator
-        public static Sprite DoctorButton; // Doctor
-        public static Sprite VigilanteButton; // Vigilante
+        public static Sprite InvestigatorButton => DefaultKillButton;
+        public static Sprite DoctorButton => DefaultKillButton;
+        public static Sprite VigilanteButton => DefaultKillButton;
+        public static Sprite EscortButton => DefaultKillButton;
 
         public static AudioClip shieldAttempt;
 

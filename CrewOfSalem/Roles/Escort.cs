@@ -16,7 +16,7 @@ namespace CrewOfSalem.Roles
 
         public override bool HasSpecialButton => true;
 
-        public override Sprite SpecialButton => DefaultKillButton;
+        public override Sprite SpecialButton => EscortButton;
 
         public override byte RoleID => 221;
 

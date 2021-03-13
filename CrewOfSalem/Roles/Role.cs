@@ -130,7 +130,7 @@ namespace CrewOfSalem.Roles
             killButton.gameObject.SetActive(true);
             killButton.renderer.enabled = true;
             killButton.isActive = true;
-            killButton.renderer.sprite = DefaultKillButton;
+            killButton.renderer.sprite = SpecialButton;
             killButton.SetTarget(PlayerTools.FindClosestTarget(Player));
         }
 

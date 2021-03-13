@@ -14,7 +14,7 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
             PlayerControl localPlayer = PlayerControl.LocalPlayer;
 
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
-            if (DefaultKillButton == null) DefaultKillButton = __instance.KillButton.renderer.sprite;
+            DefaultKillButton ??= __instance.KillButton.renderer.sprite;
             if (localPlayer.Data.IsImpostor)
             {
                 __instance.KillButton.gameObject.SetActive(true);
