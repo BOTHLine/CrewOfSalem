@@ -11,8 +11,6 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
     {
         public static void Postfix(HudManager __instance)
         {
-            __instance.ShowPopUp("Test");
-
             PlayerControl localPlayer = PlayerControl.LocalPlayer;
 
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
