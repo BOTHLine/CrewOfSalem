@@ -29,17 +29,7 @@ namespace CrewOfSalem.Roles
 
         }
 
-        protected override void SetConfigSettings()
-        {
-            Cooldown = Main.OptionInvestigatorCooldown.GetValue();
-        }
-
         public override void PerformAction(KillButtonManager instance)
-        {
-
-        }
-
-        protected override void InitializeRoleInternal()
         {
 
         }

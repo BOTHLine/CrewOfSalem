@@ -1,10 +1,10 @@
 ﻿using CrewOfSalem.Roles;
 using HarmonyLib;
+using Hazel;
 using System.Collections.Generic;
+using System.Linq;
 using UnhollowerBaseLib;
 using static CrewOfSalem.CrewOfSalem;
-using System.Linq;
-using Hazel;
 
 namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 {
@@ -26,20 +26,21 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();
             crewmates.RemoveAll(x => x.Data.IsImpostor);
 
-            Role.SetRole<Investigator>(ref crewmates, Main.OptionInvestigatorSpawnChance);
-            Role.SetRole<Sheriff>(ref crewmates, Main.OptionSheriffSpawnChance);
-            Role.SetRole<Spy>(ref crewmates, Main.OptionSpySpawnChance);
-            Role.SetRole<Tracker>(ref crewmates, Main.OptionTrackerSpawnChance);
+            Role.SetRole<Investigator>(ref crewmates);
+            Role.SetRole<Sheriff>(ref crewmates);
+            Role.SetRole<Spy>(ref crewmates);
+            Role.SetRole<Tracker>(ref crewmates);
 
-            Role.SetRole<Vigilante>(ref crewmates, Main.OptionVigilanteSpawnChance);
+            Role.SetRole<Veteran>(ref crewmates);
+            Role.SetRole<Vigilante>(ref crewmates);
 
-            Role.SetRole<Doctor>(ref crewmates, Main.OptionDoctorSpawnChance);
+            Role.SetRole<Doctor>(ref crewmates);
 
-            Role.SetRole<Escort>(ref crewmates, Main.OptionEscortSpawnChance);
+            Role.SetRole<Escort>(ref crewmates);
 
 
-            Role.SetRole<Jester>(ref crewmates, Main.OptionJesterSpawnChance);
-
+            Role.SetRole<Jester>(ref crewmates);
+            
             List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList();
             impostors.RemoveAll(x => !x.Data.IsImpostor);
 

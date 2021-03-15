@@ -15,6 +15,7 @@ namespace CrewOfSalem
 
         public static Sprite InvestigatorButton => DefaultKillButton;
         public static Sprite DoctorButton => DefaultKillButton;
+        public static Sprite VeteranButton => DefaultKillButton;
         public static Sprite VigilanteButton => DefaultKillButton;
         public static Sprite EscortButton => DefaultKillButton;
 
@@ -147,6 +148,7 @@ namespace CrewOfSalem
             SetLocalPlayers = 43,
             ResetVariables = 44,
 
+            VeteranAlert,
             VigilanteKill,
             DoctorSetShielded,
             DoctorBreakShield,

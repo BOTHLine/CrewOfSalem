@@ -1,10 +1,10 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using Essentials.CustomOptions;
 using Hazel;
 using System.Collections.Generic;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
+using static CrewOfSalem.Main;
 
 namespace CrewOfSalem.Roles
 {
@@ -50,10 +50,10 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods
-        public static void SetRole<T>(ref List<PlayerControl> crew, CustomNumberOption spawnChanceOption)
+        public static void SetRole<T>(ref List<PlayerControl> crew)
             where T : RoleGeneric<T>, new()
         {
-            float spawnChance = spawnChanceOption.GetValue();
+            float spawnChance = GetRoleSpawnChance<T>();
             if (spawnChance < 1 || crew.Count <= 0) return;
             bool spawnChanceAchieved = RNG.Next(1, 101) <= spawnChance;
             if (!spawnChanceAchieved) return;
@@ -74,6 +74,7 @@ namespace CrewOfSalem.Roles
         {
             Player = player;
             SetConfigSettings();
+            Player.SetKillTimer(Cooldown);
             SetRoleDescription();
             InitializeRoleInternal();
         }
@@ -144,13 +145,16 @@ namespace CrewOfSalem.Roles
             instance.__this.BackgroundBar.material.color = Color;
         }
 
+        // Abstract Methods
+        protected virtual void InitializeRoleInternal()
+        {
+            Player.SetKillTimer(Cooldown);
+        }
+
         public virtual void UpdateCooldown(float deltaTime)
         {
             Player.SetKillTimer(Mathf.Max(0F, Player.killTimer - deltaTime));
         }
-
-        // Abstract Methods
-        protected abstract void InitializeRoleInternal();
 
         protected abstract void SetConfigSettings();
 

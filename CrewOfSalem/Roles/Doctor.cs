@@ -23,16 +23,19 @@ namespace CrewOfSalem.Roles
 
         // Properties
         public int ShowShieldedPlayerOption { get; private set; }
+        public float ShieldDuration { get; private set; }
+        public float CurrentShieldDuration { get; set; }
 
         public PlayerControl ShieldedPlayer { get; set; }
 
         // Methods Role
         public override void PerformAction(KillButtonManager instance)
         {
-            if (instance.isCoolingDown) return;
+            if (instance.isCoolingDown || ShieldedPlayer != null) return;
+            CurrentShieldDuration = ShieldDuration;
             ShieldedPlayer = PlayerTools.FindClosestTarget(Player);
 
-            Player.SetKillTimer(Cooldown); 
+            Player.SetKillTimer(Cooldown);
 
             MessageWriter writer = GetWriter(RPC.DoctorSetShielded);
             writer.Write(ShieldedPlayer.PlayerId);
@@ -43,17 +46,14 @@ namespace CrewOfSalem.Roles
         protected override void ClearSettingsInternal()
         {
             ShieldedPlayer = null;
-        }
-
-        protected override void InitializeRoleInternal()
-        {
-            Player.SetKillTimer(10F);
+            CurrentShieldDuration = 0F;
         }
 
         protected override void SetConfigSettings()
         {
-            Cooldown = Main.OptionDoctorCooldown.GetValue();
+            base.SetConfigSettings();
             ShowShieldedPlayerOption = Main.OptionDoctorShowShieldedPlayer.GetValue();
+            ShieldDuration = Main.OptionDoctorShieldDuration.GetValue();
         }
 
         // Methods
@@ -82,23 +82,23 @@ namespace CrewOfSalem.Roles
             killButton.SetTarget(ShieldedPlayer == null ? PlayerTools.FindClosestTarget(Player) : null);
         }
 
+        public override void UpdateCooldown(float deltaTime)
+        {
+            base.UpdateCooldown(deltaTime);
+            CurrentShieldDuration = Mathf.Max(0F, CurrentShieldDuration - deltaTime);
+            if (CurrentShieldDuration <= 0F && ShieldedPlayer) BreakShield();
+        }
+
         public void CheckShowShieldedPlayer()
         {
             if (ShieldedPlayer == null) return;
 
-            int showShielded = ShowShieldedPlayerOption;
-
-            if ((showShielded == 0 || showShielded == 2) && PlayerControl.LocalPlayer == Player)
+            switch (ShowShieldedPlayerOption)
             {
-                ShowShieldedPlayer();
-            }
-            else if ((showShielded == 1 || showShielded == 2) && PlayerControl.LocalPlayer == ShieldedPlayer)
-            {
-                ShowShieldedPlayer();
-            }
-            else if (showShielded == 3)
-            {
-                ShowShieldedPlayer();
+                case 0: if (PlayerControl.LocalPlayer == Player) ShowShieldedPlayer(); break;
+                case 1: if (PlayerControl.LocalPlayer == ShieldedPlayer) ShowShieldedPlayer(); break;
+                case 2: if (PlayerControl.LocalPlayer == Player || PlayerControl.LocalPlayer == ShieldedPlayer) ShowShieldedPlayer(); break;
+                case 3: ShowShieldedPlayer(); break;
             }
         }
 

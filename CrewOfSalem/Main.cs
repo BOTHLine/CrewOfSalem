@@ -6,6 +6,8 @@ using Essentials.CustomOptions;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Factions;
 using CrewOfSalem.Roles.Alignments;
+using System.Collections.Generic;
+using System;
 
 namespace CrewOfSalem
 {
@@ -21,61 +23,59 @@ namespace CrewOfSalem
 
         //This section uses the https://github.com/DorCoMaNdO/Reactor-Essentials framework
 
-        // Spawn Chances
-        public static readonly CustomNumberOption OptionInvestigatorSpawnChance = GetRoleSpawnChanceOption<Investigator>();
-        public static readonly CustomNumberOption OptionSheriffSpawnChance = GetRoleSpawnChanceOption<Sheriff>();
-        public static readonly CustomNumberOption OptionSpySpawnChance = GetRoleSpawnChanceOption<Spy>();
-        public static readonly CustomNumberOption OptionTrackerSpawnChance = GetRoleSpawnChanceOption<Tracker>();
+        // SpawnChance Options
+        public static readonly DictionaryKVP<Type, CustomNumberOption> RoleSpawnChances = new DictionaryKVP<Type, CustomNumberOption>
+        {
+            CreateRoleSpawnChanceOption<Investigator>(),
+            CreateRoleSpawnChanceOption<Sheriff>(),
+            CreateRoleSpawnChanceOption<Spy>(),
+            CreateRoleSpawnChanceOption<Tracker>(),
 
-        public static readonly CustomNumberOption OptionVigilanteSpawnChance = GetRoleSpawnChanceOption<Vigilante>();
+            CreateRoleSpawnChanceOption<Veteran>(),
+            CreateRoleSpawnChanceOption<Vigilante>(),
 
-        public static readonly CustomNumberOption OptionDoctorSpawnChance = GetRoleSpawnChanceOption<Doctor>();
+            CreateRoleSpawnChanceOption<Doctor>(),
 
-        public static readonly CustomNumberOption OptionEscortSpawnChance = GetRoleSpawnChanceOption<Escort>();
+            CreateRoleSpawnChanceOption<Escort>(),
 
-        public static readonly CustomNumberOption OptionJesterSpawnChance = GetRoleSpawnChanceOption<Jester>();
+            CreateRoleSpawnChanceOption<Jester>()
+        };
 
+        // Cooldown Options
+        public static readonly DictionaryKVP<Type, CustomNumberOption> RoleCooldowns = new DictionaryKVP<Type, CustomNumberOption>
+        {
+            CreateRoleCooldownOption<Investigator>(),
+
+            CreateRoleCooldownOption<Veteran>(),
+            CreateRoleCooldownOption<Vigilante>(),
+
+            CreateRoleCooldownOption<Doctor>(),
+            CreateRoleCooldownOption<Escort>()
+        };
+
+        // Additional Options
         // Crew
-        // Crew Investigative
-        // Investigator
-        public static readonly CustomNumberOption OptionInvestigatorCooldown = GetCooldownOption<Investigator>();
-
-        // Sheriff
-
-        // Spy
-
-        // Tracker
 
         // Crew Killing
-        // Vigilante
-        public static readonly CustomNumberOption OptionVigilanteCooldown = GetCooldownOption<Vigilante>();
+        // Veteran
+        public static readonly CustomNumberOption OptionVeteranAlertDuration = CustomOption.AddNumber(nameof(Veteran) + ": Alert Duration", 15F, 5F, GetRoleCooldown<Veteran>(), 2.5F);
 
         // Crew Protective
         // Doctor
-        public static readonly CustomNumberOption OptionDoctorCooldown = GetCooldownOption<Doctor>();
         public static readonly CustomStringOption OptionDoctorShowShieldedPlayer = CustomOption.AddString(nameof(Doctor) + ": Show Shielded Player", new[] { "Doctor", "Target", "Doctor & Target", "Everyone" });
+        public static readonly CustomNumberOption OptionDoctorShieldDuration = CustomOption.AddNumber(nameof(Doctor) + ": Shield Duration", 15F, 5F, GetRoleCooldown<Doctor>(), 2.5F);
 
         // Crew Support
         // Escort
-        public static readonly CustomNumberOption OptionEscortCooldown = GetCooldownOption<Escort>();
-        public static readonly CustomNumberOption OptionEscortCooldownIncrease = CustomOption.AddNumber(nameof(Escort) + ": Cooldown Increase", 30F, 10F, 60F, 0.25F);
+        public static readonly CustomNumberOption OptionEscortCooldownIncrease = CustomOption.AddNumber(nameof(Escort) + ": Cooldown Increase", 30F, 10F, 60F, 2.5F);
 
 
         // Neutral
         // Neutral Evil
-        // Jester
-
-        // public ConfigEntry<string> Ip { get; set; }
-        // public ConfigEntry<ushort> Port { get; set; }
 
         public override void Load()
         {
-            // Ip = Config.Bind("Custom", "Ipv4 or Hostname", "127.0.0.1");
-            // Port = Config.Bind("Custom", "Port", (ushort)22023);
-
             // TODO:Add Assets?
-
-
 
             //Disable the https://github.com/DorCoMaNdO/Reactor-Essentials watermark.
             //The code said that you were allowed, as long as you provided credit elsewhere. 
@@ -88,17 +88,35 @@ namespace CrewOfSalem
             Harmony.PatchAll();
         }
 
-        private static CustomNumberOption GetRoleSpawnChanceOption<T>() where T : RoleGeneric<T>, new()
+        private static KeyValuePair<Type, CustomNumberOption> CreateRoleSpawnChanceOption<T>()
+            where T : RoleGeneric<T>, new()
         {
+            Type type = typeof(T);
+
             string name = Role.GetName<T>();
             Faction faction = Role.GetFaction<T>();
             Alignment alignment = Role.GetAlignment<T>();
-            return CustomOption.AddNumber("(" + faction.shortHandle + alignment.shortHandle + ") " + name, 50F, 0F, 100F, 5F);
+            CustomNumberOption customNumberOption = CustomOption.AddNumber("(" + faction.shortHandle + alignment.shortHandle + ") " + name, 50F, 0F, 100F, 5F);
+
+            return new KeyValuePair<Type, CustomNumberOption>(type, customNumberOption);
         }
 
-        private static CustomNumberOption GetCooldownOption<T>(float value = 30F, float min = 10F, float max = 60F, float increment = 2.5F) where T : RoleGeneric<T>, new()
+        public static float GetRoleSpawnChance<T>()
+            where T : RoleGeneric<T>, new()
         {
-            return CustomOption.AddNumber(typeof(T).Name + ": Cooldown", value, min, max, increment);
+            return RoleSpawnChances.TryGetValue(typeof(T), out CustomNumberOption value) ? value.GetValue() : 0F;
+        }
+
+        private static KeyValuePair<Type, CustomNumberOption> CreateRoleCooldownOption<T>(float value = 30F, float min = 10F, float max = 60F, float increment = 2.5F)
+            where T : RoleGeneric<T>, new()
+        {
+            return new KeyValuePair<Type, CustomNumberOption>(typeof(T), CustomOption.AddNumber(typeof(T).Name + ": Cooldown", value, min, max, increment));
+        }
+
+        public static float GetRoleCooldown<T>()
+            where T : RoleGeneric<T>, new()
+        {
+            return RoleCooldowns.TryGetValue(typeof(T), out CustomNumberOption value) ? value.GetValue() : 0F;
         }
     }
 }

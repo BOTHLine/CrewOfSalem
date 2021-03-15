@@ -29,11 +29,6 @@ namespace CrewOfSalem.Roles
             throw new System.NotImplementedException();
         }
 
-        protected override void InitializeRoleInternal()
-        {
-            throw new System.NotImplementedException();
-        }
-
         protected override void SetConfigSettings()
         {
             throw new System.NotImplementedException();

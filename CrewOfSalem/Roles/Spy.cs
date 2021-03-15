@@ -32,11 +32,6 @@ namespace CrewOfSalem.Roles
 
         }
 
-        protected override void InitializeRoleInternal()
-        {
-
-        }
-
         protected override void SetConfigSettings()
         {
 

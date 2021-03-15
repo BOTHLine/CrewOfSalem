@@ -9,9 +9,6 @@ namespace CrewOfSalem.Roles
 {
     public class Vigilante : RoleGeneric<Vigilante>
     {
-        // Properties
-        public bool showReport { get; private set; }
-
         // Properties Role
         public override Color Color => Color.magenta;
 
@@ -45,11 +42,6 @@ namespace CrewOfSalem.Roles
 
         }
 
-        protected override void SetConfigSettings()
-        {
-            Cooldown = Main.OptionVigilanteCooldown.GetValue();
-        }
-
         public override void PerformAction(KillButtonManager instance)
         {
             if (instance.isCoolingDown) return;
@@ -74,11 +66,6 @@ namespace CrewOfSalem.Roles
                 KillPlayer(Player);
             }
             return;
-        }
-
-        protected override void InitializeRoleInternal()
-        {
-
         }
     }
 }

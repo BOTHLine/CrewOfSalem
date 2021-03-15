@@ -1,5 +1,9 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
+using Hazel;
+using System.Collections.Generic;
+using static CrewOfSalem.CrewOfSalem;
+using static CrewOfSalem.Main;
 
 namespace CrewOfSalem.Roles
 {
@@ -29,5 +33,10 @@ namespace CrewOfSalem.Roles
         public static Alignment GetAlignment() => Instance.Alignment;
 
         public static PlayerControl GetPlayer() => Instance.Player;
+
+        protected override void SetConfigSettings()
+        {
+            Cooldown = GetRoleCooldown<T>();
+        }
     }
 }

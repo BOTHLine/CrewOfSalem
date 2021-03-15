@@ -41,6 +41,10 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                                     AddSpecialRole(new Tracker(), player);
                                     break;
 
+                                case var value when value == Veteran.GetRoleID():
+                                    AddSpecialRole(new Veteran(), player);
+                                    break;
+
                                 case var value when value == Vigilante.GetRoleID():
                                     AddSpecialRole(new Vigilante(), player);
                                     break;
@@ -61,6 +65,11 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     }
                     break;
                 // ---------- Special Role Conditions ----------
+
+                case (byte)RPC.VeteranAlert:
+                    var veteran = GetSpecialRole<Veteran>();
+                    veteran.CurrentAlertDuration = veteran.AlertDuration;
+                    break;
 
                 case (byte)RPC.VigilanteKill:
                     byte killerID = reader.ReadByte();

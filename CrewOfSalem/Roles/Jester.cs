@@ -58,11 +58,6 @@ namespace CrewOfSalem.Roles
 
         }
 
-        protected override void InitializeRoleInternal()
-        {
-
-        }
-
         public void Win()
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)

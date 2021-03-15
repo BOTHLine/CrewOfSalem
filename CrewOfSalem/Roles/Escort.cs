@@ -51,15 +51,9 @@ namespace CrewOfSalem.Roles
 
         }
 
-        protected override void InitializeRoleInternal()
-        {
-            Cooldown = Main.OptionEscortCooldown.GetValue();
-            CooldownIncrease = Main.OptionEscortCooldownIncrease.GetValue();
-        }
-
         protected override void SetConfigSettings()
         {
-
+            CooldownIncrease = Main.OptionEscortCooldownIncrease.GetValue();
         }
     }
 }
