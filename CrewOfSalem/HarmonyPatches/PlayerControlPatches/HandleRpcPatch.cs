@@ -71,11 +71,19 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     veteran.CurrentAlertDuration = veteran.AlertDuration;
                     break;
 
-                case (byte)RPC.VigilanteKill:
+                case (byte)RPC.VeteranKill:
                     byte killerID = reader.ReadByte();
                     byte victimID = reader.ReadByte();
                     PlayerControl killer = PlayerTools.GetPlayerById(killerID);
                     PlayerControl victim = PlayerTools.GetPlayerById(victimID);
+                    killer.MurderPlayer(victim);
+                    break;
+
+                case (byte)RPC.VigilanteKill:
+                    killerID = reader.ReadByte();
+                    victimID = reader.ReadByte();
+                    killer = PlayerTools.GetPlayerById(killerID);
+                    victim = PlayerTools.GetPlayerById(victimID);
                     killer.MurderPlayer(victim);
                     break;
 
@@ -104,14 +112,14 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 case (byte)RPC.EscortIncreaseCooldown:
                     byte targetID = reader.ReadByte();
                     PlayerControl target = PlayerTools.GetPlayerById(targetID);
-                    target.SetKillTimer(target.killTimer + GetSpecialRole<Escort>().CooldownIncrease);
+                    target.SetKillTimer(target.killTimer + GetSpecialRole<Escort>().Duration);
                     break;
 
                 case (byte)RPC.ResetVariables:
                     List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
-                    foreach (Role resetRole in assignedRoles)
+                    foreach (Role role in assignedRoles)
                     {
-                        resetRole.ClearSettings();
+                        role.ClearSettings();
                     }
                     ResetValues();
                     break;

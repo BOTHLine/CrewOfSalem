@@ -1,7 +1,6 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
-using System;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -23,10 +22,19 @@ namespace CrewOfSalem.Roles
         public override Alignment Alignment => Alignment.Killing;
 
         public override Color Color => Color.green;
-        protected override string StartText => "Survive the Impostors";
 
         public override bool HasSpecialButton => true;
         public override Sprite SpecialButton => VeteranButton;
+
+        // Methods
+        public void KillPlayer(PlayerControl target)
+        {
+            MessageWriter writer = GetWriter(RPC.VeteranKill);
+            writer.Write(PlayerControl.LocalPlayer.PlayerId);
+            writer.Write(target.PlayerId);
+            CloseWriter(writer);
+            PlayerControl.LocalPlayer.MurderPlayer(target);
+        }
 
         // Methods Role
         public override void PerformAction(KillButtonManager instance)
@@ -45,11 +53,6 @@ namespace CrewOfSalem.Roles
         protected override void ClearSettingsInternal()
         {
             CurrentAlertDuration = 0F;
-        }
-
-        protected override void SetConfigSettings()
-        {
-            AlertDuration = Main.OptionVeteranAlertDuration.GetValue();
         }
 
         public override void UpdateCooldown(float deltaTime)

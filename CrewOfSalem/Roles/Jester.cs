@@ -7,24 +7,23 @@ namespace CrewOfSalem.Roles
 {
     public class Jester : RoleGeneric<Jester>
     {
-        public bool canSeeImpostor { get; private set; }
-        public bool canDieToVigilante { get; private set; }
+        // Properties
+        public bool CanSeeImpostor { get; private set; }
+        public bool CanDieToVigilante { get; private set; }
+
+        // Properties Role
+        public override byte RoleID => 245;
+        public override string Name => nameof(Jester);
+
+        public override Faction Faction => Faction.Neutral;
+        public override Alignment Alignment => Alignment.Evil;
 
         public override Color Color => Color.grey;
-
-        protected override string StartText => "Trick the others to vote you!";
 
         public override bool HasSpecialButton => false;
         public override Sprite SpecialButton => null;
 
-        public override byte RoleID => 245;
-
-        public override string Name => nameof(Jester);
-
-        public override Faction Faction => Faction.Neutral;
-
-        public override Alignment Alignment => Alignment.Evil;
-
+        // Methods
         public void ClearTasks()
         {
             if (Player == null) return;
@@ -43,21 +42,6 @@ namespace CrewOfSalem.Roles
             }
         }
 
-        protected override void ClearSettingsInternal()
-        {
-
-        }
-
-        protected override void SetConfigSettings()
-        {
-
-        }
-
-        public override void PerformAction(KillButtonManager instance)
-        {
-
-        }
-
         public void Win()
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
@@ -72,6 +56,12 @@ namespace CrewOfSalem.Roles
             Player.Revive();
             Player.Data.IsDead = false;
             Player.Data.IsImpostor = true;
+        }
+
+        // Methods Role
+        protected override void SetConfigSettings()
+        {
+
         }
     }
 }

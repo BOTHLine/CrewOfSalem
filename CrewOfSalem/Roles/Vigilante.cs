@@ -10,21 +10,16 @@ namespace CrewOfSalem.Roles
     public class Vigilante : RoleGeneric<Vigilante>
     {
         // Properties Role
+        public override byte RoleID => 216;
+        public override string Name => nameof(Vigilante);
+
+        public override Faction Faction => Faction.Crew;
+        public override Alignment Alignment => Alignment.Killing;
+
         public override Color Color => Color.magenta;
 
         public override bool HasSpecialButton => true;
         public override Sprite SpecialButton => VigilanteButton;
-
-        // TODO: Move to Faction/Alignment ?
-        protected override string StartText => "Kill the [FF0000FF]Mafia[]";
-
-        public override byte RoleID => 216;
-
-        public override string Name => nameof(Vigilante);
-
-        public override Faction Faction => Faction.Crew;
-
-        public override Alignment Alignment => Alignment.Killing;
 
         // Methods
         public void KillPlayer(PlayerControl target)
@@ -37,11 +32,6 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods Role
-        protected override void ClearSettingsInternal()
-        {
-
-        }
-
         public override void PerformAction(KillButtonManager instance)
         {
             if (instance.isCoolingDown) return;
@@ -51,13 +41,13 @@ namespace CrewOfSalem.Roles
 
             Player.SetKillTimer(Cooldown);
 
-            if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp) && doctorKvp.Value.ShieldedPlayer?.PlayerId == target.PlayerId)
+            if (TryGetSpecialRole(out Doctor doctor) && doctor.ShieldedPlayer?.PlayerId == target.PlayerId)
             {
-                doctorKvp.Value.BreakShield();
+                doctor.BreakShield();
                 return;
             }
 
-            if (SpecialRoleIsAssigned(out KeyValuePair<byte, Jester> jesterKvp) && target.PlayerId == jesterKvp.Key && jesterKvp.Value.canDieToVigilante || target.Data.IsImpostor)
+            if ((TryGetSpecialRole(out Jester jester) && target.PlayerId == jester.Player.PlayerId && jester.CanDieToVigilante) || target.Data.IsImpostor)
             {
                 KillPlayer(target);
             }

@@ -23,6 +23,9 @@ namespace CrewOfSalem
 
         //This section uses the https://github.com/DorCoMaNdO/Reactor-Essentials framework
 
+        // General Game Options
+        public static CustomStringOption OptionShowPlayerNames = CustomOption.AddString("Show Player Names", new[] { "Always", "Line of Sight", "Never" });
+
         // SpawnChance Options
         public static readonly DictionaryKVP<Type, CustomNumberOption> RoleSpawnChances = new DictionaryKVP<Type, CustomNumberOption>
         {
@@ -53,21 +56,23 @@ namespace CrewOfSalem
             CreateRoleCooldownOption<Escort>()
         };
 
+        //
+        public static readonly DictionaryKVP<Type, CustomNumberOption> RoleDurations = new DictionaryKVP<Type, CustomNumberOption>
+        {
+            CreateRoleDurationOption<Veteran>("Alert"),
+            CreateRoleDurationOption<Doctor>("Shield"),
+            CreateRoleDurationOption<Escort>("Block")
+        };
+
         // Additional Options
         // Crew
-
         // Crew Killing
-        // Veteran
-        public static readonly CustomNumberOption OptionVeteranAlertDuration = CustomOption.AddNumber(nameof(Veteran) + ": Alert Duration", 15F, 5F, GetRoleCooldown<Veteran>(), 2.5F);
 
         // Crew Protective
         // Doctor
-        public static readonly CustomStringOption OptionDoctorShowShieldedPlayer = CustomOption.AddString(nameof(Doctor) + ": Show Shielded Player", new[] { "Doctor", "Target", "Doctor & Target", "Everyone" });
-        public static readonly CustomNumberOption OptionDoctorShieldDuration = CustomOption.AddNumber(nameof(Doctor) + ": Shield Duration", 15F, 5F, GetRoleCooldown<Doctor>(), 2.5F);
+        public static readonly CustomStringOption OptionDoctorShowShieldedPlayer = CustomOption.AddString(Role.GetName<Doctor>() + ": Show Shielded Player", new[] { "Doctor", "Target", "Doctor & Target", "Everyone" });
 
         // Crew Support
-        // Escort
-        public static readonly CustomNumberOption OptionEscortCooldownIncrease = CustomOption.AddNumber(nameof(Escort) + ": Cooldown Increase", 30F, 10F, 60F, 2.5F);
 
 
         // Neutral
@@ -88,7 +93,7 @@ namespace CrewOfSalem
             Harmony.PatchAll();
         }
 
-        private static KeyValuePair<Type, CustomNumberOption> CreateRoleSpawnChanceOption<T>()
+        private static KeyValuePair<Type, CustomNumberOption> CreateRoleSpawnChanceOption<T>(float value = 50F, float min = 0F, float max = 100F, float increment = 5F)
             where T : RoleGeneric<T>, new()
         {
             Type type = typeof(T);
@@ -96,7 +101,7 @@ namespace CrewOfSalem
             string name = Role.GetName<T>();
             Faction faction = Role.GetFaction<T>();
             Alignment alignment = Role.GetAlignment<T>();
-            CustomNumberOption customNumberOption = CustomOption.AddNumber("(" + faction.shortHandle + alignment.shortHandle + ") " + name, 50F, 0F, 100F, 5F);
+            CustomNumberOption customNumberOption = CustomOption.AddNumber("(" + faction.ShortHandle + alignment.ShortHandle + ") " + name, value, min, max, increment);
 
             return new KeyValuePair<Type, CustomNumberOption>(type, customNumberOption);
         }
@@ -110,13 +115,26 @@ namespace CrewOfSalem
         private static KeyValuePair<Type, CustomNumberOption> CreateRoleCooldownOption<T>(float value = 30F, float min = 10F, float max = 60F, float increment = 2.5F)
             where T : RoleGeneric<T>, new()
         {
-            return new KeyValuePair<Type, CustomNumberOption>(typeof(T), CustomOption.AddNumber(typeof(T).Name + ": Cooldown", value, min, max, increment));
+            return new KeyValuePair<Type, CustomNumberOption>(typeof(T), CustomOption.AddNumber(Role.GetName<T>() + ": Cooldown", value, min, max, increment));
         }
 
         public static float GetRoleCooldown<T>()
             where T : RoleGeneric<T>, new()
         {
             return RoleCooldowns.TryGetValue(typeof(T), out CustomNumberOption value) ? value.GetValue() : 0F;
+        }
+
+        private static KeyValuePair<Type, CustomNumberOption> CreateRoleDurationOption<T>(string actionName, float value = 15F, float min = 5F, float max = -1F, float increment = 2.5F)
+            where T : RoleGeneric<T>, new()
+        {
+            if (max < 0F) max = GetRoleCooldown<T>();
+            return new KeyValuePair<Type, CustomNumberOption>(typeof(T), CustomOption.AddNumber(Role.GetName<T>() + " " + actionName + ": Duration", value, min, max, increment));
+        }
+
+        public static float GetRoleDuration<T>()
+            where T : RoleGeneric<T>, new()
+        {
+            return RoleDurations.TryGetValue(typeof(T), out CustomNumberOption value) ? value.GetValue() : 0F;
         }
     }
 }

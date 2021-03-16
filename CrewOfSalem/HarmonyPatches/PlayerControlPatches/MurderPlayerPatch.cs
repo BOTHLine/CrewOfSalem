@@ -1,4 +1,5 @@
 ﻿using CrewOfSalem.Roles;
+using CrewOfSalem.Roles.Alignments;
 using HarmonyLib;
 using System;
 using static CrewOfSalem.CrewOfSalem;
@@ -10,7 +11,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     {
         public static bool Prefix(PlayerControl __instance, PlayerControl CAKODNGLPDF)
         {
-            if (TryGetSpecialRoleByPlayer(__instance.PlayerId, out Role role) && role is Vigilante)
+            if (TryGetSpecialRoleByPlayer(__instance.PlayerId, out Role role) && role.Alignment is Killing)
                 __instance.Data.IsImpostor = true;
             return true;
         }
@@ -22,13 +23,13 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
             DeadPlayer deadPlayer = new DeadPlayer(target, current, DateTime.UtcNow);
 
-            if (TryGetSpecialRole(current.PlayerId, out Vigilante _))
+            if (TryGetSpecialRoleByPlayer(current.PlayerId, out Role role) && role.Alignment is Killing)
             {
                 current.Data.IsImpostor = false;
             }
             DeadPlayers.Add(deadPlayer);
 
-            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker) && target != tracker.Player)
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker) && target != tracker.Player)
                 tracker.SendChatMessage(Tracker.MessageType.PlayerDied);
         }
     }

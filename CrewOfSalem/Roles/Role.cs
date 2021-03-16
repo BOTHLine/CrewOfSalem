@@ -18,15 +18,16 @@ namespace CrewOfSalem.Roles
         public abstract Alignment Alignment { get; }
 
         public abstract Color Color { get; }
-        public string ColorAsHex => ((int)Color.r * 255).ToString("X2") + ((int)Color.g * 255).ToString("X2") + ((int)Color.b * 255).ToString("X2") + ((int)Color.a * 255).ToString("X2");
         public virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
 
-        protected abstract string StartText { get; }
+        protected virtual string StartText => Alignment.GetColorizedTask(Faction);
         protected virtual Vector3 TitleScale { get; } = new Vector3(1, 1, 1);
 
         public abstract bool HasSpecialButton { get; }
         public abstract Sprite SpecialButton { get; }
+
         public float Cooldown { get; protected set; }
+        public float Duration { get; protected set; }
 
         public PlayerControl Player { get; protected set; }
 
@@ -79,14 +80,6 @@ namespace CrewOfSalem.Roles
             InitializeRoleInternal();
         }
 
-        public void ClearSettings()
-        {
-            Player = null;
-            ClearSettingsInternal();
-        }
-
-        public string EjectMessage(string playerName) => $"{playerName} was the {Name}";
-        
         public void SetNameColor()
         {
             if (MeetingHud.Instance != null)
@@ -104,15 +97,44 @@ namespace CrewOfSalem.Roles
                 Player.nameText.Color = Color;
             }
         }
-       
+
         public void SetRoleDescription()
         {
             ImportantTextTask roleDescription = new GameObject("roleDescription").AddComponent<ImportantTextTask>();
             roleDescription.transform.SetParent(Player.transform, false);
-            roleDescription.Text = $"[{ColorAsHex}]You are the {Name}![]";
+            roleDescription.Text = $"{ColorizedText(Name, Color)}: {StartText}";
             Player.myTasks.Insert(0, roleDescription);
         }
+
+        public string EjectMessage(string playerName) => $"{playerName} was the {ColorizedText(Name, Color)}";
+
+        public void ClearSettings()
+        {
+            Player = null;
+            ClearSettingsInternal();
+        }
+
         // Virtual Methods
+        protected virtual void SetConfigSettings()
+        {
+
+        }
+
+        public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
+        {
+            instance.__this.Title.Text = Name;
+            instance.__this.Title.render?.material?.SetColor("_OutlineColor", OutlineColor);
+            instance.__this.Title.transform.localScale = TitleScale;
+            instance.c = Color;
+            instance.__this.ImpostorText.Text = StartText;
+            instance.__this.BackgroundBar.material.color = Color;
+        }
+
+        protected virtual void InitializeRoleInternal()
+        {
+            Player.SetKillTimer(Cooldown);
+        }
+
         public virtual void CheckDead(HudManager instance)
         {
             if (!Player.Data.IsDead) return;
@@ -121,6 +143,7 @@ namespace CrewOfSalem.Roles
             killButton.gameObject.SetActive(false);
             killButton.renderer.enabled = false;
         }
+
         public virtual void CheckSpecialButton(HudManager instance)
         {
             if (!HasSpecialButton) return;
@@ -135,31 +158,19 @@ namespace CrewOfSalem.Roles
             killButton.SetTarget(PlayerTools.FindClosestTarget(Player));
         }
 
-        public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
-        {
-            instance.__this.Title.Text = Name;
-            instance.__this.Title.render?.material?.SetColor("_OutlineColor", OutlineColor);
-            instance.__this.Title.transform.localScale = TitleScale;
-            instance.c = Color;
-            instance.__this.ImpostorText.Text = StartText;
-            instance.__this.BackgroundBar.material.color = Color;
-        }
-
-        // Abstract Methods
-        protected virtual void InitializeRoleInternal()
-        {
-            Player.SetKillTimer(Cooldown);
-        }
-
         public virtual void UpdateCooldown(float deltaTime)
         {
             Player.SetKillTimer(Mathf.Max(0F, Player.killTimer - deltaTime));
         }
 
-        protected abstract void SetConfigSettings();
+        public virtual void PerformAction(KillButtonManager instance)
+        {
 
-        public abstract void PerformAction(KillButtonManager instance);
+        }
 
-        protected abstract void ClearSettingsInternal();
+        protected virtual void ClearSettingsInternal()
+        {
+
+        }
     }
 }

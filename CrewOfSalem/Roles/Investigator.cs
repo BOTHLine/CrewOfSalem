@@ -8,27 +8,19 @@ namespace CrewOfSalem.Roles
 
     public class Investigator : RoleGeneric<Investigator>
     {
-        public override Color Color => Color.green;
-
-        protected override string StartText => "Find the [FF0000FF]Mafia[]";
-
-        public override bool HasSpecialButton => true;
-
-        public override Sprite SpecialButton => InvestigatorButton;
-
+        // Properties Role
         public override byte RoleID => 207;
-
         public override string Name => nameof(Investigator);
 
         public override Faction Faction => Faction.Crew;
-
         public override Alignment Alignment => Alignment.Investigative;
 
-        protected override void ClearSettingsInternal()
-        {
+        public override Color Color => Color.green;
 
-        }
+        public override bool HasSpecialButton => true;
+        public override Sprite SpecialButton => InvestigatorButton;
 
+        // Methods Role
         public override void PerformAction(KillButtonManager instance)
         {
 

@@ -10,7 +10,7 @@ namespace CrewOfSalem.HarmonyPatches.VentPatches
         public static void Postfix(PlayerControl NMEAPOJFNKA)
         {
             PlayerVentTimeUtility.SetLastVent(NMEAPOJFNKA.PlayerId);
-            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
             {
                 tracker.SendChatMessage(Tracker.MessageType.PlayerExitedVent);
             }

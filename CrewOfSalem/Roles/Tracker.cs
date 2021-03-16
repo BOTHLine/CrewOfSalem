@@ -16,21 +16,16 @@ namespace CrewOfSalem.Roles
         };
 
         // Properties Role
-        public override Color Color => Color.yellow;
-
-        public override bool HasSpecialButton => false;
-
-        public override Sprite SpecialButton => null;
-
-        protected override string StartText => "Find the [FF0000FF]Mafia[]";
-
         public override byte RoleID => 212;
-
         public override string Name => nameof(Tracker);
 
         public override Faction Faction => Faction.Crew;
-
         public override Alignment Alignment => Alignment.Investigative;
+
+        public override Color Color => Color.yellow;
+
+        public override bool HasSpecialButton => false;
+        public override Sprite SpecialButton => null;
 
         // Methods
         public void SendChatMessage(MessageType type)
@@ -42,19 +37,19 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods Role
-        protected override void ClearSettingsInternal()
+        protected override void SetConfigSettings()
         {
 
         }
 
         public override void PerformAction(KillButtonManager instance)
         {
-
+            // TODO
         }
 
-        protected override void SetConfigSettings()
+        protected override void ClearSettingsInternal()
         {
-
+            // TODO
         }
 
         // Nested Types

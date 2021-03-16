@@ -14,24 +14,14 @@ namespace CrewOfSalem.Roles
         public override Alignment Alignment => Alignment.Investigative;
 
         public override Color Color => Color.blue;
-        protected override string StartText => "Find the Impostors";
 
         public override bool HasSpecialButton => false;
         public override Sprite SpecialButton => null;
 
-        public override void PerformAction(KillButtonManager instance)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void ClearSettingsInternal()
-        {
-            throw new System.NotImplementedException();
-        }
-
+        // Methods Role
         protected override void SetConfigSettings()
         {
-            throw new System.NotImplementedException();
+            // TODO Report Times
         }
     }
 }

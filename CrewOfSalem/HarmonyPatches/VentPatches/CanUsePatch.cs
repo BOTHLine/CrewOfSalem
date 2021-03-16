@@ -1,7 +1,6 @@
 ﻿using CrewOfSalem.Roles;
 using HarmonyLib;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -14,14 +13,8 @@ namespace CrewOfSalem.HarmonyPatches.VentPatches
         {
             float distance = float.MaxValue;
             PlayerControl localPlayer = pc.Object;
-            if (SpecialRoleIsAssigned(out KeyValuePair<byte, Spy> spyKvp))
-            {
-                couldUse = (spyKvp.Value.Player.PlayerId == PlayerControl.LocalPlayer.PlayerId || localPlayer.Data.IsImpostor) && !localPlayer.Data.IsDead;
-            }
-            else
-            {
-                couldUse = localPlayer.Data.IsImpostor && !localPlayer.Data.IsDead;
-            }
+
+            couldUse = !localPlayer.Data.IsDead && (localPlayer.Data.IsImpostor || TryGetSpecialRoleByPlayer(localPlayer.PlayerId, out Spy _));
             canUse = couldUse;
             if ((DateTime.UtcNow - PlayerVentTimeUtility.GetLastVent(pc.Object.PlayerId)).TotalMilliseconds > 100F)
             {

@@ -27,10 +27,9 @@ namespace CrewOfSalem
                 return null;
 
             Vector2 fromPosition = fromPlayer.GetTruePosition();
-            Il2CppSystem.Collections.Generic.List<GameData.PlayerInfo> allPlayers = GameData.Instance.AllPlayers;
-            for (int index = 0; index < allPlayers.Count; index++)
+            GameData.PlayerInfo[] allPlayers = GameData.Instance.AllPlayers.ToArray();
+            foreach (GameData.PlayerInfo playerInfo in allPlayers)
             {
-                GameData.PlayerInfo playerInfo = allPlayers[index];
                 if (!playerInfo.Disconnected && playerInfo.PlayerId != fromPlayer.PlayerId && !playerInfo.IsDead)
                 {
                     PlayerControl current = playerInfo.Object;

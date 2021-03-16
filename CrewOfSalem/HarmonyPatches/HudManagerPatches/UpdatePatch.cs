@@ -29,7 +29,7 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
             }
 
             bool sabotageActive = false;
-            foreach(PlayerTask task in localPlayer.myTasks)
+            foreach (PlayerTask task in localPlayer.myTasks)
             {
                 sabotageActive = task.TaskType switch
                 {
@@ -42,21 +42,15 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
                 };
             }
 
-            foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
                 player.nameText.Color = Color.white;
             }
 
             // Jester Tasks have to be reset every frame.. maybe rework later?
-            if (SpecialRoleIsAssigned<Jester>(out var jesterKvp))
-            {
-                jesterKvp.Value.ClearTasks();
-            }
+            GetSpecialRole<Jester>()?.ClearTasks();
 
-            if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
-            {
-                doctorKvp.Value.CheckShowShieldedPlayer();
-            }
+            GetSpecialRole<Doctor>()?.CheckShowShieldedPlayer();
 
             bool jesterCanSeeImpostor = false;
 
@@ -66,28 +60,24 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
                 current.CheckDead(__instance);
                 current.CheckSpecialButton(__instance);
                 current.UpdateCooldown(Time.deltaTime);
-                switch(current)
+                switch (current)
                 {
-                    case Investigator investigator:
-                      //  investigator.CheckInvestigateButton();
-                      //  investigator.SetCooldown(Time.deltaTime);
-                        break;
                     // TODO: Add all Roles
                     case Jester jester:
-                        jesterCanSeeImpostor = jester.canSeeImpostor;
+                        jesterCanSeeImpostor = jester.CanSeeImpostor;
                         break;
                 }
             }
 
             if (current is Jester && jesterCanSeeImpostor)
             {
-                foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
                     player.nameText.Color = TryGetSpecialRoleByPlayer(player.PlayerId, out Role role) ? role.Color : player.nameText.Color;
 
                     if (MeetingHud.Instance == null) continue;
 
-                    foreach(PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                     {
                         if (player.PlayerId == playerVote.TargetPlayerId)
                         {
@@ -98,7 +88,7 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
             }
             else if (localPlayer.Data.IsImpostor)
             {
-                foreach(PlayerControl player in PlayerControl.AllPlayerControls)
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
                     if (!player.Data.IsImpostor) continue;
 
@@ -106,13 +96,38 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
                     if (MeetingHud.Instance == null) continue;
 
-                    foreach(PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                     {
                         if (player.PlayerId == playerVote.TargetPlayerId)
                         {
                             playerVote.NameText.Color = player.nameText.Color;
                         }
                     }
+                }
+            }
+
+            UpdatePlayerNames();
+        }
+
+        // TODO: Currently working with PhysicsHelpers.AnyNonTriggersBetween, change to something like "Vision" later?
+        private static void UpdatePlayerNames()
+        {
+            int showPlayerNames = Main.OptionShowPlayerNames.GetValue();
+            if (showPlayerNames != 1) return;
+            Vector2 fromPosition = PlayerControl.LocalPlayer.GetTruePosition();
+
+            PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
+            foreach (PlayerControl player in allPlayers)
+            {
+                Vector2 distanceVector = player.GetTruePosition() - fromPosition;
+                float distance = distanceVector.magnitude;
+                if (PhysicsHelpers.AnyNonTriggersBetween(fromPosition, distanceVector.normalized, distance, Constants.ShipOnlyMask))
+                {
+                    player.nameText.Text = "";
+                }
+                else
+                {
+                    player.nameText.Text = player.name;
                 }
             }
         }

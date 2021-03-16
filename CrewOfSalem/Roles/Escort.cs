@@ -8,25 +8,17 @@ namespace CrewOfSalem.Roles
 {
     public class Escort : RoleGeneric<Escort>
     {
-        // Properties
-        public float CooldownIncrease { get; private set; }
-
         // Properties Role
-        public override Color Color => Color.green;
-
-        public override bool HasSpecialButton => true;
-
-        public override Sprite SpecialButton => EscortButton;
-
         public override byte RoleID => 221;
-
         public override string Name => nameof(Escort);
 
         public override Faction Faction => Faction.Crew;
-
         public override Alignment Alignment => Alignment.Support;
 
-        protected override string StartText => "Block the [FF0000FF]Mafia[]";
+        public override Color Color => Color.green;
+
+        public override bool HasSpecialButton => true;
+        public override Sprite SpecialButton => EscortButton;
 
         // Methods Role
         public override void PerformAction(KillButtonManager instance)
@@ -37,23 +29,13 @@ namespace CrewOfSalem.Roles
             if (target == null) return;
 
             Player.SetKillTimer(Cooldown);
-            target.SetKillTimer(target.killTimer + CooldownIncrease);
+            target.SetKillTimer(target.killTimer + Duration);
 
             MessageWriter writer = GetWriter(RPC.EscortIncreaseCooldown);
             writer.Write(target.PlayerId);
             CloseWriter(writer);
 
             return;
-        }
-
-        protected override void ClearSettingsInternal()
-        {
-
-        }
-
-        protected override void SetConfigSettings()
-        {
-            CooldownIncrease = Main.OptionEscortCooldownIncrease.GetValue();
         }
     }
 }

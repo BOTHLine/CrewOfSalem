@@ -16,7 +16,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             DeadPlayer deadPlayer = DeadPlayers.FirstOrDefault(x => x.Victim?.PlayerId == CAKODNGLPDF.PlayerId);
             if (deadPlayer == null) return;
 
-            if (!TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Sheriff _)) return;
+            if (!TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Sheriff _)) return;
 
             Sheriff sheriff = GetSpecialRole<Sheriff>(PlayerControl.LocalPlayer.PlayerId);
             if (sheriff == null) return;

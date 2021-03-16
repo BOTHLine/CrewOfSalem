@@ -11,12 +11,12 @@ namespace CrewOfSalem.HarmonyPatches.MeetingPatches
         public static void Prefix(UnityEngine.Object obj)
         {
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return;
-            if (!SpecialRoleIsAssigned<Jester>(out var jesterKvp)) return;
-            if (ExileController.Instance.exiled?.PlayerId != jesterKvp.Key) return;
+            if (!TryGetSpecialRole(out Jester jester)) return;
+            if (ExileController.Instance.exiled?.PlayerId != jester.Player.PlayerId) return;
 
             WriteImmediately(RPC.JesterWin);
 
-            jesterKvp.Value.Win();
+            jester.Win();
         }
     }
 }

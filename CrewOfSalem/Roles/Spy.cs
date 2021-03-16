@@ -6,35 +6,27 @@ namespace CrewOfSalem.Roles
 {
     public class Spy : RoleGeneric<Spy>
     {
-        public override Color Color => Color.blue;
-
-        public override bool HasSpecialButton => false;
-
-        public override Sprite SpecialButton => null;
-
-        protected override string StartText => "Find the [FF0000FF]Mafia[]";
-
+        // Properties Role
         public override byte RoleID => 211;
-
         public override string Name => nameof(Spy);
 
         public override Faction Faction => Faction.Crew;
-
         public override Alignment Alignment => Alignment.Investigative;
 
-        protected override void ClearSettingsInternal()
-        {
+        public override Color Color => Color.blue;
 
+        public override bool HasSpecialButton => false;
+        public override Sprite SpecialButton => null;
+
+        // Methods Role
+        protected override void SetConfigSettings()
+        {
+            // TODO: Spy Time + Cooldown
         }
 
         public override void PerformAction(KillButtonManager instance)
         {
-
-        }
-
-        protected override void SetConfigSettings()
-        {
-
+            // Extra Info from Admin / Vitals?
         }
     }
 }

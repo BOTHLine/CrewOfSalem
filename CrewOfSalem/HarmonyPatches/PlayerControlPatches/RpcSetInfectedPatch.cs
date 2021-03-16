@@ -40,19 +40,18 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
 
             Role.SetRole<Jester>(ref crewmates);
-            
+
             List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList();
             impostors.RemoveAll(x => !x.Data.IsImpostor);
 
             Crew.Clear();
-            LocalPlayer = PlayerControl.LocalPlayer;
 
-            bool jesterExists = SpecialRoleIsAssigned<Jester>(out var jesterKvp);
-            Jester jester = jesterKvp.Value;
+
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
+                if (Main.OptionShowPlayerNames.GetValue() == 2) player.nameText.Text = "";
                 if (player.Data.IsImpostor) continue;
-                if (jesterExists && jester.Player.PlayerId == player.PlayerId) continue;
+                if (GetSpecialRoleByPlayer(player.PlayerId) is Jester) continue;
 
                 Crew.Add(player);
             }

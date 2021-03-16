@@ -18,14 +18,14 @@ namespace CrewOfSalem.HarmonyPatches.EndgameManagerPatches
                 List<PlayerControl> orderLocalPlayers = new List<PlayerControl>();
                 foreach (PlayerControl player in Crew)
                 {
-                    if (player.PlayerId == LocalPlayer.PlayerId)
+                    if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
                     {
                         orderLocalPlayers.Add(player);
                     }
                 }
                 foreach (PlayerControl player in Crew)
                 {
-                    if (player.PlayerId != LocalPlayer.PlayerId)
+                    if (player.PlayerId != PlayerControl.LocalPlayer.PlayerId)
                     {
                         orderLocalPlayers.Add(player);
                     }
@@ -45,7 +45,7 @@ namespace CrewOfSalem.HarmonyPatches.EndgameManagerPatches
 
             foreach (PlayerControl player in Crew)
             {
-                if (player.PlayerId == LocalPlayer.PlayerId)
+                if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
                 {
                     return;
                 }

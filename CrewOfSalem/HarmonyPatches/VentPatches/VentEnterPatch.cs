@@ -11,7 +11,7 @@ namespace CrewOfSalem.HarmonyPatches.VentPatches
         {
             PlayerVentTimeUtility.SetLastVent(NMEAPOJFNKA.PlayerId);
 
-            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
             {
                 tracker.SendChatMessage(Tracker.MessageType.PlayerEnteredVent);
             }
