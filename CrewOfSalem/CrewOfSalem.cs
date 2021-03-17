@@ -12,6 +12,11 @@ namespace CrewOfSalem
     public class CrewOfSalem
     {
         // Fields
+        public static readonly int ShaderVisorColor   = Shader.PropertyToID("_VisorColor");
+        public static readonly int ShaderOutline      = Shader.PropertyToID("_Outline");
+        public static readonly int ShaderOutlineColor = Shader.PropertyToID("_OutlineColor");
+        public static readonly int ShaderDesat        = Shader.PropertyToID("_Desat");
+
         public static Sprite DefaultKillButton;
 
         public static Sprite InvestigatorButton => DefaultKillButton;
@@ -133,60 +138,6 @@ namespace CrewOfSalem
         {
             return ((int) color.r * 255).ToString("X2") + ((int) color.g * 255).ToString("X2") +
                    ((int) color.b * 255).ToString("X2") + ((int) color.a * 255).ToString("X2");
-        }
-
-        // Nested Types
-        public enum RPC
-        {
-            PlayAnimation    = 0,
-            CompleteTask     = 1,
-            SyncSettings     = 2,
-            SetInfected      = 3,
-            Exiled           = 4,
-            CheckName        = 5,
-            SetName          = 6,
-            CheckColor       = 7,
-            SetColor         = 8,
-            SetHat           = 9,
-            SetSkin          = 10,
-            ReportDeadBody   = 11,
-            MurderPlayer     = 12,
-            SendChat         = 13,
-            StartMeeting     = 14,
-            SetScanner       = 15,
-            SendChatNote     = 16,
-            SetPet           = 17,
-            SetStartCounter  = 18,
-            EnterVent        = 19,
-            ExitVent         = 20,
-            SnapTo           = 21,
-            Close            = 22,
-            VotingComplete   = 23,
-            CastVote         = 24,
-            ClearVote        = 25,
-            AddVote          = 26,
-            CloseDoorsOfType = 27,
-            RepairSystem     = 28,
-            SetTasks         = 29,
-            UpdateGameData   = 30,
-
-            // --- Custom RPCs --- TODO:
-            SetRole         = 42,
-            SetLocalPlayers = 43,
-            ResetVariables  = 44,
-
-            VeteranAlert,
-            VeteranKill,
-            VigilanteKill,
-            DoctorSetShielded,
-            DoctorBreakShield,
-            EscortIncreaseCooldown,
-            JesterWin
-        }
-
-        public static class ModdedPalette
-        {
-            public static Color shieldedColor = new Color(0F, 1F, 1F, 1F);
         }
     }
 }

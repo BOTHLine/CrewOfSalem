@@ -12,16 +12,16 @@ namespace CrewOfSalem.Roles
         public bool CanDieToVigilante { get; private set; }
 
         // Properties Role
-        public override byte   RoleID => 245;
+        protected override byte   RoleID => 245;
         public override string Name   => nameof(Jester);
 
         public override Faction   Faction   => Faction.Neutral;
         public override Alignment Alignment => Alignment.Evil;
 
-        public override Color Color => new Color(244F / 255F, 159F / 255F, 208F / 255F, 1F);
+        protected override Color Color => new Color(244F / 255F, 159F / 255F, 208F / 255F, 1F);
 
-        public override bool   HasSpecialButton => false;
-        public override Sprite SpecialButton    => null;
+        protected override bool   HasSpecialButton => false;
+        protected override Sprite SpecialButtonSprite    => null;
 
         // Methods
         public void ClearTasks()

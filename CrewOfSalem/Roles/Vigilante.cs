@@ -9,14 +9,14 @@ namespace CrewOfSalem.Roles
     public class Vigilante : RoleGeneric<Vigilante>
     {
         // Properties Role
-        public override byte   RoleID => 216;
-        public override string Name   => nameof(Vigilante);
+        protected override byte   RoleID => 216;
+        public override    string Name   => nameof(Vigilante);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
 
-        public override bool   HasSpecialButton => true;
-        public override Sprite SpecialButton    => VigilanteButton;
+        protected override bool   HasSpecialButton    => true;
+        protected override Sprite SpecialButtonSprite => VigilanteButton;
 
         // Methods
         public void KillPlayer(PlayerControl target)
@@ -28,30 +28,31 @@ namespace CrewOfSalem.Roles
             PlayerControl.LocalPlayer.MurderPlayer(target);
         }
 
-        // Methods Role
-        public override void PerformAction(KillButtonManager instance)
+        private bool IsKillable(PlayerControl target)
         {
-            if (instance.isCoolingDown) return;
+            TryGetSpecialRoleByPlayer(target.PlayerId, out Role role);
+            return target.Data.IsImpostor || role is Jester {CanDieToVigilante: true};
+        }
 
-            PlayerControl target = PlayerTools.FindClosestTarget(Player);
-            if (target == null) return;
+        // Methods Role
+        public override bool PerformAction(PlayerControl target)
+        {
+            if (target == null) return false;
 
-            Player.SetKillTimer(Cooldown);
-
-            if (TryGetSpecialRole(out Doctor doctor) && doctor.ShieldedPlayer?.PlayerId == target.PlayerId)
+            TryGetSpecialRoleByPlayer(target.PlayerId, out Role targetRole);
+            switch (targetRole)
             {
-                doctor.BreakShield();
-                return;
+                case Survivor {IsVested: true}:
+                    return true;
+                case Doctor doctor when doctor.ShieldedPlayer?.PlayerId == target.PlayerId:
+                    doctor.BreakShield();
+                    return true;
+                default:
+                    KillPlayer(IsKillable(target) ? target : Player);
+                    break;
             }
 
-            if ((TryGetSpecialRole(out Jester jester) && target.PlayerId == jester.Player.PlayerId &&
-                 jester.CanDieToVigilante) || target.Data.IsImpostor)
-            {
-                KillPlayer(target);
-            } else
-            {
-                KillPlayer(Player);
-            }
+            return true;
         }
     }
 }

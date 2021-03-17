@@ -1,4 +1,5 @@
-﻿using CrewOfSalem.Roles.Alignments;
+﻿using System;
+using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
 using UnityEngine;
@@ -9,29 +10,27 @@ namespace CrewOfSalem.Roles
     public class Escort : RoleGeneric<Escort>
     {
         // Properties Role
-        public override byte   RoleID => 221;
-        public override string Name   => nameof(Escort);
+        protected override byte   RoleID => 221;
+        public override    string Name   => nameof(Escort);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Support;
 
-        public override bool   HasSpecialButton => true;
-        public override Sprite SpecialButton    => EscortButton;
+        protected override bool   HasSpecialButton    => true;
+        protected override Sprite SpecialButtonSprite => EscortButton;
 
         // Methods Role
-        public override void PerformAction(KillButtonManager instance)
+        public override bool PerformAction(PlayerControl target)
         {
-            if (instance.isCoolingDown) return;
+            if (target == null) return false;
 
-            PlayerControl target = PlayerTools.FindClosestTarget(Player);
-            if (target == null) return;
-
-            Player.SetKillTimer(Cooldown);
-            target.SetKillTimer(target.killTimer + Duration);
+            if (TryGetSpecialRoleByPlayer(target.PlayerId, out Role role)) role.SpecialButton.AddCooldown(Duration);
+            else target.SetKillTimer(target.killTimer + Duration);
 
             MessageWriter writer = GetWriter(RPC.EscortIncreaseCooldown);
             writer.Write(target.PlayerId);
             CloseWriter(writer);
+            return true;
         }
     }
 }

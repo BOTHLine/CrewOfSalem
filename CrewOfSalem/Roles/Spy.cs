@@ -7,18 +7,19 @@ namespace CrewOfSalem.Roles
     public class Spy : RoleGeneric<Spy>
     {
         // Properties Role
-        public override byte   RoleID => 211;
-        public override string Name   => nameof(Spy);
+        protected override byte   RoleID => 211;
+        public override    string Name   => nameof(Spy);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override bool   HasSpecialButton => false;
-        public override Sprite SpecialButton    => null;
+        protected override bool   HasSpecialButton    => false;
+        protected override Sprite SpecialButtonSprite => null;
 
         // Methods Role
-        public override void PerformAction(KillButtonManager instance)
+        public override bool PerformAction(PlayerControl target)
         {
+            return true;
             // Extra Info from Admin / Vitals?
         }
     }

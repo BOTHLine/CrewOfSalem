@@ -14,8 +14,11 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
             PlayerControl localPlayer = PlayerControl.LocalPlayer;
 
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+
             DefaultKillButton ??= __instance.KillButton.renderer.sprite;
-            if (localPlayer.Data.IsImpostor) {
+
+            if (localPlayer.Data.IsImpostor)
+            {
                 __instance.KillButton.gameObject.SetActive(true);
                 __instance.KillButton.renderer.enabled = true;
                 __instance.KillButton.renderer.sprite = DefaultKillButton;
@@ -23,23 +26,13 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
             if (!localPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ &&
-                __instance.UseButton.isActiveAndEnabled) {
+                __instance.UseButton.isActiveAndEnabled)
+            {
                 PerformKillPatch.Prefix(null);
             }
 
-            bool sabotageActive = false;
-            foreach (PlayerTask task in localPlayer.myTasks) {
-                sabotageActive = task.TaskType switch {
-                    TaskTypes.FixLights => true,
-                    TaskTypes.RestoreOxy => true,
-                    TaskTypes.ResetReactor => true,
-                    TaskTypes.ResetSeismic => true,
-                    TaskTypes.FixComms => true,
-                    _ => sabotageActive
-                };
-            }
-
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            {
                 player.nameText.Color = Color.white;
             }
 
@@ -48,50 +41,18 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
             GetSpecialRole<Doctor>()?.CheckShowShieldedPlayer();
 
-            bool jesterCanSeeImpostor = false;
-
-            if (TryGetSpecialRoleByPlayer(localPlayer.PlayerId, out Role current)) {
-                current.SetNameColor();
-                current.CheckDead(__instance);
-                current.CheckSpecialButton(__instance);
-                current.UpdateCooldown(Time.deltaTime);
-                switch (current) {
+            if (TryGetSpecialRoleByPlayer(localPlayer.PlayerId, out Role role))
+            {
+                role.SetNameColor();
+                role.UpdateButton();
+                role.UpdateDuration(Time.deltaTime);
+                switch (role)
+                {
                     // TODO: Add all Roles
                     case Jester jester:
-                        jesterCanSeeImpostor = jester.CanSeeImpostor;
+                        if (jester.CanSeeImpostor) { }
+
                         break;
-                }
-            }
-
-            if (current is Jester && jesterCanSeeImpostor) {
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
-                    player.nameText.Color = TryGetSpecialRoleByPlayer(player.PlayerId, out Role role)
-                        ? role.Color
-                        : player.nameText.Color;
-
-                    if (MeetingHud.Instance == null) continue;
-
-                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates) {
-                        if (player.PlayerId == playerVote.TargetPlayerId) {
-                            playerVote.NameText.Color = player.nameText.Color;
-                        }
-                    }
-                }
-            } else if (localPlayer.Data.IsImpostor) {
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
-                    if (!player.Data.IsImpostor) continue;
-
-                    player.nameText.Color = TryGetSpecialRoleByPlayer(player.PlayerId, out Role role)
-                        ? role.Color
-                        : Palette.ImpostorRed;
-
-                    if (MeetingHud.Instance == null) continue;
-
-                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates) {
-                        if (player.PlayerId == playerVote.TargetPlayerId) {
-                            playerVote.NameText.Color = player.nameText.Color;
-                        }
-                    }
                 }
             }
 
@@ -106,13 +67,16 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
             Vector2 fromPosition = PlayerControl.LocalPlayer.GetTruePosition();
 
             PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
-            foreach (PlayerControl player in allPlayers) {
+            foreach (PlayerControl player in allPlayers)
+            {
                 Vector2 distanceVector = player.GetTruePosition() - fromPosition;
                 float distance = distanceVector.magnitude;
                 if (PhysicsHelpers.AnyNonTriggersBetween(fromPosition, distanceVector.normalized, distance,
-                    Constants.ShipOnlyMask)) {
+                    Constants.ShipOnlyMask))
+                {
                     player.nameText.Text = "";
-                } else {
+                } else
+                {
                     player.nameText.Text = player.name;
                 }
             }

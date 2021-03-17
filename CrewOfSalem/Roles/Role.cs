@@ -1,4 +1,5 @@
-﻿using CrewOfSalem.Roles.Alignments;
+﻿using System;
+using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
 using System.Collections.Generic;
@@ -11,29 +12,35 @@ namespace CrewOfSalem.Roles
     public abstract class Role
     {
         // Properties
-        public abstract byte   RoleID { get; }
-        public abstract string Name   { get; }
+        protected abstract byte   RoleID { get; }
+        public abstract    string Name   { get; }
 
         public abstract Faction   Faction   { get; }
         public abstract Alignment Alignment { get; }
 
-        public virtual Color Color        => Faction.Color;
-        public virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
+        protected virtual Color Color        => Faction.Color;
+        protected virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
 
         protected virtual string  StartText  => Alignment.GetColorizedTask(Faction);
         protected virtual Vector3 TitleScale { get; } = new Vector3(1, 1, 1);
 
-        public abstract bool   HasSpecialButton { get; }
-        public abstract Sprite SpecialButton    { get; }
+        protected abstract bool       HasSpecialButton    { get; }
+        public             RoleButton SpecialButton       { get; private set; }
+        protected abstract Sprite     SpecialButtonSprite { get; }
 
         public float Cooldown        { get; protected set; }
         public float Duration        { get; protected set; }
         public float CurrentDuration { get; set; }
 
+        protected virtual bool       NeedsTarget   => true;
+        protected virtual Func<bool> CanUse        => () => true;
+        protected virtual Action     OnMeetingEnds => null;
+        protected virtual Vector3    ButtonOffset  => Vector3.zero;
+
         public PlayerControl Player { get; protected set; }
 
         // Methods
-        public static byte GetRoleID<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetRoleID();
+        private static byte GetRoleID<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetRoleID();
         public static string GetName<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetName();
 
         public static PlayerControl GetPlayer<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetPlayer();
@@ -74,9 +81,11 @@ namespace CrewOfSalem.Roles
         {
             Player = player;
             SetConfigSettings();
-            Player.SetKillTimer(Cooldown);
             SetRoleDescription();
             InitializeRole();
+            if (!HasSpecialButton) return;
+            SpecialButton = new RoleButton(Cooldown, PerformActionInternal, CanUse, OnMeetingEnds,
+                SpecialButtonSprite, ButtonOffset);
         }
 
         public void SetNameColor()
@@ -98,10 +107,32 @@ namespace CrewOfSalem.Roles
 
         public void SetRoleDescription()
         {
-            ImportantTextTask roleDescription = new GameObject("roleDescription").AddComponent<ImportantTextTask>();
+            var roleDescription = new GameObject("roleDescription").AddComponent<ImportantTextTask>();
             roleDescription.transform.SetParent(Player.transform, false);
             roleDescription.Text = $"{ColorizedText(Name, Color)}: {StartText}";
             Player.myTasks.Insert(0, roleDescription);
+        }
+
+        public void UpdateButton()
+        {
+            if (!HasSpecialButton) return;
+            if (NeedsTarget)
+            {
+                PlayerControl target = PlayerTools.FindClosestTarget(Player);
+                HudManager.Instance.KillButton.SetTarget(target);
+            }
+
+            SpecialButton.HudUpdate();
+        }
+
+        private bool PerformActionInternal()
+        {
+            PlayerControl target = PlayerTools.FindClosestTarget(Player);
+            if (NeedsTarget) HudManager.Instance.KillButton.SetTarget(target);
+            if (!PerformAction(target)) return false;
+
+            CurrentDuration = Duration;
+            return true;
         }
 
         public string EjectMessage(string playerName) => $"{playerName} was the {ColorizedText(Name, Color)}";
@@ -110,6 +141,7 @@ namespace CrewOfSalem.Roles
         {
             Player = null;
             CurrentDuration = 0F;
+            SpecialButton = null;
             ClearSettings();
         }
 
@@ -119,48 +151,24 @@ namespace CrewOfSalem.Roles
         public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
         {
             instance.__this.Title.Text = Name;
-            instance.__this.Title.render?.material?.SetColor("_OutlineColor", OutlineColor);
+            instance.__this.Title.render?.material.SetColor(ShaderOutlineColor, OutlineColor);
             instance.__this.Title.transform.localScale = TitleScale;
             instance.c = Color;
             instance.__this.ImpostorText.Text = StartText;
             instance.__this.BackgroundBar.material.color = Color;
         }
 
-        protected virtual void InitializeRole()
+        protected virtual void InitializeRole() { }
+
+        public virtual void UpdateDuration(float deltaTime)
         {
-            Player.SetKillTimer(Cooldown);
-        }
-
-        public virtual void CheckDead(HudManager instance)
-        {
-            if (!Player.Data.IsDead) return;
-
-            KillButtonManager killButton = instance.KillButton;
-            killButton.gameObject.SetActive(false);
-            killButton.renderer.enabled = false;
-        }
-
-        public virtual void CheckSpecialButton(HudManager instance)
-        {
-            if (!HasSpecialButton) return;
-
-            if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled || Player.Data.IsDead) return;
-
-            KillButtonManager killButton = instance.KillButton;
-            killButton.gameObject.SetActive(true);
-            killButton.renderer.enabled = true;
-            killButton.isActive = true;
-            killButton.renderer.sprite = SpecialButton;
-            killButton.SetTarget(PlayerTools.FindClosestTarget(Player));
-        }
-
-        public virtual void UpdateCooldown(float deltaTime)
-        {
-            Player.SetKillTimer(Mathf.Max(0F, Player.killTimer - deltaTime));
             CurrentDuration = Mathf.Max(0F, CurrentDuration - deltaTime);
         }
 
-        public virtual void PerformAction(KillButtonManager instance) { }
+        public virtual bool PerformAction(PlayerControl target)
+        {
+            return false;
+        }
 
         protected virtual void ClearSettings() { }
     }

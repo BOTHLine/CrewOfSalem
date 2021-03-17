@@ -9,19 +9,17 @@ namespace CrewOfSalem.Roles
     public class Veteran : RoleGeneric<Veteran>
     {
         // Properties
-        public float AlertDuration { get; private set; }
-
-        public bool IsOnAlert => CurrentDuration > 0F;
+        public bool IsAlerted => CurrentDuration > 0F;
 
         // Properties Role
-        public override byte   RoleID => 215;
-        public override string Name   => nameof(Veteran);
+        protected override byte   RoleID => 215;
+        public override    string Name   => nameof(Veteran);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
 
-        public override bool   HasSpecialButton => true;
-        public override Sprite SpecialButton    => VeteranButton;
+        protected override bool   HasSpecialButton    => true;
+        protected override Sprite SpecialButtonSprite => VeteranButton;
 
         // Methods
         public void KillPlayer(PlayerControl target)
@@ -34,15 +32,18 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods Role
-        public override void PerformAction(KillButtonManager instance)
+        public override bool PerformAction(PlayerControl target)
         {
-            if (instance.isCoolingDown) return;
+            CurrentDuration = Duration;
 
-            Player.SetKillTimer(Cooldown);
-            CurrentDuration = AlertDuration;
+            WriteImmediately(RPC.VeteranAlert);
+            return true;
+        }
 
-            MessageWriter writer = GetWriter(RPC.VeteranAlert);
-            CloseWriter(writer);
+        public override void UpdateDuration(float deltaTime)
+        {
+            base.UpdateDuration(deltaTime);
+            if (CurrentDuration <= 0F) WriteImmediately(RPC.VeteranAlertEnd);
         }
     }
 }

@@ -13,14 +13,14 @@ namespace CrewOfSalem.Roles
         private bool evenMeeting = true;
 
         // Properties Role
-        public override byte   RoleID => 209;
+        protected override byte   RoleID => 209;
         public override string Name   => nameof(Psychic);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override bool   HasSpecialButton => false;
-        public override Sprite SpecialButton    => null;
+        protected override bool   HasSpecialButton => false;
+        protected override Sprite SpecialButtonSprite    => null;
 
         // Methods
         public void StartMeeting()

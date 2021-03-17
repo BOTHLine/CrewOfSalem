@@ -10,14 +10,14 @@ namespace CrewOfSalem.Roles
     public class Investigator : RoleGeneric<Investigator>
     {
         // Properties Role
-        public override byte   RoleID => 207;
-        public override string Name   => nameof(Investigator);
+        protected override byte   RoleID => 207;
+        public override    string Name   => nameof(Investigator);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override bool   HasSpecialButton => true;
-        public override Sprite SpecialButton    => InvestigatorButton;
+        protected override bool   HasSpecialButton    => true;
+        protected override Sprite SpecialButtonSprite => InvestigatorButton;
 
         // Methods
         private static IEnumerable<string> GetResults(Role role)
@@ -96,18 +96,13 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods Role
-        public override void PerformAction(KillButtonManager instance)
+        public override bool PerformAction(PlayerControl target)
         {
-            if (instance.isCoolingDown) return;
-
-            PlayerControl target = PlayerTools.FindClosestTarget(Player);
-            if (target == null) return;
-
-            Player.SetKillTimer(Cooldown);
+            if (target == null) return false;
 
             string result = Player.name + " could be a(n) ";
             string[] results = GetResults(GetSpecialRoleByPlayer(target.PlayerId)).ToArray();
-            for (int i = 0; i < results.Length; i++)
+            for (var i = 0; i < results.Length; i++)
             {
                 result += results[i];
                 if (i < results.Length - 2)
@@ -120,6 +115,7 @@ namespace CrewOfSalem.Roles
             }
 
             DestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, result);
+            return true;
         }
     }
 }

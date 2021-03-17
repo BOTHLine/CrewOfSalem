@@ -16,14 +16,14 @@ namespace CrewOfSalem.Roles
         };
 
         // Properties Role
-        public override byte   RoleID => 212;
-        public override string Name   => nameof(Tracker);
+        protected override byte   RoleID => 212;
+        public override    string Name   => nameof(Tracker);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override bool   HasSpecialButton => false;
-        public override Sprite SpecialButton    => null;
+        protected override bool   HasSpecialButton    => false;
+        protected override Sprite SpecialButtonSprite => null;
 
         // Methods
         public void SendChatMessage(MessageType type)
@@ -37,9 +37,10 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void SetConfigSettings() { }
 
-        public override void PerformAction(KillButtonManager instance)
+        public override bool PerformAction(PlayerControl target)
         {
             // TODO
+            return true;
         }
 
         protected override void ClearSettings()
