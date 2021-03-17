@@ -1,5 +1,4 @@
-﻿using System;
-using static CrewOfSalem.CrewOfSalem;
+﻿using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem
 {
@@ -18,13 +17,10 @@ namespace CrewOfSalem
 
         public string ParseBodyReport()
         {
-            String roleName = "Crewmate";
-            if (TryGetSpecialRoleByPlayer(DeadPlayer.Victim.PlayerId, out var role))
-            {
+            string roleName = "Crewmate";
+            if (TryGetSpecialRoleByPlayer(DeadPlayer.Victim.PlayerId, out var role)) {
                 roleName = role.Name;
-            }
-            else if (DeadPlayer.Victim.Data.IsImpostor)
-            {
+            } else if (DeadPlayer.Victim.Data.IsImpostor) {
                 roleName = "Impostor";
             }
 

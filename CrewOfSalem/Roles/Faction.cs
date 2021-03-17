@@ -27,7 +27,7 @@ namespace CrewOfSalem.Roles.Factions
 
         public override Faction Enemy => Mafia;
 
-        public override Color Color => Color.green;
+        public override Color Color => new Color(69F / 255F, 191 / 255F, 0 / 255F, 1F);
     }
 
     public class Mafia : Faction
@@ -36,7 +36,7 @@ namespace CrewOfSalem.Roles.Factions
 
         public override Faction Enemy => Crew;
 
-        public override Color Color => Color.red;
+        public override Color Color => new Color(221F / 255F, 0F / 255F, 0F / 255F, 1F);
     }
 
     public class Neutral : Faction
@@ -54,6 +54,6 @@ namespace CrewOfSalem.Roles.Factions
 
         public override Faction Enemy => Crew;
 
-        public override Color Color => Color.magenta;
+        public override Color Color => new Color(191F / 255F, 95F / 255F, 255F / 255F, 1F);
     }
 }

@@ -9,8 +9,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     {
         public static void Postfix(PlayerControl __instance)
         {
-            if (TryGetSpecialRoleByPlayer(__instance.PlayerId, out Role role))
-            {
+            if (TryGetSpecialRoleByPlayer(__instance.PlayerId, out Role role)) {
                 role.SetRoleDescription();
             }
         }

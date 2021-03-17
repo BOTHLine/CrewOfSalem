@@ -8,8 +8,11 @@ namespace CrewOfSalem.Roles
 {
     public class Doctor : RoleGeneric<Doctor>
     {
+        private static readonly int VisorColor = Shader.PropertyToID("_VisorColor");
+        private static readonly int Outline = Shader.PropertyToID("_Outline");
+        private static readonly int OutlineColor1 = Shader.PropertyToID("_OutlineColor");
+
         // Properties
-        public float CurrentShieldDuration { get; set; }
         public int ShowShieldedPlayerOption { get; private set; }
 
         public PlayerControl ShieldedPlayer { get; set; }
@@ -21,30 +24,36 @@ namespace CrewOfSalem.Roles
         public override Faction Faction => Faction.Crew;
         public override Alignment Alignment => Alignment.Protective;
 
-        public override Color Color => Color.cyan;
-
         public override bool HasSpecialButton => true;
-        public override Sprite SpecialButton { get => DoctorButton; }
+        public override Sprite SpecialButton => DoctorButton;
 
         // Methods
         public void CheckShowShieldedPlayer()
         {
             if (ShieldedPlayer == null) return;
 
-            switch (ShowShieldedPlayerOption)
-            {
-                case 0: if (PlayerControl.LocalPlayer == Player) ShowShieldedPlayer(); break;
-                case 1: if (PlayerControl.LocalPlayer == ShieldedPlayer) ShowShieldedPlayer(); break;
-                case 2: if (PlayerControl.LocalPlayer == Player || PlayerControl.LocalPlayer == ShieldedPlayer) ShowShieldedPlayer(); break;
-                case 3: ShowShieldedPlayer(); break;
+            switch (ShowShieldedPlayerOption) {
+                case 0:
+                    if (PlayerControl.LocalPlayer == Player) ShowShieldedPlayer();
+                    break;
+                case 1:
+                    if (PlayerControl.LocalPlayer == ShieldedPlayer) ShowShieldedPlayer();
+                    break;
+                case 2:
+                    if (PlayerControl.LocalPlayer == Player || PlayerControl.LocalPlayer == ShieldedPlayer)
+                        ShowShieldedPlayer();
+                    break;
+                case 3:
+                    ShowShieldedPlayer();
+                    break;
             }
         }
 
         private void ShowShieldedPlayer()
         {
-            ShieldedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.shieldedColor);
-            ShieldedPlayer.myRend.material.SetFloat("_Outline", 1F);
-            ShieldedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.shieldedColor);
+            ShieldedPlayer.myRend.material.SetColor(VisorColor, ModdedPalette.shieldedColor);
+            ShieldedPlayer.myRend.material.SetFloat(Outline, 1F);
+            ShieldedPlayer.myRend.material.SetColor(OutlineColor1, ModdedPalette.shieldedColor);
         }
 
         public bool CheckShieldedPlayer(byte playerId)
@@ -55,8 +64,8 @@ namespace CrewOfSalem.Roles
         public void BreakShield()
         {
             WriteImmediately(RPC.DoctorBreakShield);
-            ShieldedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-            ShieldedPlayer.myRend.material.SetFloat("_Outline", 0F);
+            ShieldedPlayer.myRend.material.SetColor(VisorColor, Palette.VisorColor);
+            ShieldedPlayer.myRend.material.SetFloat(Outline, 0F);
             ShieldedPlayer = null;
         }
 
@@ -82,14 +91,14 @@ namespace CrewOfSalem.Roles
         public override void UpdateCooldown(float deltaTime)
         {
             base.UpdateCooldown(deltaTime);
-            CurrentShieldDuration = Mathf.Max(0F, CurrentShieldDuration - deltaTime);
-            if (CurrentShieldDuration <= 0F && ShieldedPlayer) BreakShield();
+            CurrentDuration = Mathf.Max(0F, CurrentDuration - deltaTime);
+            if (CurrentDuration <= 0F && ShieldedPlayer) BreakShield();
         }
 
         public override void PerformAction(KillButtonManager instance)
         {
             if (instance.isCoolingDown || ShieldedPlayer != null) return;
-            CurrentShieldDuration = Duration;
+            CurrentDuration = Duration;
             ShieldedPlayer = PlayerTools.FindClosestTarget(Player);
 
             Player.SetKillTimer(Cooldown);
@@ -97,13 +106,11 @@ namespace CrewOfSalem.Roles
             MessageWriter writer = GetWriter(RPC.DoctorSetShielded);
             writer.Write(ShieldedPlayer.PlayerId);
             CloseWriter(writer);
-            return;
         }
 
-        protected override void ClearSettingsInternal()
+        protected override void ClearSettings()
         {
             ShieldedPlayer = null;
-            CurrentShieldDuration = 0F;
         }
     }
 }

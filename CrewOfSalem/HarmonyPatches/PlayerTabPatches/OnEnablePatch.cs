@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CrewOfSalem.HarmonyPatches.PlayerTabPatches
 {
     [HarmonyPatch(typeof(PlayerTab), nameof(PlayerTab.OnEnable))]
-   public static class OnEnablePatch
+    public static class OnEnablePatch
     {
         public static void Postfix(PlayerTab __instance)
         {
@@ -18,21 +18,18 @@ namespace CrewOfSalem.HarmonyPatches.PlayerTabPatches
             float x = xMin;
             float y = -0.05F;
 
-            for (int i = 0; i < __instance.ColorChips.Count; i++)
-            {
-                if (i% columns == 0)
-                {
+            for (int i = 0; i < __instance.ColorChips.Count; i++) {
+                if (i % columns == 0) {
                     x = xMin;
                     y -= add;
-                }
-                else
-                {
+                } else {
                     x += add;
                 }
 
                 ColorChip chip = __instance.ColorChips[i];
-                chip.transform.localPosition = new Vector3(x, y, -1F);
-                chip.transform.localScale *= scale;
+                var transform = chip.transform;
+                transform.localPosition = new Vector3(x, y, -1F);
+                transform.localScale *= scale;
             }
         }
     }

@@ -1,5 +1,5 @@
-CrewOfSalem/\.idea/
-CrewOfSalem/\.vs/
-CrewOfSalem/bin/
+\.idea/
+\.vs/
+bin/
 *.user
-CrewOfSalem/obj/
+obj/

@@ -11,8 +11,7 @@ namespace CrewOfSalem.Roles
         // Properties
         public float AlertDuration { get; private set; }
 
-        public float CurrentAlertDuration { get; set; }
-        public bool IsOnAlert => CurrentAlertDuration > 0F;
+        public bool IsOnAlert => CurrentDuration > 0F;
 
         // Properties Role
         public override byte RoleID => 215;
@@ -20,8 +19,6 @@ namespace CrewOfSalem.Roles
 
         public override Faction Faction => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
-
-        public override Color Color => Color.green;
 
         public override bool HasSpecialButton => true;
         public override Sprite SpecialButton => VeteranButton;
@@ -42,23 +39,10 @@ namespace CrewOfSalem.Roles
             if (instance.isCoolingDown) return;
 
             Player.SetKillTimer(Cooldown);
-            CurrentAlertDuration = AlertDuration;
+            CurrentDuration = AlertDuration;
 
             MessageWriter writer = GetWriter(RPC.VeteranAlert);
             CloseWriter(writer);
-
-            return;
-        }
-
-        protected override void ClearSettingsInternal()
-        {
-            CurrentAlertDuration = 0F;
-        }
-
-        public override void UpdateCooldown(float deltaTime)
-        {
-            base.UpdateCooldown(deltaTime);
-            CurrentAlertDuration = Mathf.Max(0F, CurrentAlertDuration - deltaTime);
         }
     }
 }

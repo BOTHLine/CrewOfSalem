@@ -1,6 +1,5 @@
 ﻿using CrewOfSalem.Roles;
 using HarmonyLib;
-using Hazel;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.KillButtonManagerPatches

@@ -1,7 +1,6 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
-using System.Collections.Generic;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -15,8 +14,6 @@ namespace CrewOfSalem.Roles
 
         public override Faction Faction => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
-
-        public override Color Color => Color.magenta;
 
         public override bool HasSpecialButton => true;
         public override Sprite SpecialButton => VigilanteButton;
@@ -55,7 +52,6 @@ namespace CrewOfSalem.Roles
             {
                 KillPlayer(Player);
             }
-            return;
         }
     }
 }

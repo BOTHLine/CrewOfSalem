@@ -7,12 +7,11 @@ namespace CrewOfSalem.HarmonyPatches.VentPatches
     [HarmonyPatch(typeof(Vent), nameof(Vent.Method_38))]
     public static class VentEnterPatch
     {
-        public static void Postfix(PlayerControl NMEAPOJFNKA)
+        public static void Postfix()
         {
-            PlayerVentTimeUtility.SetLastVent(NMEAPOJFNKA.PlayerId);
+            PlayerVentTimeUtility.SetLastVent(PlayerControl.LocalPlayer.PlayerId);
 
-            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
-            {
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker)) {
                 tracker.SendChatMessage(Tracker.MessageType.PlayerEnteredVent);
             }
         }

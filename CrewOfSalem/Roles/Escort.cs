@@ -15,8 +15,6 @@ namespace CrewOfSalem.Roles
         public override Faction Faction => Faction.Crew;
         public override Alignment Alignment => Alignment.Support;
 
-        public override Color Color => Color.green;
-
         public override bool HasSpecialButton => true;
         public override Sprite SpecialButton => EscortButton;
 
@@ -34,8 +32,6 @@ namespace CrewOfSalem.Roles
             MessageWriter writer = GetWriter(RPC.EscortIncreaseCooldown);
             writer.Write(target.PlayerId);
             CloseWriter(writer);
-
-            return;
         }
     }
 }

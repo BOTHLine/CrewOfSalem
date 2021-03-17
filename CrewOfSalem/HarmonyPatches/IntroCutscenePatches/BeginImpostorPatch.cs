@@ -9,8 +9,7 @@ namespace CrewOfSalem.HarmonyPatches.IntroCutscenePatches
     {
         public static void Postfix(IntroCutscene __instance)
         {
-            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Role _))
-            {
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Role _)) {
                 __instance.ImpostorText.gameObject.SetActive(true);
             }
         }

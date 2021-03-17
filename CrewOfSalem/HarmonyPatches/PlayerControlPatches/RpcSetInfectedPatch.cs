@@ -11,14 +11,14 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetInfected))]
     public class RpcSetInfectedPatch
     {
-        public static void Postfix(Il2CppReferenceArray<GameData.PlayerInfo> JPGEIBIBJPJ)
+        public static void Postfix(Il2CppReferenceArray<GameData.PlayerInfo> FMAOEJEHPAO)
         {
             List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
 
-            foreach (Role r in assignedRoles)
-            {
-                r.ClearSettings();
+            foreach (Role r in assignedRoles) {
+                r.ClearSettingsInternal();
             }
+
             ResetValues();
 
             WriteImmediately(RPC.ResetVariables);
@@ -27,17 +27,29 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             crewmates.RemoveAll(x => x.Data.IsImpostor);
 
             Role.SetRole<Investigator>(ref crewmates);
+            // Lookout
+            Role.SetRole<Psychic>(ref crewmates);
             Role.SetRole<Sheriff>(ref crewmates);
             Role.SetRole<Spy>(ref crewmates);
             Role.SetRole<Tracker>(ref crewmates);
 
+            // Jailor
+            // Vampire Hunter
             Role.SetRole<Veteran>(ref crewmates);
             Role.SetRole<Vigilante>(ref crewmates);
 
+            // Bodyguard
             Role.SetRole<Doctor>(ref crewmates);
+            // Crusader
+            // Trapper
 
             Role.SetRole<Escort>(ref crewmates);
+            // Mayor
+            // Medium
+            // Retributionist
+            // Transporter
 
+            Role.SetRole<Survivor>(ref crewmates);
 
             Role.SetRole<Jester>(ref crewmates);
 
@@ -47,8 +59,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             Crew.Clear();
 
 
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
                 if (Main.OptionShowPlayerNames.GetValue() == 2) player.nameText.Text = "";
                 if (player.Data.IsImpostor) continue;
                 if (GetSpecialRoleByPlayer(player.PlayerId) is Jester) continue;

@@ -17,7 +17,7 @@ namespace CrewOfSalem.Roles
         public abstract Faction Faction { get; }
         public abstract Alignment Alignment { get; }
 
-        public abstract Color Color { get; }
+        public virtual Color Color => Faction.Color;
         public virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
 
         protected virtual string StartText => Alignment.GetColorizedTask(Faction);
@@ -28,6 +28,7 @@ namespace CrewOfSalem.Roles
 
         public float Cooldown { get; protected set; }
         public float Duration { get; protected set; }
+        public float CurrentDuration { get; set; }
 
         public PlayerControl Player { get; protected set; }
 
@@ -35,15 +36,13 @@ namespace CrewOfSalem.Roles
         public static byte GetRoleID<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetRoleID();
         public static string GetName<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetName();
 
-        public static PlayerControl GetPlayer<T>() where T : RoleGeneric<T>, new () => RoleGeneric<T>.GetPlayer();
+        public static PlayerControl GetPlayer<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetPlayer();
 
         public static Faction GetFaction<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetFaction();
         public static Alignment GetAlignment<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetAlignment();
 
         // Constructors
-        protected Role()
-        {
-        }
+        protected Role() { }
 
         protected Role(PlayerControl player)
         {
@@ -56,12 +55,12 @@ namespace CrewOfSalem.Roles
         {
             float spawnChance = GetRoleSpawnChance<T>();
             if (spawnChance < 1 || crew.Count <= 0) return;
-            bool spawnChanceAchieved = RNG.Next(1, 101) <= spawnChance;
+            bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if (!spawnChanceAchieved) return;
 
-            int random = RNG.Next(0, crew.Count);
+            int random = Rng.Next(0, crew.Count);
             T role = new T();
-            role.InitializeRole(crew[random]);
+            role.InitializeRoleInternal(crew[random]);
             AddSpecialRole(role);
             crew.RemoveAt(random);
 
@@ -71,29 +70,24 @@ namespace CrewOfSalem.Roles
             CloseWriter(writer);
         }
 
-        public void InitializeRole(PlayerControl player)
+        public void InitializeRoleInternal(PlayerControl player)
         {
             Player = player;
             SetConfigSettings();
             Player.SetKillTimer(Cooldown);
             SetRoleDescription();
-            InitializeRoleInternal();
+            InitializeRole();
         }
 
         public void SetNameColor()
         {
-            if (MeetingHud.Instance != null)
-            {
-                foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
-                {
-                    if (Player.PlayerId == playerVote.TargetPlayerId)
-                    {
+            if (MeetingHud.Instance != null) {
+                foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates) {
+                    if (Player.PlayerId == playerVote.TargetPlayerId) {
                         playerVote.NameText.Color = Color;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 Player.nameText.Color = Color;
             }
         }
@@ -108,17 +102,15 @@ namespace CrewOfSalem.Roles
 
         public string EjectMessage(string playerName) => $"{playerName} was the {ColorizedText(Name, Color)}";
 
-        public void ClearSettings()
+        public void ClearSettingsInternal()
         {
             Player = null;
-            ClearSettingsInternal();
+            CurrentDuration = 0F;
+            ClearSettings();
         }
 
         // Virtual Methods
-        protected virtual void SetConfigSettings()
-        {
-
-        }
+        protected virtual void SetConfigSettings() { }
 
         public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
         {
@@ -130,7 +122,7 @@ namespace CrewOfSalem.Roles
             instance.__this.BackgroundBar.material.color = Color;
         }
 
-        protected virtual void InitializeRoleInternal()
+        protected virtual void InitializeRole()
         {
             Player.SetKillTimer(Cooldown);
         }
@@ -161,16 +153,11 @@ namespace CrewOfSalem.Roles
         public virtual void UpdateCooldown(float deltaTime)
         {
             Player.SetKillTimer(Mathf.Max(0F, Player.killTimer - deltaTime));
+            CurrentDuration = Mathf.Max(0F, CurrentDuration - deltaTime);
         }
 
-        public virtual void PerformAction(KillButtonManager instance)
-        {
+        public virtual void PerformAction(KillButtonManager instance) { }
 
-        }
-
-        protected virtual void ClearSettingsInternal()
-        {
-
-        }
+        protected virtual void ClearSettings() { }
     }
 }

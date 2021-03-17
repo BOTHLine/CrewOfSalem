@@ -13,8 +13,6 @@ namespace CrewOfSalem.Roles
         public override Faction Faction => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override Color Color => Color.blue;
-
         public override bool HasSpecialButton => false;
         public override Sprite SpecialButton => null;
 

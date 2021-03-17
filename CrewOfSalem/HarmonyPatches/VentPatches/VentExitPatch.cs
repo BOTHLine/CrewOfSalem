@@ -5,13 +5,13 @@ using static CrewOfSalem.CrewOfSalem;
 namespace CrewOfSalem.HarmonyPatches.VentPatches
 {
     [HarmonyPatch(typeof(Vent), nameof(Vent.Method_1))]
-    class VentExitPatch
+    public static class VentExitPatch
     {
-        public static void Postfix(PlayerControl NMEAPOJFNKA)
+        public static void Postfix()
         {
-            PlayerVentTimeUtility.SetLastVent(NMEAPOJFNKA.PlayerId);
-            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
-            {
+            PlayerVentTimeUtility.SetLastVent(PlayerControl.LocalPlayer.PlayerId);
+            
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker)) {
                 tracker.SendChatMessage(Tracker.MessageType.PlayerExitedVent);
             }
         }

@@ -8,11 +8,10 @@ namespace CrewOfSalem.Roles
     public class Tracker : RoleGeneric<Tracker>
     {
         // Fields
-        private readonly Dictionary<MessageType, string> messages = new Dictionary<MessageType, string>()
-        {
-            { MessageType.PlayerEnteredVent, "Someone entered a vent..." },
-            {MessageType.PlayerExitedVent, "Someone exited a vent..." },
-            {MessageType.PlayerDied, "Someone died..." }
+        private readonly Dictionary<MessageType, string> messages = new Dictionary<MessageType, string>() {
+            {MessageType.PlayerEnteredVent, "Someone entered a vent..."},
+            {MessageType.PlayerExitedVent, "Someone exited a vent..."},
+            {MessageType.PlayerDied, "Someone died..."}
         };
 
         // Properties Role
@@ -22,32 +21,26 @@ namespace CrewOfSalem.Roles
         public override Faction Faction => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override Color Color => Color.yellow;
-
         public override bool HasSpecialButton => false;
         public override Sprite SpecialButton => null;
 
         // Methods
         public void SendChatMessage(MessageType type)
         {
-            if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance && !Player.Data.IsDead)
-            {
+            if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance && !Player.Data.IsDead) {
                 DestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, messages[type]);
             }
         }
 
         // Methods Role
-        protected override void SetConfigSettings()
-        {
-
-        }
+        protected override void SetConfigSettings() { }
 
         public override void PerformAction(KillButtonManager instance)
         {
             // TODO
         }
 
-        protected override void ClearSettingsInternal()
+        protected override void ClearSettings()
         {
             // TODO
         }

@@ -1,4 +1,5 @@
-﻿using CrewOfSalem.Roles;
+﻿using System;
+using CrewOfSalem.Roles;
 using HarmonyLib;
 using Hazel;
 using System.Collections.Generic;
@@ -19,75 +20,81 @@ namespace CrewOfSalem
         public static Sprite VigilanteButton => DefaultKillButton;
         public static Sprite EscortButton => DefaultKillButton;
 
+        public static Sprite SurvivorButton => DefaultKillButton;
+
         public static AudioClip shieldAttempt;
 
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles = new Dictionary<byte, Role>();
         public static readonly List<DeadPlayer> DeadPlayers = new List<DeadPlayer>();
 
         public static readonly List<PlayerControl> Crew = new List<PlayerControl>();
-        public static readonly System.Random RNG = new System.Random();
+        public static readonly System.Random Rng = new System.Random((int) DateTime.Now.Ticks);
 
         public static bool GameIsRunning = false;
 
         // Methods
         public static void AddSpecialRole<T>(RoleGeneric<T> specialRole) where T : RoleGeneric<T>, new()
         {
-            if (AssignedSpecialRoles.ContainsKey(specialRole.Player.PlayerId))
-            {
+            if (AssignedSpecialRoles.ContainsKey(specialRole.Player.PlayerId)) {
                 AssignedSpecialRoles.Remove(specialRole.Player.PlayerId);
             }
+
             AssignedSpecialRoles.Add(specialRole.Player.PlayerId, specialRole);
         }
 
-        public static void AddSpecialRole<T>(RoleGeneric<T> specialRole, PlayerControl player) where T : RoleGeneric<T>, new()
+        public static void AddSpecialRole<T>(RoleGeneric<T> specialRole, PlayerControl player)
+            where T : RoleGeneric<T>, new()
         {
-            specialRole.InitializeRole(player);
+            specialRole.InitializeRoleInternal(player);
             AddSpecialRole(specialRole);
         }
 
-        public static Role GetSpecialRoleByPlayer(byte playerId) => AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? role : null;
+        public static Role GetSpecialRoleByPlayer(byte playerId) =>
+            AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? role : null;
 
-        public static T GetSpecialRole<T>(byte playerId) where T : RoleGeneric<T>, new() => AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T)role : null;
+        public static T GetSpecialRole<T>(byte playerId) where T : RoleGeneric<T>, new() =>
+            AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
 
-        public static T GetSpecialRole<T>() where T : RoleGeneric<T>, new() => AssignedSpecialRoles.Values.OfType<T>().FirstOrDefault();
+        public static T GetSpecialRole<T>() where T : RoleGeneric<T>, new() =>
+            AssignedSpecialRoles.Values.OfType<T>().FirstOrDefault();
 
         public static bool TryGetSpecialRole<T>(out T role) where T : RoleGeneric<T>, new()
         {
-            foreach (var kvp in AssignedSpecialRoles)
-            {
-                if (kvp.Value is T)
-                {
-                    role = (T)kvp.Value;
+            foreach (var kvp in AssignedSpecialRoles) {
+                if (kvp.Value is T value) {
+                    role = value;
                     return true;
                 }
             }
+
             role = null;
             return false;
         }
 
         public static bool TryGetSpecialRoleByPlayer<T>(byte playerId, out T role) where T : RoleGeneric<T>, new()
         {
-            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value)
-            {
+            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value) {
                 role = value;
                 return true;
             }
+
             role = null;
             return false;
         }
 
         public static bool TryGetSpecialRoleByPlayer(byte playerId, out Role role)
         {
-            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole))
-            {
+            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole)) {
                 role = tempRole;
                 return true;
             }
+
             role = null;
             return false;
         }
 
-        public static bool IsPlayerSpecialRole<T>(byte playerId) where T : RoleGeneric<T>, new() => TryGetSpecialRoleByPlayer(playerId, out Role role) && role is T;
+        public static bool IsPlayerSpecialRole<T>(byte playerId) where T : RoleGeneric<T>, new() =>
+            TryGetSpecialRoleByPlayer(playerId, out Role role) && role is T;
 
         public static void WriteImmediately(RPC action)
         {
@@ -97,7 +104,8 @@ namespace CrewOfSalem
 
         public static MessageWriter GetWriter(RPC action)
         {
-            return AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)action, SendOption.None, -1);
+            return AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte) action,
+                SendOption.None, -1);
         }
 
         public static void CloseWriter(MessageWriter writer)
@@ -116,9 +124,10 @@ namespace CrewOfSalem
             return $"[{ColorToHex(color)}]{text}[]";
         }
 
-        public static string ColorToHex(Color color)
+        private static string ColorToHex(Color color)
         {
-            return ((int)color.r * 255).ToString("X2") + ((int)color.g * 255).ToString("X2") + ((int)color.b * 255).ToString("X2") + ((int)color.a * 255).ToString("X2");
+            return ((int) color.r * 255).ToString("X2") + ((int) color.g * 255).ToString("X2") +
+                   ((int) color.b * 255).ToString("X2") + ((int) color.a * 255).ToString("X2");
         }
 
         // Nested Types
@@ -155,6 +164,7 @@ namespace CrewOfSalem
             RepairSystem = 28,
             SetTasks = 29,
             UpdateGameData = 30,
+
             // --- Custom RPCs --- TODO:
             SetRole = 42,
             SetLocalPlayers = 43,

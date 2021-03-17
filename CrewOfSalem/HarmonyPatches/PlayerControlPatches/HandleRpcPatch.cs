@@ -3,6 +3,7 @@ using HarmonyLib;
 using Hazel;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
@@ -10,23 +11,33 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     public class HandleRpcPatch
     {
-        public static void Postfix(byte HKHMBLJFLMC, MessageReader ALMCIJKELCP)
-        {
-            MessageReader reader = ALMCIJKELCP;
+        private static readonly int Outline = Shader.PropertyToID("_Outline");
+        private static readonly int VisorColor = Shader.PropertyToID("_VisorColor");
 
-            switch (HKHMBLJFLMC /*Packet ID*/)
-            {
-                case (byte)RPC.SetRole:
+        public static void Postfix(byte ACCJCEHMKLN, MessageReader HFPCBBHJIPJ)
+        {
+            MessageReader reader = HFPCBBHJIPJ;
+
+            switch (ACCJCEHMKLN /*Packet ID*/) {
+                case (byte) RPC.ReportDeadBody:
+                    if (TryGetSpecialRole(out Psychic psychic)) {
+                        psychic.StartMeeting();
+                    }
+
+                    break;
+
+                case (byte) RPC.SetRole:
                     byte roleId = reader.ReadByte();
                     byte playerId = reader.ReadByte();
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    {
-                        if (player.PlayerId == playerId)
-                        {
-                            switch (roleId)
-                            {
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
+                        if (player.PlayerId == playerId) {
+                            switch (roleId) {
                                 case var value when value == Investigator.GetRoleID():
                                     AddSpecialRole(new Investigator(), player);
+                                    break;
+
+                                case var value when value == Psychic.GetRoleID():
+                                    AddSpecialRole(new Psychic(), player);
                                     break;
 
                                 case var value when value == Sheriff.GetRoleID():
@@ -57,21 +68,26 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                                     AddSpecialRole(new Escort(), player);
                                     break;
 
+                                case var value when value == Survivor.GetRoleID():
+                                    AddSpecialRole(new Survivor(), player);
+                                    break;
+
                                 case var value when value == Jester.GetRoleID():
                                     AddSpecialRole(new Jester(), player);
                                     break;
                             }
                         }
                     }
+
                     break;
                 // ---------- Special Role Conditions ----------
 
-                case (byte)RPC.VeteranAlert:
+                case (byte) RPC.VeteranAlert:
                     var veteran = GetSpecialRole<Veteran>();
-                    veteran.CurrentAlertDuration = veteran.AlertDuration;
+                    veteran.CurrentDuration = veteran.AlertDuration;
                     break;
 
-                case (byte)RPC.VeteranKill:
+                case (byte) RPC.VeteranKill:
                     byte killerID = reader.ReadByte();
                     byte victimID = reader.ReadByte();
                     PlayerControl killer = PlayerTools.GetPlayerById(killerID);
@@ -79,7 +95,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     killer.MurderPlayer(victim);
                     break;
 
-                case (byte)RPC.VigilanteKill:
+                case (byte) RPC.VigilanteKill:
                     killerID = reader.ReadByte();
                     victimID = reader.ReadByte();
                     killer = PlayerTools.GetPlayerById(killerID);
@@ -87,44 +103,43 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     killer.MurderPlayer(victim);
                     break;
 
-                case (byte)RPC.DoctorSetShielded:
+                case (byte) RPC.DoctorSetShielded:
                     byte shieldedId = reader.ReadByte();
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    {
-                        if (player.PlayerId == shieldedId)
-                        {
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
+                        if (player.PlayerId == shieldedId) {
                             GetSpecialRole<Doctor>().ShieldedPlayer = player;
                         }
                     }
+
                     break;
 
-                case (byte)RPC.DoctorBreakShield:
+                case (byte) RPC.DoctorBreakShield:
                     Doctor doctor = GetSpecialRole<Doctor>();
                     PlayerControl shieldedPlayer = doctor.ShieldedPlayer;
-                    if (shieldedPlayer != null)
-                    {
-                        shieldedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                        shieldedPlayer.myRend.material.SetFloat("_Outline", 0F);
+                    if (shieldedPlayer != null) {
+                        shieldedPlayer.myRend.material.SetColor(VisorColor, Palette.VisorColor);
+                        shieldedPlayer.myRend.material.SetFloat(Outline, 0F);
                     }
+
                     doctor.ShieldedPlayer = null;
                     break;
 
-                case (byte)RPC.EscortIncreaseCooldown:
+                case (byte) RPC.EscortIncreaseCooldown:
                     byte targetID = reader.ReadByte();
                     PlayerControl target = PlayerTools.GetPlayerById(targetID);
                     target.SetKillTimer(target.killTimer + GetSpecialRole<Escort>().Duration);
                     break;
 
-                case (byte)RPC.ResetVariables:
+                case (byte) RPC.ResetVariables:
                     List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
-                    foreach (Role role in assignedRoles)
-                    {
-                        role.ClearSettings();
+                    foreach (Role role in assignedRoles) {
+                        role.ClearSettingsInternal();
                     }
+
                     ResetValues();
                     break;
 
-                case (byte)RPC.JesterWin:
+                case (byte) RPC.JesterWin:
                     GetSpecialRole<Jester>().Win();
                     break;
             }

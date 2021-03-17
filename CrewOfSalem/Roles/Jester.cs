@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         public override Faction Faction => Faction.Neutral;
         public override Alignment Alignment => Alignment.Evil;
 
-        public override Color Color => Color.grey;
+        public override Color Color => new Color(244F / 255F, 159F / 255F, 208F / 255F, 1F);
 
         public override bool HasSpecialButton => false;
         public override Sprite SpecialButton => null;
@@ -29,23 +29,21 @@ namespace CrewOfSalem.Roles
             if (Player == null) return;
 
             var tasksToRemove = new List<PlayerTask>();
-            foreach (PlayerTask task in Player.myTasks)
-            {
-                if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.ResetReactor && task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy)
-                {
+            foreach (PlayerTask task in Player.myTasks) {
+                if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.ResetReactor &&
+                    task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy) {
                     tasksToRemove.Add(task);
                 }
             }
-            foreach (PlayerTask task in tasksToRemove)
-            {
+
+            foreach (PlayerTask task in tasksToRemove) {
                 Player.RemoveTask(task);
             }
         }
 
         public void Win()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
                 if (player == Player) continue;
                 player.RemoveInfected();
                 player.Die(DeathReason.Exile);
@@ -59,9 +57,6 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods Role
-        protected override void SetConfigSettings()
-        {
-
-        }
+        protected override void SetConfigSettings() { }
     }
 }
