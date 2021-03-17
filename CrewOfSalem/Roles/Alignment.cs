@@ -7,13 +7,13 @@ namespace CrewOfSalem.Roles.Alignments
     {
         // Instances
         public static readonly Alignment Investigative = new Investigative();
-        public static readonly Alignment Killing = new Killing();
-        public static readonly Alignment Protective = new Protective();
-        public static readonly Alignment Support = new Support();
-        public static readonly Alignment Deception = new Deception();
-        public static readonly Alignment Benign = new Benign();
-        public static readonly Alignment Evil = new Evil();
-        public static readonly Alignment Chaos = new Chaos();
+        public static readonly Alignment Killing       = new Killing();
+        public static readonly Alignment Protective    = new Protective();
+        public static readonly Alignment Support       = new Support();
+        public static readonly Alignment Deception     = new Deception();
+        public static readonly Alignment Benign        = new Benign();
+        public static readonly Alignment Evil          = new Evil();
+        public static readonly Alignment Chaos         = new Chaos();
 
         // public static readonly Alignment[] Alignments = new[] { Investigative, Killing, Protective, Support, Deception, Benign, Evil, Chaos };
 
@@ -22,8 +22,8 @@ namespace CrewOfSalem.Roles.Alignments
 
         public string ShortHandle => Name.Substring(0, 1);
 
-        public abstract string Task { get; }
-        public abstract bool IsTaskForOwnFaction { get; }
+        public abstract string Task                { get; }
+        public abstract bool   IsTaskForOwnFaction { get; }
 
         public string GetTask(Faction faction) => $"{Task} {faction.Enemy}";
 

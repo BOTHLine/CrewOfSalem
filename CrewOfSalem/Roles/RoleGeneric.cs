@@ -8,8 +8,8 @@ namespace CrewOfSalem.Roles
         where T : RoleGeneric<T>, new()
     {
         // Singleton
-        private static T instance = null;
-        private static readonly object @lock = new object();
+        private static          T      instance = null;
+        private static readonly object @lock    = new object();
 
         protected static T Instance
         {

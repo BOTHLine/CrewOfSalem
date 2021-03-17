@@ -14,14 +14,14 @@ namespace CrewOfSalem.Roles
         public bool IsOnAlert => CurrentDuration > 0F;
 
         // Properties Role
-        public override byte RoleID => 215;
-        public override string Name => nameof(Veteran);
+        public override byte   RoleID => 215;
+        public override string Name   => nameof(Veteran);
 
-        public override Faction Faction => Faction.Crew;
+        public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
 
-        public override bool HasSpecialButton => true;
-        public override Sprite SpecialButton => VeteranButton;
+        public override bool   HasSpecialButton => true;
+        public override Sprite SpecialButton    => VeteranButton;
 
         // Methods
         public void KillPlayer(PlayerControl target)

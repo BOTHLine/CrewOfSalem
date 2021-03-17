@@ -8,8 +8,8 @@ namespace CrewOfSalem.Roles
 {
     public class Doctor : RoleGeneric<Doctor>
     {
-        private static readonly int VisorColor = Shader.PropertyToID("_VisorColor");
-        private static readonly int Outline = Shader.PropertyToID("_Outline");
+        private static readonly int VisorColor    = Shader.PropertyToID("_VisorColor");
+        private static readonly int Outline       = Shader.PropertyToID("_Outline");
         private static readonly int OutlineColor1 = Shader.PropertyToID("_OutlineColor");
 
         // Properties
@@ -18,21 +18,22 @@ namespace CrewOfSalem.Roles
         public PlayerControl ShieldedPlayer { get; set; }
 
         // Properties Role
-        public override byte RoleID => 218;
-        public override string Name => nameof(Doctor);
+        public override byte   RoleID => 218;
+        public override string Name   => nameof(Doctor);
 
-        public override Faction Faction => Faction.Crew;
+        public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Protective;
 
-        public override bool HasSpecialButton => true;
-        public override Sprite SpecialButton => DoctorButton;
+        public override bool   HasSpecialButton => true;
+        public override Sprite SpecialButton    => DoctorButton;
 
         // Methods
         public void CheckShowShieldedPlayer()
         {
             if (ShieldedPlayer == null) return;
 
-            switch (ShowShieldedPlayerOption) {
+            switch (ShowShieldedPlayerOption)
+            {
                 case 0:
                     if (PlayerControl.LocalPlayer == Player) ShowShieldedPlayer();
                     break;

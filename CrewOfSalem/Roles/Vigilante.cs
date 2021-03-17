@@ -9,14 +9,14 @@ namespace CrewOfSalem.Roles
     public class Vigilante : RoleGeneric<Vigilante>
     {
         // Properties Role
-        public override byte RoleID => 216;
-        public override string Name => nameof(Vigilante);
+        public override byte   RoleID => 216;
+        public override string Name   => nameof(Vigilante);
 
-        public override Faction Faction => Faction.Crew;
+        public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
 
-        public override bool HasSpecialButton => true;
-        public override Sprite SpecialButton => VigilanteButton;
+        public override bool   HasSpecialButton => true;
+        public override Sprite SpecialButton    => VigilanteButton;
 
         // Methods
         public void KillPlayer(PlayerControl target)
@@ -44,11 +44,11 @@ namespace CrewOfSalem.Roles
                 return;
             }
 
-            if ((TryGetSpecialRole(out Jester jester) && target.PlayerId == jester.Player.PlayerId && jester.CanDieToVigilante) || target.Data.IsImpostor)
+            if ((TryGetSpecialRole(out Jester jester) && target.PlayerId == jester.Player.PlayerId &&
+                 jester.CanDieToVigilante) || target.Data.IsImpostor)
             {
                 KillPlayer(target);
-            }
-            else
+            } else
             {
                 KillPlayer(Player);
             }

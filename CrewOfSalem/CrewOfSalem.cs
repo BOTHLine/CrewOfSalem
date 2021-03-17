@@ -15,27 +15,28 @@ namespace CrewOfSalem
         public static Sprite DefaultKillButton;
 
         public static Sprite InvestigatorButton => DefaultKillButton;
-        public static Sprite DoctorButton => DefaultKillButton;
-        public static Sprite VeteranButton => DefaultKillButton;
-        public static Sprite VigilanteButton => DefaultKillButton;
-        public static Sprite EscortButton => DefaultKillButton;
+        public static Sprite DoctorButton       => DefaultKillButton;
+        public static Sprite VeteranButton      => DefaultKillButton;
+        public static Sprite VigilanteButton    => DefaultKillButton;
+        public static Sprite EscortButton       => DefaultKillButton;
 
         public static Sprite SurvivorButton => DefaultKillButton;
 
         public static AudioClip shieldAttempt;
 
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles = new Dictionary<byte, Role>();
-        public static readonly List<DeadPlayer> DeadPlayers = new List<DeadPlayer>();
+        public static readonly List<DeadPlayer>       DeadPlayers          = new List<DeadPlayer>();
 
         public static readonly List<PlayerControl> Crew = new List<PlayerControl>();
-        public static readonly System.Random Rng = new System.Random((int) DateTime.Now.Ticks);
+        public static readonly System.Random       Rng  = new System.Random((int) DateTime.Now.Ticks);
 
         public static bool GameIsRunning = false;
 
         // Methods
         public static void AddSpecialRole<T>(RoleGeneric<T> specialRole) where T : RoleGeneric<T>, new()
         {
-            if (AssignedSpecialRoles.ContainsKey(specialRole.Player.PlayerId)) {
+            if (AssignedSpecialRoles.ContainsKey(specialRole.Player.PlayerId))
+            {
                 AssignedSpecialRoles.Remove(specialRole.Player.PlayerId);
             }
 
@@ -60,8 +61,10 @@ namespace CrewOfSalem
 
         public static bool TryGetSpecialRole<T>(out T role) where T : RoleGeneric<T>, new()
         {
-            foreach (var kvp in AssignedSpecialRoles) {
-                if (kvp.Value is T value) {
+            foreach (KeyValuePair<byte, Role> kvp in AssignedSpecialRoles)
+            {
+                if (kvp.Value is T value)
+                {
                     role = value;
                     return true;
                 }
@@ -73,7 +76,8 @@ namespace CrewOfSalem
 
         public static bool TryGetSpecialRoleByPlayer<T>(byte playerId, out T role) where T : RoleGeneric<T>, new()
         {
-            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value) {
+            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value)
+            {
                 role = value;
                 return true;
             }
@@ -84,7 +88,8 @@ namespace CrewOfSalem
 
         public static bool TryGetSpecialRoleByPlayer(byte playerId, out Role role)
         {
-            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole)) {
+            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole))
+            {
                 role = tempRole;
                 return true;
             }
@@ -133,42 +138,42 @@ namespace CrewOfSalem
         // Nested Types
         public enum RPC
         {
-            PlayAnimation = 0,
-            CompleteTask = 1,
-            SyncSettings = 2,
-            SetInfected = 3,
-            Exiled = 4,
-            CheckName = 5,
-            SetName = 6,
-            CheckColor = 7,
-            SetColor = 8,
-            SetHat = 9,
-            SetSkin = 10,
-            ReportDeadBody = 11,
-            MurderPlayer = 12,
-            SendChat = 13,
-            StartMeeting = 14,
-            SetScanner = 15,
-            SendChatNote = 16,
-            SetPet = 17,
-            SetStartCounter = 18,
-            EnterVent = 19,
-            ExitVent = 20,
-            SnapTo = 21,
-            Close = 22,
-            VotingComplete = 23,
-            CastVote = 24,
-            ClearVote = 25,
-            AddVote = 26,
+            PlayAnimation    = 0,
+            CompleteTask     = 1,
+            SyncSettings     = 2,
+            SetInfected      = 3,
+            Exiled           = 4,
+            CheckName        = 5,
+            SetName          = 6,
+            CheckColor       = 7,
+            SetColor         = 8,
+            SetHat           = 9,
+            SetSkin          = 10,
+            ReportDeadBody   = 11,
+            MurderPlayer     = 12,
+            SendChat         = 13,
+            StartMeeting     = 14,
+            SetScanner       = 15,
+            SendChatNote     = 16,
+            SetPet           = 17,
+            SetStartCounter  = 18,
+            EnterVent        = 19,
+            ExitVent         = 20,
+            SnapTo           = 21,
+            Close            = 22,
+            VotingComplete   = 23,
+            CastVote         = 24,
+            ClearVote        = 25,
+            AddVote          = 26,
             CloseDoorsOfType = 27,
-            RepairSystem = 28,
-            SetTasks = 29,
-            UpdateGameData = 30,
+            RepairSystem     = 28,
+            SetTasks         = 29,
+            UpdateGameData   = 30,
 
             // --- Custom RPCs --- TODO:
-            SetRole = 42,
+            SetRole         = 42,
             SetLocalPlayers = 43,
-            ResetVariables = 44,
+            ResetVariables  = 44,
 
             VeteranAlert,
             VeteranKill,

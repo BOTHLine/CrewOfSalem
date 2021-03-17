@@ -5,16 +5,16 @@ namespace CrewOfSalem.Roles.Factions
     public abstract class Faction
     {
         // Instances
-        public static readonly Faction Crew = new Crew();
-        public static readonly Faction Mafia = new Mafia();
+        public static readonly Faction Crew    = new Crew();
+        public static readonly Faction Mafia   = new Mafia();
         public static readonly Faction Neutral = new Neutral();
-        public static readonly Faction Coven = new Coven();
+        public static readonly Faction Coven   = new Coven();
 
-        public static readonly Faction[] Factions = new[] { Crew, Mafia, Neutral, Coven };
+        public static readonly Faction[] Factions = new[] {Crew, Mafia, Neutral, Coven};
 
         // Properties
-        public abstract string Name { get; }
-        public string ShortHandle => Name.Substring(0, 1);
+        public abstract string Name        { get; }
+        public          string ShortHandle => Name.Substring(0, 1);
 
         public abstract Color Color { get; }
 

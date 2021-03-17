@@ -10,19 +10,20 @@ namespace CrewOfSalem.Roles
     public class Investigator : RoleGeneric<Investigator>
     {
         // Properties Role
-        public override byte RoleID => 207;
-        public override string Name => nameof(Investigator);
+        public override byte   RoleID => 207;
+        public override string Name   => nameof(Investigator);
 
-        public override Faction Faction => Faction.Crew;
+        public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override bool HasSpecialButton => true;
-        public override Sprite SpecialButton => InvestigatorButton;
+        public override bool   HasSpecialButton => true;
+        public override Sprite SpecialButton    => InvestigatorButton;
 
         // Methods
         private static IEnumerable<string> GetResults(Role role)
         {
-            switch (role) {
+            switch (role)
+            {
                 case Vigilante _:
                 case Veteran _:
                     // Mafioso
@@ -106,11 +107,14 @@ namespace CrewOfSalem.Roles
 
             string result = Player.name + " could be a(n) ";
             string[] results = GetResults(GetSpecialRoleByPlayer(target.PlayerId)).ToArray();
-            for (int i = 0; i < results.Length; i++) {
+            for (int i = 0; i < results.Length; i++)
+            {
                 result += results[i];
-                if (i < results.Length - 2) {
+                if (i < results.Length - 2)
+                {
                     result += ", ";
-                } else if (i == results.Length - 2) {
+                } else if (i == results.Length - 2)
+                {
                     result += " or ";
                 }
             }

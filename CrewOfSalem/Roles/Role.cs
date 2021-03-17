@@ -11,23 +11,23 @@ namespace CrewOfSalem.Roles
     public abstract class Role
     {
         // Properties
-        public abstract byte RoleID { get; }
-        public abstract string Name { get; }
+        public abstract byte   RoleID { get; }
+        public abstract string Name   { get; }
 
-        public abstract Faction Faction { get; }
+        public abstract Faction   Faction   { get; }
         public abstract Alignment Alignment { get; }
 
-        public virtual Color Color => Faction.Color;
+        public virtual Color Color        => Faction.Color;
         public virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
 
-        protected virtual string StartText => Alignment.GetColorizedTask(Faction);
+        protected virtual string  StartText  => Alignment.GetColorizedTask(Faction);
         protected virtual Vector3 TitleScale { get; } = new Vector3(1, 1, 1);
 
-        public abstract bool HasSpecialButton { get; }
-        public abstract Sprite SpecialButton { get; }
+        public abstract bool   HasSpecialButton { get; }
+        public abstract Sprite SpecialButton    { get; }
 
-        public float Cooldown { get; protected set; }
-        public float Duration { get; protected set; }
+        public float Cooldown        { get; protected set; }
+        public float Duration        { get; protected set; }
         public float CurrentDuration { get; set; }
 
         public PlayerControl Player { get; protected set; }
@@ -81,13 +81,17 @@ namespace CrewOfSalem.Roles
 
         public void SetNameColor()
         {
-            if (MeetingHud.Instance != null) {
-                foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates) {
-                    if (Player.PlayerId == playerVote.TargetPlayerId) {
+            if (MeetingHud.Instance != null)
+            {
+                foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                {
+                    if (Player.PlayerId == playerVote.TargetPlayerId)
+                    {
                         playerVote.NameText.Color = Color;
                     }
                 }
-            } else {
+            } else
+            {
                 Player.nameText.Color = Color;
             }
         }

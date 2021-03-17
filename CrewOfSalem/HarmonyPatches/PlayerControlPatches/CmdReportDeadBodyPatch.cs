@@ -26,7 +26,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             BodyReport bodyReport = new BodyReport(deadPlayer, deadPlayer.Killer,
                 (float) (DateTime.UtcNow - deadPlayer.KillTime).TotalMilliseconds);
 
-            var reportMsg = bodyReport.ParseBodyReport();
+            string reportMsg = bodyReport.ParseBodyReport();
 
             if (string.IsNullOrWhiteSpace(reportMsg)) return;
 
