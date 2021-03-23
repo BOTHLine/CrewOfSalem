@@ -10,7 +10,7 @@ namespace CrewOfSalem.Roles.Factions
         public static readonly Faction Neutral = new Neutral();
         public static readonly Faction Coven   = new Coven();
 
-        public static readonly Faction[] Factions = new[] {Crew, Mafia, Neutral, Coven};
+        // public static readonly Faction[] Factions = new[] {Crew, Mafia, Neutral, Coven};
 
         // Properties
         public abstract string Name        { get; }
@@ -27,7 +27,7 @@ namespace CrewOfSalem.Roles.Factions
 
         public override Faction Enemy => Mafia;
 
-        public override Color Color => new Color(69F / 255F, 191 / 255F, 0 / 255F, 1F);
+        public override Color Color => new Color(69F / 255F, 191F / 255F, 0 / 255F, 1F);
     }
 
     public class Mafia : Faction

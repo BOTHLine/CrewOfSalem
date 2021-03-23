@@ -2,6 +2,7 @@
 using CrewOfSalem.Roles.Alignments;
 using HarmonyLib;
 using System;
+using CrewOfSalem.Roles.Factions;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
@@ -11,6 +12,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     {
         public static bool Prefix(PlayerControl __instance, PlayerControl PAIBDFDMIGK)
         {
+            ConsoleTools.Info(__instance.name + " murders " + PAIBDFDMIGK.name);
             if (TryGetSpecialRoleByPlayer(__instance.PlayerId, out Role role) && role.Alignment is Killing)
                 __instance.Data.IsImpostor = true;
             return true;
@@ -23,7 +25,10 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
             DeadPlayer deadPlayer = new DeadPlayer(target, current, DateTime.UtcNow);
 
-            if (TryGetSpecialRoleByPlayer(current.PlayerId, out Role role) && role.Alignment is Killing) {
+            if (TryGetSpecialRoleByPlayer(current.PlayerId, out Role role) && role.Alignment is Killing
+                                                                           && role.Faction != Faction.Mafia &&
+                                                                              role.Faction != Faction.Coven)
+            {
                 current.Data.IsImpostor = false;
             }
 
@@ -32,6 +37,12 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker) &&
                 target != tracker.Player)
                 tracker.SendChatMessage(Tracker.MessageType.PlayerDied);
+
+            if (TryGetSpecialRole(out Executioner executioner) &&
+                target.PlayerId == executioner.VoteTarget.PlayerId)
+            {
+                executioner.TurnIntoJester();
+            }
         }
     }
 }

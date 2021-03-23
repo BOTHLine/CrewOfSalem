@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
+using Object = UnityEngine.Object;
 
 namespace CrewOfSalem
 {
@@ -16,7 +17,13 @@ namespace CrewOfSalem
 
         private readonly Action     onMeetingEnds;
         private readonly Func<bool> canUse;
+        private readonly Func<bool> onUse;
 
+        public PlayerControl Target
+        {
+            get => killButtonManager.CurrentTarget;
+            set => killButtonManager.SetTarget(value);
+        }
 
         public RoleButton(float cooldown, Func<bool> onUse, Func<bool> canUse, Action onMeetingEnds,
             Sprite sprite, Vector3 positionOffset)
@@ -25,27 +32,29 @@ namespace CrewOfSalem
             currentCooldown = cooldown;
 
             this.canUse = canUse;
+            this.onUse = onUse;
             this.onMeetingEnds = onMeetingEnds;
 
             this.sprite = sprite;
             this.positionOffset = positionOffset;
 
             HudManager hudManager = HudManager.Instance;
-            killButtonManager = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.transform);
+            killButtonManager = hudManager.KillButton;
             var button = killButtonManager.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
-            button.OnClick.AddListener((UnityEngine.Events.UnityAction) Listener);
-
-            void Listener()
-            {
-                if (!canUse() && currentCooldown > 0F) return;
-
-                killButtonManager.renderer.color = new Color(1F, 1F, 1F, 0.3F);
-                currentCooldown = cooldown;
-                if (onUse()) killButtonManager.SetCoolDown(this.cooldown, this.cooldown);
-            }
+            button.OnClick.AddListener((UnityEngine.Events.UnityAction) Use);
 
             SetActive(false);
+        }
+
+        public void Use()
+        {
+            ConsoleTools.Info("Use Button");
+            if (!canUse() || currentCooldown > 0F || !onUse()) return;
+
+            killButtonManager.renderer.color = new Color(1F, 1F, 1F, 0.3F);
+            currentCooldown = cooldown;
+            killButtonManager.SetCoolDown(this.cooldown, this.cooldown);
         }
 
         public void HudUpdate()
@@ -84,7 +93,7 @@ namespace CrewOfSalem
 
             killButtonManager.renderer.sprite = sprite;
 
-            if (killButtonManager.transform.position == HudManager.Instance.KillButton.transform.position)
+            // if (killButtonManager.transform.position == HudManager.Instance.KillButton.transform.position)
             {
                 Transform transform = killButtonManager.transform;
                 Vector3 vector = transform.localPosition;
@@ -104,13 +113,17 @@ namespace CrewOfSalem
 
             currentCooldown = Mathf.Max(0F, currentCooldown - Time.deltaTime);
 
-            ConsoleTools.Info("Current Cooldown: " + currentCooldown + ", Cooldown: " + cooldown);
             killButtonManager.SetCoolDown(currentCooldown, cooldown);
         }
 
         public void AddCooldown(float time)
         {
             currentCooldown += time;
+        }
+
+        public void Destroy()
+        {
+            UnityEngine.Object.Destroy(killButtonManager);
         }
     }
 }

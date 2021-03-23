@@ -37,7 +37,10 @@ namespace CrewOfSalem
         // --- Custom RPCs --- TODO:
         SetRole         = 42,
         SetLocalPlayers = 43,
-        ResetVariables  = 44,
+        SendWhisperChat = 44,
+        SendMafiaChat   = 45,
+        SendLoversChat  = 46,
+        ResetVariables,
 
         VeteranAlert,
         VeteranKill,
@@ -46,8 +49,10 @@ namespace CrewOfSalem
         DoctorSetShielded,
         DoctorBreakShield,
         EscortIncreaseCooldown,
+        MafiosoKill,
         SurvivorVest,
         SurvivorVestEnd,
-        JesterWin
+        JesterWin,
+        ExecutionerWin
     }
 }

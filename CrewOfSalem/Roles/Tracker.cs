@@ -28,25 +28,13 @@ namespace CrewOfSalem.Roles
         // Methods
         public void SendChatMessage(MessageType type)
         {
-            if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance && !Player.Data.IsDead)
+            if (AmongUsClient.Instance.AmClient && HudManager.Instance && !Player.Data.IsDead)
             {
-                DestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, messages[type]);
+                HudManager.Instance.Chat.AddChat(Player, messages[type]);
             }
         }
 
         // Methods Role
-        protected override void SetConfigSettings() { }
-
-        public override bool PerformAction(PlayerControl target)
-        {
-            // TODO
-            return true;
-        }
-
-        protected override void ClearSettings()
-        {
-            // TODO
-        }
 
         // Nested Types
         public enum MessageType

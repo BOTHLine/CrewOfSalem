@@ -26,82 +26,81 @@ namespace CrewOfSalem.Roles
             {
                 case Vigilante _:
                 case Veteran _:
-                    // Mafioso
-                    // Pirate
-                    // Ambusher
-                    return new[] {Vigilante.GetName(), Veteran.GetName()};
+                case Mafioso _:
+                    // case Pirate _:
+                    // case Ambusher _:
+                    return new[] {Vigilante.GetName(), Veteran.GetName(), Mafioso.GetName()};
 
-                // Medium
-                // Janitor
-                // Retributionist
-                // Necromancer
-                // Trapper
+                // case Medium _:
+                // case Janitor _:
+                // case Retributionist _:
+                // case Necromancer _:
+                // case Trapper _:
+                // return new [] {};
 
-                // Survivor
-                // Vampire Hunter
-                // Amnesiac
-                // Medusa
+                case Survivor _:
+                // case Vampire Hunter _:
+                // case Amnesiac _:
+                // case Medusa _:
                 case Psychic _:
                     return new[] {Psychic.GetName()};
 
                 case Spy _:
-                    // Blackmailer
-                    // Jailor
-                    // Guardian Angel
+                    // case Blackmailer _:
+                    // case Jailor _:
+                    // case Guardian Angel _:
                     return new[] {Spy.GetName()};
 
                 case Sheriff _:
-                    // Executioner
-                    // Werewolf
-                    // Poisoner
-                    return new[] {Sheriff.GetName()};
+                case Executioner _:
+                    // case Werewolf _:
+                    // case Poisoner _: 
+                    return new[] {Sheriff.GetName(), Executioner.GetName()};
 
-                // Framer
-                // Vampire
+                // case Framer _:
+                // case Vampire _:
                 case Jester _:
-                    // Hex Master
+                    // case Hex Master _:
                     return new[] {Jester.GetName()};
 
-                // Lookout
-                // Forager
-                // Juggernaut
-                // Coven Leader
+                // case Lookout _:
+                // case Forager _:
+                // case Juggernaut _:
+                // case Coven Leader _:
 
                 case Escort _:
-                    // Transporter
-                    // Consort
-                    // Hypnotist
+                    // case Transporter _:
+                    // case Consort _:
+                    // case Hypnotist _:
                     return new[] {Escort.GetName()};
 
                 case Doctor _:
-                    // Disguiser
-                    // Serial Killer
-                    // Potion Master
+                    // case Disguiser _:
+                    // case Serial Killer _:
+                    // case Potion Master _:
                     return new[] {Doctor.GetName()};
 
                 case Investigator _:
-                    // Consigliere
-                    // Mayor
-                    // Tracker
-                    // Plaguebearer
-                    return new[] {Investigator.GetName()};
+                    // case Consigliere _:
+                    // case Mayor _:
+                    // case Tracker _:
+                    // case Plaguebearer _:
+                    return new[] {GetName()};
 
-                // Bodyguard
-                // Godfather
-                // Arsonist
-                // Crusader
+                // case Bodyguard _:
+                // case Godfather _:
+                // case Arsonist _:
+                // case Crusader _:
             }
 
             return new string[] { };
         }
 
         // Methods Role
-        public override bool PerformAction(PlayerControl target)
+        protected override bool PerformActionInternal()
         {
-            if (target == null) return false;
-
             string result = Player.name + " could be a(n) ";
-            string[] results = GetResults(GetSpecialRoleByPlayer(target.PlayerId)).ToArray();
+            string[] results = GetResults(GetSpecialRoleByPlayer(SpecialButton.Target.PlayerId)).ToArray();
             for (var i = 0; i < results.Length; i++)
             {
                 result += results[i];
@@ -114,7 +113,7 @@ namespace CrewOfSalem.Roles
                 }
             }
 
-            DestroyableSingleton<HudManager>.Instance.Chat.AddChat(Player, result);
+            HudManager.Instance.Chat.AddChat(Player, result);
             return true;
         }
     }

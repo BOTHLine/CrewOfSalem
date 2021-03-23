@@ -1,4 +1,4 @@
-﻿using CrewOfSalem.Roles.Alignments;
+using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
 using UnityEngine;
@@ -6,39 +6,33 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles
 {
-    public class Vigilante : RoleGeneric<Vigilante>
+    public class Mafioso : RoleGeneric<Mafioso>
     {
-        // Properties Role
-        protected override byte   RoleID => 216;
-        public override    string Name   => nameof(Vigilante);
+        // Properties
+        protected override byte   RoleID => 233;
+        public override    string Name   => nameof(Mafioso);
 
-        public override Faction   Faction   => Faction.Crew;
+        public override Faction   Faction   => Faction.Mafia;
         public override Alignment Alignment => Alignment.Killing;
 
         protected override bool   HasSpecialButton    => true;
-        protected override Sprite SpecialButtonSprite => VigilanteButton;
+        protected override Sprite SpecialButtonSprite => MafiosoButton;
 
         // Methods
         public void KillPlayer(PlayerControl target)
         {
-            MessageWriter writer = GetWriter(RPC.VigilanteKill);
+            MessageWriter writer = GetWriter(RPC.MafiosoKill);
             writer.Write(Player.PlayerId);
             writer.Write(target.PlayerId);
             CloseWriter(writer);
             Player.MurderPlayer(target);
         }
 
-        private bool IsKillable(PlayerControl target)
-        {
-            TryGetSpecialRoleByPlayer(target.PlayerId, out Role role);
-            return role.Faction == Faction.Mafia || role.Faction == Faction.Neutral || role.Faction == Faction.Coven;
-        }
-
         // Methods Role
         // TODO: Move "KillPlayer" And DoctorShield-Checks etc. to global method?
-        // TODO: Create "Die()" Method to handle something like BreakShield for Medic (If it should apply on death)
         protected override bool PerformActionInternal()
         {
+            ConsoleTools.Info("Perform Action");
             TryGetSpecialRoleByPlayer(SpecialButton.Target.PlayerId, out Role targetRole);
             switch (targetRole)
             {
@@ -48,11 +42,9 @@ namespace CrewOfSalem.Roles
                     doctor.BreakShield();
                     return true;
                 default:
-                    KillPlayer(IsKillable(SpecialButton.Target) ? SpecialButton.Target : Player);
-                    break;
+                    KillPlayer(SpecialButton.Target);
+                    return true;
             }
-
-            return true;
         }
     }
 }

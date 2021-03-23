@@ -1,5 +1,5 @@
-﻿using CrewOfSalem.HarmonyPatches.KillButtonManagerPatches;
-using CrewOfSalem.Roles;
+﻿using CrewOfSalem.Roles;
+using CrewOfSalem.Roles.Factions;
 using HarmonyLib;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
@@ -15,21 +15,25 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
 
-            DefaultKillButton ??= __instance.KillButton.renderer.sprite;
+            defaultKillButton ??= __instance.KillButton.renderer.sprite;
 
+            /*
             if (localPlayer.Data.IsImpostor)
             {
                 __instance.KillButton.gameObject.SetActive(true);
                 __instance.KillButton.renderer.enabled = true;
-                __instance.KillButton.renderer.sprite = DefaultKillButton;
+                __instance.KillButton.renderer.sprite = defaultKillButton;
             }
+            */
 
+            /*
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
             if (!localPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ &&
                 __instance.UseButton.isActiveAndEnabled)
             {
                 PerformKillPatch.Prefix(null);
             }
+            */
 
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
@@ -37,7 +41,8 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
             }
 
             // Jester Tasks have to be reset every frame.. maybe rework later?
-            GetSpecialRole<Jester>()?.ClearTasks();
+            // GetSpecialRole<Executioner>()?.ClearTasks();
+            // GetSpecialRole<Jester>()?.ClearTasks();
 
             GetSpecialRole<Doctor>()?.CheckShowShieldedPlayer();
 
@@ -53,6 +58,15 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
                         if (jester.CanSeeImpostor) { }
 
                         break;
+                }
+            }
+
+            // Add Mafia / Coven / Lover Chat
+            if (role?.Faction == Faction.Mafia || role?.Faction == Faction.Coven || role is Spy)
+            {
+                if (!__instance.Chat.isActiveAndEnabled)
+                {
+                    __instance.Chat.SetVisible(true);
                 }
             }
 

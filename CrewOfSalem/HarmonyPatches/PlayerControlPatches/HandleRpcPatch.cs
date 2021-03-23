@@ -69,8 +69,16 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                                     AddSpecialRole(new Escort(), player);
                                     break;
 
+                                case var value when value == Mafioso.GetRoleID():
+                                    AddSpecialRole(new Mafioso(), player);
+                                    break;
+
                                 case var value when value == Survivor.GetRoleID():
                                     AddSpecialRole(new Survivor(), player);
+                                    break;
+
+                                case var value when value == Executioner.GetRoleID():
+                                    AddSpecialRole(new Executioner(), player);
                                     break;
 
                                 case var value when value == Jester.GetRoleID():
@@ -81,11 +89,20 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     }
 
                     break;
-                // ---------- Special Role Conditions ----------
+                case (byte) RPC.ResetVariables:
+                    List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
+                    foreach (Role role in assignedRoles)
+                    {
+                        role.ClearSettings();
+                    }
 
+                    ResetValues();
+                    break;
+
+                // ---------- Special Role Conditions ----------
                 case (byte) RPC.VeteranAlert:
                     var veteran = GetSpecialRole<Veteran>();
-                    veteran.CurrentDuration = veteran.Duration;
+                    veteran.StartDuration();
                     break;
 
                 case (byte) RPC.VeteranKill:
@@ -98,7 +115,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
                 case (byte) RPC.VeteranAlertEnd:
                     veteran = GetSpecialRole<Veteran>();
-                    veteran.CurrentDuration = 0F;
+                    veteran.EndDuration();
                     break;
 
                 case (byte) RPC.VigilanteKill:
@@ -147,24 +164,26 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
                     break;
 
-                case (byte) RPC.ResetVariables:
-                    List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
-                    foreach (Role role in assignedRoles)
-                    {
-                        role.ClearSettingsInternal();
-                    }
-
-                    ResetValues();
+                case (byte) RPC.MafiosoKill:
+                    killerID = reader.ReadByte();
+                    victimID = reader.ReadByte();
+                    killer = PlayerTools.GetPlayerById(killerID);
+                    victim = PlayerTools.GetPlayerById(victimID);
+                    killer.MurderPlayer(victim);
                     break;
 
                 case (byte) RPC.SurvivorVest:
                     var survivor = GetSpecialRole<Survivor>();
-                    survivor.CurrentDuration = survivor.Duration;
+                    survivor.StartDuration();
                     break;
 
                 case (byte) RPC.SurvivorVestEnd:
                     survivor = GetSpecialRole<Survivor>();
-                    survivor.CurrentDuration = 0F;
+                    survivor.EndDuration();
+                    break;
+
+                case (byte) RPC.ExecutionerWin:
+                    GetSpecialRole<Executioner>().Win();
                     break;
 
                 case (byte) RPC.JesterWin:

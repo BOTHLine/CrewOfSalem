@@ -17,16 +17,6 @@ namespace CrewOfSalem
         public static readonly int ShaderOutlineColor = Shader.PropertyToID("_OutlineColor");
         public static readonly int ShaderDesat        = Shader.PropertyToID("_Desat");
 
-        public static Sprite DefaultKillButton;
-
-        public static Sprite InvestigatorButton => DefaultKillButton;
-        public static Sprite DoctorButton       => DefaultKillButton;
-        public static Sprite VeteranButton      => DefaultKillButton;
-        public static Sprite VigilanteButton    => DefaultKillButton;
-        public static Sprite EscortButton       => DefaultKillButton;
-
-        public static Sprite SurvivorButton => DefaultKillButton;
-
         public static AudioClip shieldAttempt;
 
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles = new Dictionary<byte, Role>();
@@ -37,8 +27,22 @@ namespace CrewOfSalem
 
         public static bool GameIsRunning = false;
 
+        public static Sprite defaultKillButton;
+
+        // Properties
+        public static Sprite InvestigatorButton => defaultKillButton;
+        public static Sprite DoctorButton       => defaultKillButton;
+        public static Sprite VeteranButton      => defaultKillButton;
+        public static Sprite VigilanteButton    => defaultKillButton;
+        public static Sprite EscortButton       => defaultKillButton;
+
+        public static Sprite MafiosoButton => defaultKillButton;
+
+        public static Sprite SurvivorButton => defaultKillButton;
+
         // Methods
-        public static void AddSpecialRole<T>(RoleGeneric<T> specialRole) where T : RoleGeneric<T>, new()
+        public static void AddSpecialRole<T>(RoleGeneric<T> specialRole)
+            where T : RoleGeneric<T>, new()
         {
             if (AssignedSpecialRoles.ContainsKey(specialRole.Player.PlayerId))
             {
@@ -51,7 +55,7 @@ namespace CrewOfSalem
         public static void AddSpecialRole<T>(RoleGeneric<T> specialRole, PlayerControl player)
             where T : RoleGeneric<T>, new()
         {
-            specialRole.InitializeRoleInternal(player);
+            specialRole.InitializeRole(player);
             AddSpecialRole(specialRole);
         }
 
@@ -136,8 +140,8 @@ namespace CrewOfSalem
 
         private static string ColorToHex(Color color)
         {
-            return ((int) color.r * 255).ToString("X2") + ((int) color.g * 255).ToString("X2") +
-                   ((int) color.b * 255).ToString("X2") + ((int) color.a * 255).ToString("X2");
+            return ((int) (color.r * 255)).ToString("X2") + ((int) (color.g * 255)).ToString("X2") +
+                   ((int) (color.b * 255)).ToString("X2") + ((int) (color.a * 255)).ToString("X2");
         }
     }
 }

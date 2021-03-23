@@ -14,7 +14,12 @@ namespace CrewOfSalem.HarmonyPatches.ExileControllerPatches
             TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Role role);
             role?.SpecialButton?.OnMeetingEnds();
 
-            if (role is Jester jester && ExileController.Instance.exiled?.PlayerId == jester.Player.PlayerId)
+            if (TryGetSpecialRole(out Executioner executioner) &&
+                executioner.VoteTarget.PlayerId == ExileController.Instance.exiled?.PlayerId)
+            {
+                WriteImmediately(RPC.ExecutionerWin);
+                executioner.Win();
+            } else if (role is Jester jester && jester.Player.PlayerId == ExileController.Instance.exiled?.PlayerId)
             {
                 WriteImmediately(RPC.JesterWin);
                 jester.Win();

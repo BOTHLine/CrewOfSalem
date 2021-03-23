@@ -7,7 +7,7 @@ namespace CrewOfSalem.HarmonyPatches.PingTrackerPatches
     {
         public static void Postfix(PingTracker __instance)
         {
-            __instance.text.Text += $"\n{Main.Name} {Main.Version}";
+            __instance.text.Text += $"\n{Main.Name} {Main.Version}\n by BothLine";
         }
     }
 }

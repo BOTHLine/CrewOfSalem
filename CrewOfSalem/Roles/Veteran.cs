@@ -8,9 +8,6 @@ namespace CrewOfSalem.Roles
 {
     public class Veteran : RoleGeneric<Veteran>
     {
-        // Properties
-        public bool IsAlerted => CurrentDuration > 0F;
-
         // Properties Role
         protected override byte   RoleID => 215;
         public override    string Name   => nameof(Veteran);
@@ -20,6 +17,8 @@ namespace CrewOfSalem.Roles
 
         protected override bool   HasSpecialButton    => true;
         protected override Sprite SpecialButtonSprite => VeteranButton;
+
+        protected override bool NeedsTarget => false;
 
         // Methods
         public void KillPlayer(PlayerControl target)
@@ -32,10 +31,8 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods Role
-        public override bool PerformAction(PlayerControl target)
+        protected override bool PerformActionInternal()
         {
-            CurrentDuration = Duration;
-
             WriteImmediately(RPC.VeteranAlert);
             return true;
         }
@@ -43,7 +40,7 @@ namespace CrewOfSalem.Roles
         public override void UpdateDuration(float deltaTime)
         {
             base.UpdateDuration(deltaTime);
-            if (CurrentDuration <= 0F) WriteImmediately(RPC.VeteranAlertEnd);
+            if (!HasDurationLeft) WriteImmediately(RPC.VeteranAlertEnd);
         }
     }
 }

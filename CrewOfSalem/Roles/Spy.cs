@@ -17,7 +17,7 @@ namespace CrewOfSalem.Roles
         protected override Sprite SpecialButtonSprite => null;
 
         // Methods Role
-        public override bool PerformAction(PlayerControl target)
+        protected override bool PerformActionInternal()
         {
             return true;
             // Extra Info from Admin / Vitals?

@@ -15,16 +15,17 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
         {
             List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
 
-            foreach (Role r in assignedRoles) {
-                r.ClearSettingsInternal();
+            foreach (Role r in assignedRoles)
+            {
+                r.ClearSettings();
             }
 
             ResetValues();
 
             WriteImmediately(RPC.ResetVariables);
 
-            List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();
-            crewmates.RemoveAll(x => x.Data.IsImpostor);
+            List<PlayerControl> crewmates =
+                PlayerControl.AllPlayerControls.ToArray().Where(p => !p.Data.IsImpostor).ToList();
 
             Role.SetRole<Investigator>(ref crewmates);
             // Lookout
@@ -51,15 +52,18 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
             Role.SetRole<Survivor>(ref crewmates);
 
+            Role.SetRole<Executioner>(ref crewmates);
             Role.SetRole<Jester>(ref crewmates);
 
-            List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList();
-            impostors.RemoveAll(x => !x.Data.IsImpostor);
+            List<PlayerControl> impostors =
+                PlayerControl.AllPlayerControls.ToArray().Where(p => p.Data.IsImpostor).ToList();
+
+            Role.SetRole<Mafioso>(ref impostors);
 
             Crew.Clear();
 
-
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            {
                 if (Main.OptionShowPlayerNames.GetValue() == 2) player.nameText.Text = "";
                 if (player.Data.IsImpostor) continue;
                 if (GetSpecialRoleByPlayer(player.PlayerId) is Jester) continue;

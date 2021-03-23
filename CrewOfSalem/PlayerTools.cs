@@ -1,5 +1,7 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using UnityEngine;
+using System.Linq;
 
 namespace CrewOfSalem
 {
@@ -19,7 +21,8 @@ namespace CrewOfSalem
             return null;
         }
 
-        public static PlayerControl FindClosestTarget(PlayerControl fromPlayer)
+        public static PlayerControl FindClosestTarget(PlayerControl fromPlayer,
+            Func<PlayerControl, bool> predicate = null)
         {
             PlayerControl closest = null;
             float maxDistance =
@@ -36,6 +39,11 @@ namespace CrewOfSalem
 
                 PlayerControl current = playerInfo.Object;
                 if (!current)
+                {
+                    continue;
+                }
+
+                if (predicate != null && !predicate.Invoke(current))
                 {
                     continue;
                 }

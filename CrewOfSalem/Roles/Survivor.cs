@@ -7,9 +7,6 @@ namespace CrewOfSalem.Roles
 {
     public class Survivor : RoleGeneric<Survivor>
     {
-        // Properties
-        public bool IsVested => CurrentDuration > 0F;
-
         // Properties Role
         protected override byte   RoleID => 239;
         public override    string Name   => nameof(Survivor);
@@ -22,8 +19,10 @@ namespace CrewOfSalem.Roles
         protected override bool   HasSpecialButton    => true;
         protected override Sprite SpecialButtonSprite => SurvivorButton;
 
+        protected override bool NeedsTarget => false;
+
         // Methods Role
-        public override bool PerformAction(PlayerControl target)
+        protected override bool PerformActionInternal()
         {
             WriteImmediately(RPC.SurvivorVest);
             return true;
@@ -32,7 +31,7 @@ namespace CrewOfSalem.Roles
         public override void UpdateDuration(float deltaTime)
         {
             base.UpdateDuration(deltaTime);
-            if (CurrentDuration <= 0F) WriteImmediately(RPC.SurvivorVestEnd);
+            if (!HasDurationLeft) WriteImmediately(RPC.SurvivorVestEnd);
         }
     }
 }

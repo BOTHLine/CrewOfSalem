@@ -10,7 +10,7 @@ namespace CrewOfSalem.Roles
     public class Doctor : RoleGeneric<Doctor>
     {
         // Properties
-        public int ShowShieldedPlayerOption { get; private set; }
+        private int ShowShieldedPlayerOption { get; set; }
 
         public PlayerControl ShieldedPlayer { get; set; }
 
@@ -79,14 +79,12 @@ namespace CrewOfSalem.Roles
         public override void UpdateDuration(float deltaTime)
         {
             base.UpdateDuration(deltaTime);
-            if (CurrentDuration <= 0F && ShieldedPlayer) BreakShield();
+            if (!HasDurationLeft && ShieldedPlayer) BreakShield();
         }
 
-        public override bool PerformAction(PlayerControl target)
+        protected override bool PerformActionInternal()
         {
-            if (target == null) return false;
-
-            ShieldedPlayer = target;
+            ShieldedPlayer = SpecialButton.Target;
 
             MessageWriter writer = GetWriter(RPC.DoctorSetShielded);
             writer.Write(ShieldedPlayer.PlayerId);
@@ -94,7 +92,7 @@ namespace CrewOfSalem.Roles
             return true;
         }
 
-        protected override void ClearSettings()
+        protected override void ClearSettingsInternal()
         {
             ShieldedPlayer = null;
         }

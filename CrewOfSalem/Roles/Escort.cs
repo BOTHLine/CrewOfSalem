@@ -20,15 +20,18 @@ namespace CrewOfSalem.Roles
         protected override Sprite SpecialButtonSprite => EscortButton;
 
         // Methods Role
-        public override bool PerformAction(PlayerControl target)
+        protected override bool PerformActionInternal()
         {
-            if (target == null) return false;
-
-            if (TryGetSpecialRoleByPlayer(target.PlayerId, out Role role)) role.SpecialButton.AddCooldown(Duration);
-            else target.SetKillTimer(target.killTimer + Duration);
+            if (TryGetSpecialRoleByPlayer(SpecialButton.Target.PlayerId, out Role role))
+            {
+                role.SpecialButton.AddCooldown(Duration);
+            } else
+            {
+                SpecialButton.Target.SetKillTimer(SpecialButton.Target.killTimer + Duration);
+            }
 
             MessageWriter writer = GetWriter(RPC.EscortIncreaseCooldown);
-            writer.Write(target.PlayerId);
+            writer.Write(SpecialButton.Target.PlayerId);
             CloseWriter(writer);
             return true;
         }

@@ -6,6 +6,7 @@ using Essentials.Options;
 using CrewOfSalem.Roles;
 using System.Collections.Generic;
 using System;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem
 {
@@ -52,7 +53,11 @@ namespace CrewOfSalem
                 // Retributionist
                 // Transporter
 
+                CreateRoleSpawnChanceOption<Mafioso>(),
+
                 CreateRoleSpawnChanceOption<Survivor>(),
+
+                CreateRoleSpawnChanceOption<Executioner>(),
                 CreateRoleSpawnChanceOption<Jester>()
             }; // Cooldown Options
 
@@ -68,6 +73,8 @@ namespace CrewOfSalem
                 CreateRoleCooldownOption<Doctor>("Shield"),
 
                 CreateRoleCooldownOption<Escort>("Block"),
+
+                CreateRoleCooldownOption<Mafioso>("Kill"),
 
                 CreateRoleCooldownOption<Survivor>("Vest")
             };
@@ -92,13 +99,13 @@ namespace CrewOfSalem
 
         public override void Load()
         {
-            // TODO:Add Assets?
+            // TODO: Add Assets?
 
-            //Disable the https://github.com/DorCoMaNdO/Reactor-Essentials watermark.
-            //The code said that you were allowed, as long as you provided credit elsewhere. 
-            //I added a link in the Credits of the GitHub page, and I'm also mentioning it here.
-            //If the owner of this library has any problems with this, just message me on discord and we'll find a solution
-            //BothLine#9610
+            // Disable the https://github.com/DorCoMaNdO/Reactor-Essentials watermark.
+            // The code said that you were allowed, as long as you provided credit elsewhere. 
+            // I added a link in the Credits of the GitHub page, and I'm also mentioning it here.
+            // If the owner of this library has any problems with this, just message me on discord and we'll find a solution
+            // BothLine#9610
             CustomOption.ShamelessPlug = true;
             Harmony.PatchAll();
         }
@@ -107,7 +114,7 @@ namespace CrewOfSalem
             float value = 50F, float min = 0F, float max = 100F, float increment = 5F) where T : RoleGeneric<T>, new()
         {
             Type type = typeof(T);
-            string name = Role.GetName<T>();
+            string name = /*ColorizedText(*/Role.GetName<T>() /*, Role.GetColor<T>())*/;
             string faction = Role.GetFaction<T>().ShortHandle;
             string alignment = Role.GetAlignment<T>().ShortHandle;
             CustomNumberOption customNumberOption =
@@ -125,7 +132,9 @@ namespace CrewOfSalem
             where T : RoleGeneric<T>, new()
         {
             return new KeyValuePair<Type, CustomNumberOption>(typeof(T),
-                CustomOption.AddNumber($"{Role.GetName<T>()} {actionName} Cooldown", value, min, max, increment));
+                CustomOption.AddNumber(
+                    $"{ /*ColorizedText(*/Role.GetName<T>() /*,Role.GetColor<T>())*/} {actionName} Cooldown", value,
+                    min, max, increment));
         }
 
         public static float GetRoleCooldown<T>() where T : RoleGeneric<T>, new()
@@ -138,7 +147,9 @@ namespace CrewOfSalem
             where T : RoleGeneric<T>, new()
         {
             return new KeyValuePair<Type, CustomNumberOption>(typeof(T),
-                CustomOption.AddNumber($"{Role.GetName<T>()} {actionName} Duration", value, min, max, increment));
+                CustomOption.AddNumber(
+                    $"{ /*ColorizedText(*/Role.GetName<T>() /*,Role.GetColor<T>())*/} {actionName} Duration", value,
+                    min, max, increment));
         }
 
         public static float GetRoleDuration<T>() where T : RoleGeneric<T>, new()

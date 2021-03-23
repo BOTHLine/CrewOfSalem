@@ -1,7 +1,8 @@
-﻿using CrewOfSalem.Roles;
+﻿using System;
+using CrewOfSalem.Roles;
 using HarmonyLib;
-using System;
 using System.Linq;
+using Assets.CoreScripts;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
@@ -13,33 +14,33 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
         {
             if (__instance == null || PlayerControl.LocalPlayer == null || DeadPlayers.Count <= 0) return;
 
-            DeadPlayer deadPlayer = DeadPlayers.FirstOrDefault(x => x.Victim?.PlayerId == PAIBDFDMIGK.PlayerId);
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Psychic psychic))
+            {
+                psychic.StartMeeting();
+            }
+
+            DeadPlayer deadPlayer =
+                DeadPlayers.FirstOrDefault(x => PAIBDFDMIGK != null && x.Victim?.PlayerId == PAIBDFDMIGK.PlayerId);
             if (deadPlayer == null) return;
 
-            if (!TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Sheriff _)) return;
-
-            Sheriff sheriff = GetSpecialRole<Sheriff>(PlayerControl.LocalPlayer.PlayerId);
-            if (sheriff == null) return;
+            if (!TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Sheriff sheriff)) return;
 
             if (__instance.PlayerId != sheriff.Player.PlayerId) return;
 
-            BodyReport bodyReport = new BodyReport(deadPlayer, deadPlayer.Killer,
-                (float) (DateTime.UtcNow - deadPlayer.KillTime).TotalMilliseconds);
-
-            string reportMsg = bodyReport.ParseBodyReport();
+            string reportMsg = deadPlayer.ParseBodyReport();
 
             if (string.IsNullOrWhiteSpace(reportMsg)) return;
 
-            if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance) {
-                DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reportMsg);
+            if (AmongUsClient.Instance.AmClient && HudManager.Instance)
+            {
+                HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reportMsg);
+                ConsoleTools.Info("Body Report");
             }
 
-            /* TODO:
             if (reportMsg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                DestroyableSingleton<Telemetry>.Instance.SendWho();
+                Telemetry.Instance.SendWho();
             }
-            */
         }
     }
 }

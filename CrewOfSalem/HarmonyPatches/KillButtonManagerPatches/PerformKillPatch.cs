@@ -10,6 +10,15 @@ namespace CrewOfSalem.HarmonyPatches.KillButtonManagerPatches
     {
         public static bool Prefix(KillButtonManager __instance)
         {
+            /*
+            if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Role role))
+            {
+                role.PerformAction();
+                return false;
+            }
+            */
+            return false;
+            /*
             if (__instance == null || PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data.IsDead)
             {
                 return false;
@@ -18,7 +27,7 @@ namespace CrewOfSalem.HarmonyPatches.KillButtonManagerPatches
             PlayerControl closest = PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer);
             TryGetSpecialRoleByPlayer((byte) (closest?.PlayerId ?? -1), out Role closestRole);
 
-            if (closest != null && closestRole is Veteran {IsAlerted: true} veteran)
+            if (closest != null && closestRole is Veteran {HasDurationLeft: true} veteran)
             {
                 veteran.KillPlayer(PlayerControl.LocalPlayer);
                 return false;
@@ -26,11 +35,11 @@ namespace CrewOfSalem.HarmonyPatches.KillButtonManagerPatches
 
             if (TryGetSpecialRoleByPlayer(PlayerControl.LocalPlayer.PlayerId, out Role role))
             {
-               // role.SpecialButton.Use();
+                // role.SpecialButton.Use();
             }
 
-            if (closest != null && (PlayerControl.LocalPlayer.Data.IsImpostor || role.Alignment == Alignment.Killing) &&
-                closestRole is Survivor {IsVested: true})
+            if (closest != null && role.Alignment == Alignment.Killing &&
+                closestRole is Survivor {HasDurationLeft: true})
             {
                 PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.LocalPlayer.Data.IsImpostor
                     ? PlayerControl.GameOptions.KillCooldown
@@ -39,17 +48,8 @@ namespace CrewOfSalem.HarmonyPatches.KillButtonManagerPatches
                 return false;
             }
 
-            if (closest != null && PlayerControl.LocalPlayer.Data.IsImpostor && TryGetSpecialRole(out Doctor doctor) &&
-                doctor.CheckShieldedPlayer(closest.PlayerId))
-            {
-                doctor.BreakShield();
-                PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.LocalPlayer.Data.IsImpostor
-                    ? PlayerControl.GameOptions.KillCooldown
-                    : role.Cooldown);
-                return false;
-            }
-
-            return true;
+            return false;
+            */
         }
     }
 }
