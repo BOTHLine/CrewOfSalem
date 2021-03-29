@@ -1,16 +1,19 @@
-﻿using System;
-using CrewOfSalem.Roles.Alignments;
+﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
 using System.Collections.Generic;
+using System.Linq;
+using CrewOfSalem.Roles.Abilities;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
-using static CrewOfSalem.Main;
 
 namespace CrewOfSalem.Roles
 {
     public abstract class Role
     {
+        // Fields
+        private readonly List<Ability> abilities = new List<Ability>();
+
         // Properties
         protected abstract byte   RoleID { get; }
         public abstract    string Name   { get; }
@@ -21,27 +24,12 @@ namespace CrewOfSalem.Roles
         protected virtual Color Color        => Faction.Color;
         protected virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
 
-        protected virtual string  StartText  => Alignment.GetColorizedTask(Faction);
+        protected virtual string  RoleTask   => Alignment.GetColorizedTask(Faction);
         protected virtual Vector3 TitleScale { get; } = new Vector3(1, 1, 1);
 
-        protected abstract bool HasSpecialButton { get; }
+        public abstract string Description { get; }
 
-        public             RoleButton SpecialButton       { get; private set; }
-        protected abstract Sprite     SpecialButtonSprite { get; }
-
-        public  float Cooldown        { get; set; }
-        public  float Duration        { get; set; }
-        private float CurrentDuration { get; set; }
-        public  bool  HasDurationLeft => CurrentDuration > 0F;
-
-        protected virtual bool NeedsTarget => true;
-
-        // protected PlayerControl CurrentTarget { get; set; }
-        protected virtual Func<bool> CanUse        => () => true;
-        protected virtual Action     OnMeetingEnds => null;
-        protected virtual Vector3    ButtonOffset  => Vector3.zero;
-
-        public PlayerControl Player { get; protected set; }
+        public PlayerControl Owner { get; protected set; }
 
         // Methods
         private static byte GetRoleID<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetRoleID();
@@ -56,43 +44,28 @@ namespace CrewOfSalem.Roles
         // Constructors
         protected Role() { }
 
-        protected Role(PlayerControl player)
+        protected Role(PlayerControl owner)
         {
-            Player = player;
+            Owner = owner;
         }
 
         // Methods
-        public static void SetRole<T>(ref List<PlayerControl> players)
-            where T : RoleGeneric<T>, new()
+        public static void SetRole(Role role, PlayerControl player)
         {
-            float spawnChance = GetRoleSpawnChance<T>();
-            if (spawnChance < 1 || players.Count <= 0) return;
-            bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
-            if (!spawnChanceAchieved) return;
-
-            int random = Rng.Next(0, players.Count);
-            T role = new T();
-            AddSpecialRole(role, players[random]);
-            players.RemoveAt(random);
-
+            AddSpecialRole(role, player);
             MessageWriter writer = GetWriter(RPC.SetRole);
-            writer.Write(GetRoleID<T>());
-            writer.Write(role.Player.PlayerId);
+            writer.Write(role.RoleID);
+            writer.Write(player.PlayerId);
             CloseWriter(writer);
         }
 
         public void InitializeRole(PlayerControl player)
         {
-            Player = player;
-            SetConfigSettings();
-            if (HasSpecialButton)
-            {
-                SpecialButton = new RoleButton(Cooldown, PerformAction, CanUse, OnMeetingEnds, SpecialButtonSprite,
-                    ButtonOffset);
-            }
-
+            Owner = player;
+            InitializeAbilities();
+            SetConfigSettingsInternal();
             InitializeRoleInternal();
-            SetRoleDescription();
+            SetRoleTask();
         }
 
         public void SetNameColor()
@@ -101,77 +74,90 @@ namespace CrewOfSalem.Roles
             {
                 foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                 {
-                    if (Player.PlayerId == playerVote.TargetPlayerId)
+                    if (Owner.PlayerId == playerVote.TargetPlayerId)
                     {
                         playerVote.NameText.Color = Color;
                     }
                 }
             } else
             {
-                Player.nameText.Color = Color;
+                Owner.nameText.Color = Color;
             }
         }
 
-        public void SetRoleDescription()
+        public void SetRoleTask()
         {
-            if (Player != PlayerControl.LocalPlayer) return;
+            if (Owner != PlayerControl.LocalPlayer) return;
 
-            if (Player.Data.IsImpostor)
+            if (Owner.Data.IsImpostor)
             {
-                Player.myTasks.RemoveAt(0);
+                Owner.myTasks.RemoveAt(0);
             }
 
-            var roleDescription = new GameObject("roleDescription").AddComponent<ImportantTextTask>();
-            roleDescription.transform.SetParent(Player.transform, false);
-            roleDescription.Text = $"{ColorizedText(Name, Color)}: {StartText}";
-            Player.myTasks.Insert(0, roleDescription);
-        }
-
-        public void UpdateButton()
-        {
-            if (!HasSpecialButton || SpecialButton == null) return;
-            if (NeedsTarget)
-            {
-                // CurrentTarget = PlayerTools.FindClosestTarget(Player);
-                SpecialButton.Target = PlayerTools.FindClosestTarget(Player);
-            }
-
-            SpecialButton.HudUpdate();
-        }
-
-        public bool PerformAction()
-        {
-            ConsoleTools.Info("Perform Action Internal");
-            if (NeedsTarget && SpecialButton.Target == null) return false;
-            if (!PerformActionInternal()) return false;
-
-            CurrentDuration = Duration;
-            return true;
+            var roleDescription = new GameObject("roleTask").AddComponent<ImportantTextTask>();
+            roleDescription.transform.SetParent(Owner.transform, false);
+            roleDescription.Text = $"{ColorizedText(Name, Color)}: {RoleTask}";
+            Owner.myTasks.Insert(0, roleDescription);
         }
 
         public string EjectMessage(string playerName) => $"{playerName} was the {ColorizedText(Name, Color)}";
 
         public void ClearSettings()
         {
-            Player = null;
-            CurrentDuration = 0F;
-            // SpecialButton.Destroy();
-            SpecialButton = null;
+            Owner = null;
+            for (int i = abilities.Count; i >= 0; i--)
+            {
+                Ability ability = abilities[i];
+                abilities.RemoveAt(i);
+                ability.Destroy();
+            }
+
             ClearSettingsInternal();
         }
 
-        public void StartDuration()
+        public void AddAbility(Ability ability)
         {
-            CurrentDuration = Duration;
+            abilities.Add(ability);
+            RefreshAbilityOffsets();
         }
 
-        public void EndDuration()
+        public void AddAbility(Ability ability, int index)
         {
-            CurrentDuration = 0F;
+            abilities.Insert(index, ability);
+            RefreshAbilityOffsets();
+        }
+
+        private void RefreshAbilityOffsets()
+        {
+            for (var i = 0; i < abilities.Count; i++)
+            {
+                abilities[i].Offset = Vector3.left * i;
+            }
+        }
+
+        public T GetAbility<T>()
+            where T : Ability
+        {
+            return abilities.FirstOrDefault(ability => ability is T) as T;
+        }
+
+        public IReadOnlyList<Ability> GetAllAbilities()
+        {
+            return abilities;
         }
 
         // Virtual Methods
-        protected virtual void SetConfigSettings() { }
+        protected abstract void InitializeAbilities();
+
+        public void UpdateAbilities(float deltaTime)
+        {
+            foreach (Ability ability in abilities)
+            {
+                ability.Update(deltaTime);
+            }
+        }
+
+        protected virtual void SetConfigSettingsInternal() { }
 
         public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
         {
@@ -179,21 +165,11 @@ namespace CrewOfSalem.Roles
             instance.__this.Title.render?.material.SetColor(ShaderOutlineColor, OutlineColor);
             instance.__this.Title.transform.localScale = TitleScale;
             instance.c = Color;
-            instance.__this.ImpostorText.Text = StartText;
+            instance.__this.ImpostorText.Text = RoleTask;
             instance.__this.BackgroundBar.material.color = Color;
         }
 
         protected virtual void InitializeRoleInternal() { }
-
-        public virtual void UpdateDuration(float deltaTime)
-        {
-            CurrentDuration = Mathf.Max(0F, CurrentDuration - deltaTime);
-        }
-
-        protected virtual bool PerformActionInternal()
-        {
-            return false;
-        }
 
         protected virtual void ClearSettingsInternal() { }
     }

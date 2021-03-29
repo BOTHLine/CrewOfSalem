@@ -1,7 +1,7 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using UnityEngine;
-using static CrewOfSalem.Main;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles
 {
@@ -26,12 +26,12 @@ namespace CrewOfSalem.Roles
         }
 
         // Constructors
-        protected RoleGeneric() : base()
+        protected RoleGeneric()
         {
             instance = (T) this;
         }
 
-        protected RoleGeneric(PlayerControl player) : base(player)
+        protected RoleGeneric(PlayerControl owner) : base(owner)
         {
             instance = (T) this;
         }
@@ -40,16 +40,11 @@ namespace CrewOfSalem.Roles
         public static byte GetRoleID() => Instance.RoleID;
         public static string GetName() => Instance.Name;
         public static Color GetColor() => Instance.Color;
+        protected static string ColorizedName => ColorizedText(GetName(), GetColor());
 
         public static Faction GetFaction() => Instance.Faction;
         public static Alignment GetAlignment() => Instance.Alignment;
 
-        public static PlayerControl GetPlayer() => Instance.Player;
-
-        protected override void SetConfigSettings()
-        {
-            Cooldown = GetRoleCooldown<T>();
-            Duration = GetRoleDuration<T>();
-        }
+        public static PlayerControl GetPlayer() => Instance.Owner;
     }
 }

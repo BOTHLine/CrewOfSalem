@@ -1,7 +1,6 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace CrewOfSalem.Roles
 {
@@ -22,19 +21,19 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        protected override bool   HasSpecialButton    => false;
-        protected override Sprite SpecialButtonSprite => null;
+        public override string Description => "You can track your target";
 
         // Methods
         public void SendChatMessage(MessageType type)
         {
-            if (AmongUsClient.Instance.AmClient && HudManager.Instance && !Player.Data.IsDead)
+            if (AmongUsClient.Instance.AmClient && HudManager.Instance && !Owner.Data.IsDead)
             {
-                HudManager.Instance.Chat.AddChat(Player, messages[type]);
+                HudManager.Instance.Chat.AddChat(Owner, messages[type]);
             }
         }
 
         // Methods Role
+        protected override void InitializeAbilities() { }
 
         // Nested Types
         public enum MessageType

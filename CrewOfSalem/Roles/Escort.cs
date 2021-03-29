@@ -1,9 +1,6 @@
-﻿using System;
+﻿using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using Hazel;
-using UnityEngine;
-using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles
 {
@@ -16,24 +13,12 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Support;
 
-        protected override bool   HasSpecialButton    => true;
-        protected override Sprite SpecialButtonSprite => EscortButton;
+        public override string Description => "You can block your target to increase their ability cooldown";
 
         // Methods Role
-        protected override bool PerformActionInternal()
+        protected override void InitializeAbilities()
         {
-            if (TryGetSpecialRoleByPlayer(SpecialButton.Target.PlayerId, out Role role))
-            {
-                role.SpecialButton.AddCooldown(Duration);
-            } else
-            {
-                SpecialButton.Target.SetKillTimer(SpecialButton.Target.killTimer + Duration);
-            }
-
-            MessageWriter writer = GetWriter(RPC.EscortIncreaseCooldown);
-            writer.Write(SpecialButton.Target.PlayerId);
-            CloseWriter(writer);
-            return true;
+            AddAbility(new AbilityBlock(this, 30F, 15F));
         }
     }
 }

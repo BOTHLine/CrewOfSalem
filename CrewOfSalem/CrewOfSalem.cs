@@ -3,7 +3,9 @@ using CrewOfSalem.Roles;
 using HarmonyLib;
 using Hazel;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Reflection;
+using Reactor.Extensions;
 using UnityEngine;
 
 namespace CrewOfSalem
@@ -12,44 +14,61 @@ namespace CrewOfSalem
     public class CrewOfSalem
     {
         // Fields
+        public static readonly int ShaderBackColor    = Shader.PropertyToID("_BackColor");
+        public static readonly int ShaderBodyColor    = Shader.PropertyToID("_BodyColor");
+        public static readonly int ShaderOutlineColor = Shader.PropertyToID("_OutlineColor");
         public static readonly int ShaderVisorColor   = Shader.PropertyToID("_VisorColor");
         public static readonly int ShaderOutline      = Shader.PropertyToID("_Outline");
-        public static readonly int ShaderOutlineColor = Shader.PropertyToID("_OutlineColor");
         public static readonly int ShaderDesat        = Shader.PropertyToID("_Desat");
+        public static readonly int ShaderPercent      = Shader.PropertyToID("_Percent");
+
 
         public static AudioClip shieldAttempt;
 
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles = new Dictionary<byte, Role>();
         public static readonly List<DeadPlayer>       DeadPlayers          = new List<DeadPlayer>();
 
-        public static readonly List<PlayerControl> Crew = new List<PlayerControl>();
         public static readonly System.Random       Rng  = new System.Random((int) DateTime.Now.Ticks);
 
-        public static bool GameIsRunning = false;
+        public static bool gameIsRunning = false;
 
-        public static Sprite defaultKillButton;
+        private static Sprite buttonInvestigate;
+        private static Sprite buttonAlert;
+        private static Sprite buttonShield;
+        private static Sprite buttonBlock;
+        private static Sprite buttonDisguise;
+        private static Sprite buttonKill;
+        private static Sprite buttonSteal;
+        private static Sprite buttonForge;
+        private static Sprite buttonVest;
 
         // Properties
-        public static Sprite InvestigatorButton => defaultKillButton;
-        public static Sprite DoctorButton       => defaultKillButton;
-        public static Sprite VeteranButton      => defaultKillButton;
-        public static Sprite VigilanteButton    => defaultKillButton;
-        public static Sprite EscortButton       => defaultKillButton;
+        public static Sprite ButtonInvestigate =>
+            buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png", 110F);
 
-        public static Sprite MafiosoButton => defaultKillButton;
+        public static Sprite ButtonAlert  => buttonAlert ??= LoadSpriteFromResources("ButtonAlert.png",   110F);
+        public static Sprite ButtonKill   => buttonKill ??= LoadSpriteFromResources("ButtonKill.png",     110F);
+        public static Sprite ButtonShield => buttonShield ??= LoadSpriteFromResources("ButtonShield.png", 110F);
+        public static Sprite ButtonBlock  => buttonBlock ??= LoadSpriteFromResources("ButtonBlock.png",   110F);
 
-        public static Sprite SurvivorButton => defaultKillButton;
+        public static Sprite ButtonDisguise =>
+            buttonDisguise ??= LoadSpriteFromResources("ButtonDisguise.png", 110F);
+
+        public static Sprite ButtonSteal => buttonSteal ??= LoadSpriteFromResources("ButtonSteal.png", 110F);
+        public static Sprite ButtonForge => buttonForge ??= LoadSpriteFromResources("ButtonForge.png", 110F);
+
+        public static Sprite ButtonVest => buttonVest ??= LoadSpriteFromResources("ButtonVest.png", 110F);
 
         // Methods
         public static void AddSpecialRole<T>(RoleGeneric<T> specialRole)
             where T : RoleGeneric<T>, new()
         {
-            if (AssignedSpecialRoles.ContainsKey(specialRole.Player.PlayerId))
+            if (AssignedSpecialRoles.ContainsKey(specialRole.Owner.PlayerId))
             {
-                AssignedSpecialRoles.Remove(specialRole.Player.PlayerId);
+                AssignedSpecialRoles.Remove(specialRole.Owner.PlayerId);
             }
 
-            AssignedSpecialRoles.Add(specialRole.Player.PlayerId, specialRole);
+            AssignedSpecialRoles.Add(specialRole.Owner.PlayerId, specialRole);
         }
 
         public static void AddSpecialRole<T>(RoleGeneric<T> specialRole, PlayerControl player)
@@ -59,14 +78,29 @@ namespace CrewOfSalem
             AddSpecialRole(specialRole);
         }
 
-        public static Role GetSpecialRoleByPlayer(byte playerId) =>
+        private static void AddSpecialRole(Role role)
+        {
+            if (AssignedSpecialRoles.ContainsKey(role.Owner.PlayerId))
+            {
+                AssignedSpecialRoles.Remove(role.Owner.PlayerId);
+            }
+
+            AssignedSpecialRoles.Add(role.Owner.PlayerId, role);
+        }
+
+        public static void AddSpecialRole(Role role, PlayerControl player)
+        {
+            role.InitializeRole(player);
+            AddSpecialRole(role);
+        }
+
+        public static Role GetSpecialRoleByPlayerID(byte playerId) =>
             AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? role : null;
 
-        public static T GetSpecialRole<T>(byte playerId) where T : RoleGeneric<T>, new() =>
-            AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
-
-        public static T GetSpecialRole<T>() where T : RoleGeneric<T>, new() =>
-            AssignedSpecialRoles.Values.OfType<T>().FirstOrDefault();
+        public static Role GetSpecialRoleByPlayer(PlayerControl player)
+        {
+            return player == null ? null : GetSpecialRoleByPlayerID(player.PlayerId);
+        }
 
         public static bool TryGetSpecialRole<T>(out T role) where T : RoleGeneric<T>, new()
         {
@@ -82,33 +116,6 @@ namespace CrewOfSalem
             role = null;
             return false;
         }
-
-        public static bool TryGetSpecialRoleByPlayer<T>(byte playerId, out T role) where T : RoleGeneric<T>, new()
-        {
-            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value)
-            {
-                role = value;
-                return true;
-            }
-
-            role = null;
-            return false;
-        }
-
-        public static bool TryGetSpecialRoleByPlayer(byte playerId, out Role role)
-        {
-            if (AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole))
-            {
-                role = tempRole;
-                return true;
-            }
-
-            role = null;
-            return false;
-        }
-
-        public static bool IsPlayerSpecialRole<T>(byte playerId) where T : RoleGeneric<T>, new() =>
-            TryGetSpecialRoleByPlayer(playerId, out Role role) && role is T;
 
         public static void WriteImmediately(RPC action)
         {
@@ -142,6 +149,49 @@ namespace CrewOfSalem
         {
             return ((int) (color.r * 255)).ToString("X2") + ((int) (color.g * 255)).ToString("X2") +
                    ((int) (color.b * 255)).ToString("X2") + ((int) (color.a * 255)).ToString("X2");
+        }
+
+        public static void SetSkinWithAnim(PlayerPhysics playerPhysics, uint skinId)
+        {
+            SkinData nextSkin = HatManager.Instance.AllSkins[(int) skinId];
+            AnimationClip clip;
+
+            AnimationClip currentPhysicsAnim = playerPhysics.Animator.GetCurrentAnimation();
+            if (currentPhysicsAnim == playerPhysics.RunAnim) clip = nextSkin.RunAnim;
+            else if (currentPhysicsAnim == playerPhysics.SpawnAnim) clip = nextSkin.SpawnAnim;
+            else if (currentPhysicsAnim == playerPhysics.EnterVentAnim) clip = nextSkin.EnterVentAnim;
+            else if (currentPhysicsAnim == playerPhysics.ExitVentAnim) clip = nextSkin.ExitVentAnim;
+            else if (currentPhysicsAnim == playerPhysics.IdleAnim) clip = nextSkin.IdleAnim;
+            else clip = nextSkin.IdleAnim;
+
+            float progress = playerPhysics.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            playerPhysics.Skin.skin = nextSkin;
+
+            playerPhysics.Skin.animator.Play(clip, 1f);
+            playerPhysics.Skin.animator.m_animator.Play("a", 0, progress % 1);
+            playerPhysics.Skin.animator.m_animator.Update(0f);
+        }
+
+        private static Sprite LoadSpriteFromResources(string path, float pixelsPerUnit)
+        {
+            path = "CrewOfSalem.Resources." + path;
+            try
+            {
+                Texture2D texture2D = GUIExtensions.CreateEmptyTexture();
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                Stream stream = assembly.GetManifestResourceStream(path);
+                byte[] byteTexture = stream.ReadFully();
+                ImageConversion.LoadImage(texture2D, byteTexture, false);
+                return Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height),
+                    new Vector2(0.5F, 0.5F),
+                    pixelsPerUnit);
+            }
+            catch
+            {
+                ConsoleTools.Error("Failed loading sprites from path: " + path);
+            }
+
+            return null;
         }
     }
 }

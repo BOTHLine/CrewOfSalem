@@ -1,6 +1,5 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using UnityEngine;
 
 namespace CrewOfSalem.Roles
 {
@@ -8,18 +7,14 @@ namespace CrewOfSalem.Roles
     {
         // Properties Role
         protected override byte   RoleID => 210;
-        public override string Name   => nameof(Sheriff);
+        public override    string Name   => nameof(Sheriff);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        protected override bool   HasSpecialButton => false;
-        protected override Sprite SpecialButtonSprite    => null;
+        public override string Description => "You gain more information for reporting corpses. The faster you report the more information you gain";
 
         // Methods Role
-        protected override void SetConfigSettings()
-        {
-            // TODO Report Times
-        }
+        protected override void InitializeAbilities() { }
     }
 }

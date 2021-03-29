@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles.Factions
 {
@@ -16,7 +17,8 @@ namespace CrewOfSalem.Roles.Factions
         public abstract string Name        { get; }
         public          string ShortHandle => Name.Substring(0, 1);
 
-        public abstract Color Color { get; }
+        public abstract Color  Color         { get; }
+        public          string ColorizedName => ColorizedText(Name, Color);
 
         public abstract Faction Enemy { get; }
     }

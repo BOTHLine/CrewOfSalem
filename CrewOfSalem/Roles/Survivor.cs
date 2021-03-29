@@ -1,7 +1,7 @@
+using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using UnityEngine;
-using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles
 {
@@ -16,22 +16,14 @@ namespace CrewOfSalem.Roles
 
         protected override Color Color => new Color(200F / 255F, 200F / 255F, 0F / 255F, 1F);
 
-        protected override bool   HasSpecialButton    => true;
-        protected override Sprite SpecialButtonSprite => SurvivorButton;
+        protected override string RoleTask => "Survive until the end";
 
-        protected override bool NeedsTarget => false;
+        public override string Description => "You can vest to protect yourself from the next attack for a specific time. You can win with either other faction, as long as you live";
 
-        // Methods Role
-        protected override bool PerformActionInternal()
+        // Methods Ability
+        protected override void InitializeAbilities()
         {
-            WriteImmediately(RPC.SurvivorVest);
-            return true;
-        }
-
-        public override void UpdateDuration(float deltaTime)
-        {
-            base.UpdateDuration(deltaTime);
-            if (!HasDurationLeft) WriteImmediately(RPC.SurvivorVestEnd);
+            AddAbility(new AbilityVest(this, 30F, 10F));
         }
     }
 }

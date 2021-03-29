@@ -25,9 +25,25 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Essentials">
-		<HintPath>$(AmongUs)\BepInEx\plugins\Essentials-$(GameVersion).dll</HintPath>
-      </Reference>
+        <Reference Include="Essentials">
+            <HintPath>$(AmongUs)\BepInEx\plugins\Essentials-$(GameVersion).dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\ButtonInvestigate.png" />
+        <EmbeddedResource Include="Resources\ButtonAlert.png" />
+        <EmbeddedResource Include="Resources\ButtonKill.png" />
+        <EmbeddedResource Include="Resources\ButtonShield.png" />
+        <EmbeddedResource Include="Resources\ButtonBlock.png" />
+        <EmbeddedResource Include="Resources\ButtonDisguise.png" />
+        <EmbeddedResource Include="Resources\ButtonSteal.png" />
+        <EmbeddedResource Include="Resources\ButtonForge.png" />
+        <EmbeddedResource Include="Resources\ButtonVest.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="HarmonyPatches\GeneralPatches" />
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Reobfuscate">

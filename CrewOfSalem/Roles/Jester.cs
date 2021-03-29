@@ -8,10 +8,6 @@ namespace CrewOfSalem.Roles
 {
     public class Jester : RoleGeneric<Jester>
     {
-        // Properties
-        public bool CanSeeImpostor    { get; private set; }
-        public bool CanDieToVigilante { get; private set; }
-
         // Properties Role
         protected override byte   RoleID => 245;
         public override    string Name   => nameof(Jester);
@@ -21,19 +17,16 @@ namespace CrewOfSalem.Roles
 
         protected override Color Color => new Color(244F / 255F, 159F / 255F, 208F / 255F, 1F);
 
-        protected override bool   HasSpecialButton    => false;
-        protected override Sprite SpecialButtonSprite => null;
-
-        protected override string StartText => $"{base.StartText} to vote {ColorizedText("you", Color)}";
-
+        protected override string RoleTask    => $"{base.RoleTask} to vote {ColorizedText("you", Color)}";
+        public override string Description => "You have to trick everyone else to vote you";
 
         // Methods
         public void ClearTasks()
         {
-            if (Player == null) return;
+            if (Owner == null) return;
 
             var tasksToRemove = new List<PlayerTask>();
-            foreach (PlayerTask task in Player.myTasks)
+            foreach (PlayerTask task in Owner.myTasks)
             {
                 if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.ResetReactor &&
                     task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy)
@@ -44,7 +37,7 @@ namespace CrewOfSalem.Roles
 
             foreach (PlayerTask task in tasksToRemove)
             {
-                Player.RemoveTask(task);
+                Owner.RemoveTask(task);
             }
         }
 
@@ -52,18 +45,19 @@ namespace CrewOfSalem.Roles
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
-                if (player == Player) continue;
+                if (player == Owner) continue;
                 player.RemoveInfected();
                 player.Die(DeathReason.Exile);
                 player.Data.IsDead = true;
                 player.Data.IsImpostor = false;
             }
 
-            Player.Revive();
-            Player.Data.IsDead = false;
-            Player.Data.IsImpostor = true;
+            Owner.Revive();
+            Owner.Data.IsDead = false;
+            Owner.Data.IsImpostor = true;
         }
 
         // Methods Role
+        protected override void InitializeAbilities() { }
     }
 }

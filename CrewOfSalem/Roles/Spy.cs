@@ -1,6 +1,5 @@
 ﻿using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using UnityEngine;
 
 namespace CrewOfSalem.Roles
 {
@@ -13,14 +12,9 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        protected override bool   HasSpecialButton    => false;
-        protected override Sprite SpecialButtonSprite => null;
+        public override string Description => "You can vent and listen to the mafia chat";
 
         // Methods Role
-        protected override bool PerformActionInternal()
-        {
-            return true;
-            // Extra Info from Admin / Vitals?
-        }
+        protected override void InitializeAbilities() { }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using HarmonyLib;
 using UnityEngine;
-using System.Linq;
 
 namespace CrewOfSalem
 {
@@ -61,6 +60,17 @@ namespace CrewOfSalem
             }
 
             return closest;
+        }
+
+        public static bool IsPlayerInRange(PlayerControl fromPlayer, PlayerControl toPlayer)
+        {
+            float maxDistance = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
+            if (!ShipStatus.Instance) return false;
+            Vector2 fromPosition = fromPlayer.GetTruePosition();
+            Vector2 distanceVector = toPlayer.GetTruePosition() - fromPosition;
+            float distance = distanceVector.magnitude;
+            return distance <= maxDistance && !PhysicsHelpers.AnyNonTriggersBetween(fromPosition,
+                distanceVector.normalized, distance, Constants.ShipAndObjectsMask);
         }
     }
 }

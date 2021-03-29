@@ -35,24 +35,42 @@ namespace CrewOfSalem
         UpdateGameData   = 30,
 
         // --- Custom RPCs --- TODO:
-        SetRole         = 42,
-        SetLocalPlayers = 43,
-        SendWhisperChat = 44,
-        SendMafiaChat   = 45,
-        SendLoversChat  = 46,
+        None,
+        SetRole         = 43,
+        SetLocalPlayers = 44,
+        SendWhisperChat = 45,
+        SendMafiaChat   = 46,
+        SendLoversChat  = 47,
         ResetVariables,
 
-        VeteranAlert,
-        VeteranKill,
-        VeteranAlertEnd,
-        VigilanteKill,
-        DoctorSetShielded,
-        DoctorBreakShield,
-        EscortIncreaseCooldown,
-        MafiosoKill,
-        SurvivorVest,
-        SurvivorVestEnd,
-        JesterWin,
-        ExecutionerWin
+        Kill,
+
+        AlertStart,
+        AlertEnd,
+
+        ToggleGuard,
+        ToggleInTask,
+        
+        ShieldStart,
+        ShieldEnd,
+
+        CrusaderGuard,
+
+        Block,
+
+        DisguiseStart,
+        DisguiseEnd,
+
+        ForgeStart,
+        ForgeEnd,
+
+        Frame,
+
+        Hypnotize,
+
+        Protect,
+
+        VestStart,
+        VestEnd
     }
 }
