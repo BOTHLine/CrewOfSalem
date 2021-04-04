@@ -26,7 +26,9 @@ namespace CrewOfSalem.HarmonyPatches.PlayerTabPatches
                     x += add;
                 }
 
-                ColorChip chip = __instance.ColorChips[i];
+                // TODO: 2021.3.5s
+                // ColorChip chip = __instance.ColorChips[i];
+                ColorChip chip = __instance.ColorChips.ToArray()[i];
                 Transform transform = chip.transform;
                 transform.localPosition = new Vector3(x, y, -1F);
                 transform.localScale *= scale;

@@ -5,7 +5,7 @@ using static CrewOfSalem.CrewOfSalem;
 namespace CrewOfSalem.HarmonyPatches.JesterPatches
 {
     [HarmonyPatch(typeof(UnityEngine.Object), nameof(UnityEngine.Object.Destroy), new[] {typeof(UnityEngine.Object)})]
-    public static class OnMeetingEndPatch
+    public static class OnExileEndPatch
     {
         public static bool Prefix(UnityEngine.Object obj)
         {

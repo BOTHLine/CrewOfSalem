@@ -5,7 +5,7 @@ using static CrewOfSalem.CrewOfSalem;
 namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
 {
     [HarmonyPatch(typeof(UnityEngine.Object), nameof(UnityEngine.Object.Destroy), new[] {typeof(UnityEngine.Object)})]
-    public static class OnMeetingEndPatch
+    public static class OnExileEndPatch
     {
         public static bool Prefix(UnityEngine.Object obj)
         {
@@ -13,6 +13,26 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
 
             if (TryGetSpecialRole(out Executioner executioner))
             {
+                if (!executioner.IsJester)
+                {
+                    if (executioner.VoteTarget.PlayerId == ExileController.Instance.exiled.PlayerId)
+                    {
+                        executioner.Win();
+                    }
+
+                    if (executioner.VoteTarget.Data.IsDead && executioner.Owner == PlayerControl.LocalPlayer)
+                    {
+                        executioner.RpcTurnIntoJester();
+                    }
+                } else
+                {
+                    if (executioner.Owner.PlayerId == ExileController.Instance.exiled.PlayerId)
+                    {
+                        executioner.Win();
+                    }
+                }
+
+                /*
                 if (executioner.VoteTarget.Data.IsDead)
                 {
                     executioner.TurnIntoJester();
@@ -21,6 +41,7 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                     executioner.Win();
                     return true;
                 }
+                */
             }
 
             return true;

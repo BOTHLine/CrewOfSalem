@@ -98,12 +98,12 @@ namespace CrowdedMod.Patches
         }
 
         // Map/Impostor Change in Online Lobby
-        //[HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.OnEnable))]
+        [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.OnEnable))]
         private static class GameSettingMenuOnEnable
         {
             private static void Prefix(ref GameSettingMenu __instance)
             {
-                __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
+                __instance.HideForOnline = new Il2CppReferenceArray<Transform>(1) {[0] = __instance.HideForOnline[0]};
             }
         }
 

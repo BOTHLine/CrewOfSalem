@@ -7,8 +7,8 @@ namespace CrewOfSalem.Roles
     public class Investigator : RoleGeneric<Investigator>
     {
         // Properties Role
-        protected override byte   RoleID => 207;
-        public override    string Name   => nameof(Investigator);
+        public override byte   RoleID => 207;
+        public override string Name   => nameof(Investigator);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityInvestigate(this, 40F));
+            AddAbility<Investigator, AbilityInvestigate>();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace CrewOfSalem.Roles
         // ReSharper disable once StaticMemberInGenericType
         private static readonly object Lock = new object();
 
-        protected static T Instance
+        public static T Instance
         {
             get
             {
@@ -46,5 +46,7 @@ namespace CrewOfSalem.Roles
         public static Alignment GetAlignment() => Instance.Alignment;
 
         public static PlayerControl GetPlayer() => Instance.Owner;
+
+        public static string GetRoleTask() => Instance.RoleTask;
     }
 }

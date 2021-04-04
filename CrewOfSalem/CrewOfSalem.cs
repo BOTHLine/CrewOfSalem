@@ -22,42 +22,48 @@ namespace CrewOfSalem
         public static readonly int ShaderDesat        = Shader.PropertyToID("_Desat");
         public static readonly int ShaderPercent      = Shader.PropertyToID("_Percent");
 
-
         public static AudioClip shieldAttempt;
 
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles = new Dictionary<byte, Role>();
         public static readonly List<DeadPlayer>       DeadPlayers          = new List<DeadPlayer>();
 
-        public static readonly System.Random       Rng  = new System.Random((int) DateTime.Now.Ticks);
+        public static readonly System.Random Rng = new System.Random((int) DateTime.Now.Ticks);
 
         public static bool gameIsRunning = false;
 
         private static Sprite buttonInvestigate;
         private static Sprite buttonAlert;
+        private static Sprite buttonGuard;
         private static Sprite buttonShield;
         private static Sprite buttonBlock;
         private static Sprite buttonDisguise;
         private static Sprite buttonKill;
         private static Sprite buttonSteal;
         private static Sprite buttonForge;
+        private static Sprite buttonBlackmail;
         private static Sprite buttonVest;
+        private static Sprite buttonBite;
 
         // Properties
-        public static Sprite ButtonInvestigate =>
-            buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png", 110F);
+        public static Sprite ButtonInvestigate => buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png", 110F);
 
-        public static Sprite ButtonAlert  => buttonAlert ??= LoadSpriteFromResources("ButtonAlert.png",   110F);
-        public static Sprite ButtonKill   => buttonKill ??= LoadSpriteFromResources("ButtonKill.png",     110F);
+        public static Sprite ButtonAlert  => buttonAlert ??= LoadSpriteFromResources("ButtonAlert.png", 110F);
+        public static Sprite ButtonKill   => buttonKill ??= LoadSpriteFromResources("ButtonKill.png",   110F);
+        
+        public static Sprite ButtonGuard  => buttonGuard ??= ButtonShield;
         public static Sprite ButtonShield => buttonShield ??= LoadSpriteFromResources("ButtonShield.png", 110F);
+        
         public static Sprite ButtonBlock  => buttonBlock ??= LoadSpriteFromResources("ButtonBlock.png",   110F);
 
-        public static Sprite ButtonDisguise =>
-            buttonDisguise ??= LoadSpriteFromResources("ButtonDisguise.png", 110F);
+        public static Sprite ButtonDisguise => buttonDisguise ??= LoadSpriteFromResources("ButtonDisguise.png", 110F);
 
         public static Sprite ButtonSteal => buttonSteal ??= LoadSpriteFromResources("ButtonSteal.png", 110F);
         public static Sprite ButtonForge => buttonForge ??= LoadSpriteFromResources("ButtonForge.png", 110F);
 
+        public static Sprite ButtonBlackmail => buttonBlackmail ??= ButtonBlock;
+
         public static Sprite ButtonVest => buttonVest ??= LoadSpriteFromResources("ButtonVest.png", 110F);
+        public static Sprite ButtonBite => buttonBite ??= ButtonKill;
 
         // Methods
         public static void AddSpecialRole<T>(RoleGeneric<T> specialRole)
@@ -132,6 +138,16 @@ namespace CrewOfSalem
         public static void CloseWriter(MessageWriter writer)
         {
             AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
+
+        public static void WriteRPC(RPC action, params byte[] data)
+        {
+            MessageWriter writer = GetWriter(action);
+            foreach (byte b in data)
+            {
+                writer.Write(b);
+            }
+            CloseWriter(writer);
         }
 
         public static void ResetValues()

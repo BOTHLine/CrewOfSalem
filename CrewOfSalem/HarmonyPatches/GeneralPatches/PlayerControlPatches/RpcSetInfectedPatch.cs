@@ -3,7 +3,6 @@ using HarmonyLib;
 using Hazel;
 using System.Collections.Generic;
 using System.Linq;
-using CrewOfSalem.Extensions;
 using UnhollowerBaseLib;
 using static CrewOfSalem.CrewOfSalem;
 

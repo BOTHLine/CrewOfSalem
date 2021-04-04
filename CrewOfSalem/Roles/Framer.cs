@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Framer : RoleGeneric<Framer>
     {
         // Properties Role
-        protected override byte   RoleID => 228;
+        public override byte   RoleID => 228;
         public override    string Name   => nameof(Framer);
 
         public override Faction   Faction   => Faction.Mafia;

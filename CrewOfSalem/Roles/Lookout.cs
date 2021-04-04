@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Lookout : RoleGeneric<Lookout>
     {
         // Properties Role
-        protected override byte   RoleID => 208;
+        public override byte   RoleID => 208;
         public override    string Name   => nameof(Lookout);
 
         public override Faction   Faction   => Faction.Crew;

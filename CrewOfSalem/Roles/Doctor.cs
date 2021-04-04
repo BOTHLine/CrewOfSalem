@@ -7,8 +7,8 @@ namespace CrewOfSalem.Roles
     public class Doctor : RoleGeneric<Doctor>
     {
         // Properties Role
-        protected override byte   RoleID => 218;
-        public override    string Name   => nameof(Doctor);
+        public override byte   RoleID => 218;
+        public override string Name   => nameof(Doctor);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Protective;
@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityShield(this, 30F, 15F));
+            AddAbility<Doctor, AbilityShield>();
         }
     }
 }

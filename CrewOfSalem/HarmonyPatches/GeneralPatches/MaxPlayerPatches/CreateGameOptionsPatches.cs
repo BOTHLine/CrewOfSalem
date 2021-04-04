@@ -154,7 +154,8 @@ namespace CrowdedMod.Patches
         {
             private static bool Prefix(out GameOptionsData __result)
             {
-                SaveManager.GameHostOptions ??= SaveManager.Method_59("gameHostOptions");
+                // TODO: 2021.3.5s
+                // SaveManager.GameHostOptions ??= SaveManager.Method_59("gameHostOptions");
 
                 // patched because of impostor clamping
                 SaveManager.GameHostOptions.NumImpostors = Mathf.Clamp(SaveManager.GameHostOptions.NumImpostors, 1,

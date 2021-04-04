@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class SerialKiller : RoleGeneric<SerialKiller>
     {
         // Properties Role
-        protected override byte   RoleID => 249;
+        public override byte   RoleID => 249;
         public override    string Name   => "Serial Killer";
 
         public override Faction   Faction   => Faction.Neutral;

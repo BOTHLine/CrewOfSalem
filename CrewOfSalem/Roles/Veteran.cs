@@ -7,8 +7,8 @@ namespace CrewOfSalem.Roles
     public class Veteran : RoleGeneric<Veteran>
     {
         // Properties Role
-        protected override byte   RoleID => 215;
-        public override    string Name   => nameof(Veteran);
+        public override byte   RoleID => 215;
+        public override string Name   => nameof(Veteran);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityAlert(this, 30F, 10F));
+            AddAbility<Veteran, AbilityAlert>();
         }
     }
 }

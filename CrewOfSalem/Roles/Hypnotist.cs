@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Hypnotist : RoleGeneric<Hypnotist>
     {
         // Methods Role
-        protected override byte   RoleID => 229;
+        public override byte   RoleID => 229;
         public override    string Name   => nameof(Hypnotist);
 
         public override Faction   Faction   => Faction.Mafia;

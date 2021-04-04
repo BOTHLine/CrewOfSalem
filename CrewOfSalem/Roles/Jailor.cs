@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Jailor : RoleGeneric<Jailor>
     {
         // Properties Role
-        protected override byte   RoleID => 213;
+        public override byte   RoleID => 213;
         public override    string Name   => nameof(Jailor);
 
         public override Faction   Faction   => Faction.Crew;

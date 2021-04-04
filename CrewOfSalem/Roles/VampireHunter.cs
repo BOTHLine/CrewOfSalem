@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class VampireHunter : RoleGeneric<VampireHunter>
     {
         // Properties Role
-        protected override byte   RoleID => 214;
+        public override byte   RoleID => 214;
         public override    string Name   => "Vampire Hunter";
 
         public override Faction   Faction   => Faction.Crew;

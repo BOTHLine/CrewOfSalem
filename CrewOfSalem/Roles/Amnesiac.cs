@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Amnesiac : RoleGeneric<Amnesiac>
     {
         // Properties Role
-        protected override byte   RoleID => 237;
+        public override byte   RoleID => 237;
         public override    string Name   => nameof(Amnesiac);
 
         public override Faction   Faction   => Faction.Neutral;

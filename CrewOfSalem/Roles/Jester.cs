@@ -9,7 +9,7 @@ namespace CrewOfSalem.Roles
     public class Jester : RoleGeneric<Jester>
     {
         // Properties Role
-        protected override byte   RoleID => 245;
+        public override byte   RoleID => 245;
         public override    string Name   => nameof(Jester);
 
         public override Faction   Faction   => Faction.Neutral;
@@ -17,7 +17,7 @@ namespace CrewOfSalem.Roles
 
         protected override Color Color => new Color(244F / 255F, 159F / 255F, 208F / 255F, 1F);
 
-        protected override string RoleTask    => $"{base.RoleTask} to vote {ColorizedText("you", Color)}";
+        public override string RoleTask    => $"{base.RoleTask} to vote {ColorizedText("you", Color)}";
         public override string Description => "You have to trick everyone else to vote you";
 
         // Methods

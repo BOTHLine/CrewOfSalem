@@ -1,5 +1,4 @@
 ﻿using CrewOfSalem.Extensions;
-using CrewOfSalem.HarmonyPatches.VentPatches;
 using CrewOfSalem.Roles;
 using HarmonyLib;
 
@@ -10,8 +9,6 @@ namespace CrewOfSalem.HarmonyPatches.TrackerPatches
     {
         public static void Postfix()
         {
-            PlayerVentTimeUtility.SetLastVent(PlayerControl.LocalPlayer.PlayerId);
-
             if (PlayerControl.LocalPlayer.GetRole() is Tracker tracker)
             {
                 tracker.SendChatMessage(Tracker.MessageType.PlayerEnteredVent);

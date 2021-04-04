@@ -1,6 +1,5 @@
 using System;
 using CrewOfSalem.Extensions;
-using CrewOfSalem.HarmonyPatches.VentPatches;
 using CrewOfSalem.Roles;
 using HarmonyLib;
 using UnityEngine;
@@ -8,7 +7,7 @@ using UnityEngine;
 namespace CrewOfSalem.HarmonyPatches.RolePatches.SpyPatches
 {
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
-    public static class CanUsePatch
+    public static class VentCanUsePatch
     {
         public static bool Prefix(Vent __instance, ref float __result, GameData.PlayerInfo OMBNGHLFKPJ,
             out bool OFPIPGCNGAK, out bool KHBPLGBBIEC)

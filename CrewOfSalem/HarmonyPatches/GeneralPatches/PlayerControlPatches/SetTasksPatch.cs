@@ -1,15 +1,17 @@
 using CrewOfSalem.Extensions;
+using CrewOfSalem.Roles;
 using HarmonyLib;
 
 namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 {
-    [HarmonyPriority(Priority.HigherThanNormal)]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetTasks))]
     public static class SetTasksPatch
     {
+        [HarmonyPriority(Priority.HigherThanNormal)]
         public static void Postfix(PlayerControl __instance)
         {
-            __instance.GetRole().SetRoleTask();
+            Role role = __instance.GetRole();
+            role.SetRoleTask();
         }
     }
 }

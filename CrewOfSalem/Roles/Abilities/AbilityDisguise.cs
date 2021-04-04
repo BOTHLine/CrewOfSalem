@@ -19,8 +19,8 @@ namespace CrewOfSalem.Roles.Abilities
         // Constructors
         public AbilityDisguise(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
 
-        // Methods Ability
-        protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
+        // Methods
+        public static void Disguise()
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
@@ -31,12 +31,9 @@ namespace CrewOfSalem.Roles.Abilities
                 SetSkinWithAnim(player.MyPhysics, 0);
                 if (player.CurrentPet) Object.Destroy(player.CurrentPet.gameObject);
             }
-
-            sendRpc = setCooldown = true;
         }
 
-        // Methods AbilityDuration
-        protected override void EffectEndInternal()
+        private static void DisguiseEnd()
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
@@ -47,6 +44,19 @@ namespace CrewOfSalem.Roles.Abilities
                 player.CurrentPet.Visible = player.Visible;
                 player.SetColor(player.Data.ColorId);
             }
+        }
+
+        // Methods Ability
+        protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
+        {
+            Disguise();
+            sendRpc = setCooldown = true;
+        }
+
+        // Methods AbilityDuration
+        protected override void EffectEndInternal()
+        {
+            DisguiseEnd();
         }
     }
 }

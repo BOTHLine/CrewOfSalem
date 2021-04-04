@@ -67,18 +67,6 @@ namespace CrewOfSalem.Roles.Abilities
 
         public sealed override void Use(PlayerControl target, out bool sendRpc)
         {
-            IReadOnlyList<AbilityAlert> abilityAlerts = GetAllAbilities<AbilityAlert>();
-            foreach (AbilityAlert abilityAlert in abilityAlerts)
-            {
-                if (abilityAlert.owner.Owner != target) continue;
-
-                bool isImpostor = target.Data.IsImpostor;
-                target.RpcMurderPlayer(target);
-                target.Data.IsImpostor = isImpostor;
-                sendRpc = false;
-                return;
-            }
-
             UseInternal(target, out sendRpc, out bool setCooldown);
 
             if (!setCooldown) return;

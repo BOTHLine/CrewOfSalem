@@ -57,20 +57,27 @@ namespace CrewOfSalem
         CrusaderGuard,
 
         Block,
+        BlockEnd,
 
         DisguiseStart,
         DisguiseEnd,
-
-        ForgeStart,
-        ForgeEnd,
-
+        
         Frame,
 
         Hypnotize,
+        
+        ForgeStart,
+        ForgeEnd,
 
+        Blackmail,
+        
         Protect,
 
         VestStart,
-        VestEnd
+        VestEnd,
+        
+        VampireConvert,
+        
+        ExecutionerToJester
     }
 }

@@ -2,16 +2,16 @@ using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using HarmonyLib;
 
-namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
+namespace CrewOfSalem.HarmonyPatches.JesterPatches
 {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetTasks))]
-    public static class SetTasksPatch
+    public static class PlayerControlSetTasksPatch
     {
         public static void Postfix(PlayerControl __instance)
         {
-            if (__instance.GetRole() is Executioner executioner)
+            if (__instance.GetRole() is Jester jester)
             {
-                executioner.ClearTasks();
+                jester.ClearTasks();
             }
         }
     }

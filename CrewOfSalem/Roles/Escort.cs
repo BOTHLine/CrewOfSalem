@@ -7,8 +7,8 @@ namespace CrewOfSalem.Roles
     public class Escort : RoleGeneric<Escort>
     {
         // Properties Role
-        protected override byte   RoleID => 221;
-        public override    string Name   => nameof(Escort);
+        public override byte   RoleID => 221;
+        public override string Name   => nameof(Escort);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Support;
@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityBlock(this, 30F, 15F));
+            AddAbility<Escort, AbilityBlock>();
         }
     }
 }

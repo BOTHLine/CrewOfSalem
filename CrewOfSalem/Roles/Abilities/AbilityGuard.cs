@@ -17,7 +17,7 @@ namespace CrewOfSalem.Roles.Abilities
 
         // Properties Ability
         public AbilityGuard(Role owner, float cooldown) : base(owner, cooldown) { }
-        protected override Sprite Sprite => ButtonKill;
+        protected override Sprite Sprite => ButtonGuard;
 
         protected override bool NeedsTarget => false;
 

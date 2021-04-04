@@ -3,7 +3,6 @@ using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using Hazel;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -13,23 +12,26 @@ namespace CrewOfSalem.Roles
     {
         // Fields
         private bool isJester = false;
-        
+
         // Properties
         public PlayerControl VoteTarget { get; private set; }
 
         public bool IsJester => isJester;
 
         // Properties Role
-        protected override byte   RoleID => 244;
-        public override    string Name   => nameof(Executioner);
+        public override byte   RoleID => 244;
+        public override string Name   => nameof(Executioner);
 
         public override Faction   Faction   => Faction.Neutral;
         public override Alignment Alignment => Alignment.Evil;
 
         protected override Color Color => new Color(172F / 255F, 172F / 255F, 172F / 255F, 1F);
 
-        protected override string RoleTask => $"{base.RoleTask} to vote {ColorizedText(VoteTarget.name, Palette.PlayerColors[VoteTarget.Data.ColorId])}";
-        public override string Description => "You have to trick everyone else to vote your target. If they die before that, you will turn into a Jester";
+        public override string RoleTask =>
+            $"{base.RoleTask} to vote {ColorizedText(VoteTarget.name, Palette.PlayerColors[VoteTarget.Data.ColorId])}";
+
+        public override string Description =>
+            "You have to trick everyone else to vote your target. If they die before that, you will turn into a Jester";
 
         // Methods
         public void ClearTasks()
@@ -68,13 +70,22 @@ namespace CrewOfSalem.Roles
             Owner.Data.IsImpostor = true;
         }
 
+        public void RpcTurnIntoJester()
+        {
+            if (AmongUsClient.Instance.AmClient) TurnIntoJester();
+
+            WriteImmediately(RPC.ExecutionerToJester);
+        }
+
         // TODO: Don't assign Jester-Role to Executioner. Just make them appear to be a jester?
         // Change their tasks, color name and -help etc.
         // Also Investigator/Consigliere should get Jester Results.
         public void TurnIntoJester()
         {
+            var task = Owner.myTasks[0] as ImportantTextTask;
+            if (task != null) task.Text = Jester.GetRoleTask();
             isJester = true;
-            
+            /*
             PlayerControl player = Owner;
             ClearSettings();
             var jester = new Jester();
@@ -84,6 +95,7 @@ namespace CrewOfSalem.Roles
             writer.Write(Jester.GetRoleID());
             writer.Write(jester.Owner.PlayerId);
             CloseWriter(writer);
+            */
         }
 
         // Methods Role
@@ -92,7 +104,8 @@ namespace CrewOfSalem.Roles
         protected override void InitializeRoleInternal()
         {
             PlayerControl[] players = PlayerControl.AllPlayerControls.ToArray()
-               .Where(player => player.GetRole().Faction == Faction.Crew /* && !(role is Mayor || role is Jailor) */).ToArray();
+               .Where(player => player.GetRole().Faction == Faction.Crew /* && !(role is Mayor || role is Jailor) */)
+               .ToArray();
             VoteTarget = players[Rng.Next(0, players.Length)];
         }
     }

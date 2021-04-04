@@ -7,8 +7,8 @@ namespace CrewOfSalem.Roles
     public class Vigilante : RoleGeneric<Vigilante>
     {
         // Properties Role
-        protected override byte   RoleID => 216;
-        public override    string Name   => nameof(Vigilante);
+        public override byte   RoleID => 216;
+        public override string Name   => nameof(Vigilante);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityKill(this, 30F));
+            AddAbility<Vigilante, AbilityKill>();
         }
     }
 }

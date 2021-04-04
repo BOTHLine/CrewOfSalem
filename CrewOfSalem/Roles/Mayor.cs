@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Mayor : RoleGeneric<Mayor>
     {
         // Properties Role
-        protected override byte   RoleID => 222;
+        public override byte   RoleID => 222;
         public override    string Name   => nameof(Mayor);
 
         public override Faction   Faction   => Faction.Crew;

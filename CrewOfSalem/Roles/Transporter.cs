@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Transporter : RoleGeneric<Transporter>
     {
         // Properties Role
-        protected override byte   RoleID => 225;
+        public override byte   RoleID => 225;
         public override    string Name   => nameof(Transporter);
 
         public override Faction   Faction   => Faction.Crew;

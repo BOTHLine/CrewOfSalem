@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CrewOfSalem.Extensions;
+using CrewOfSalem.HarmonyPatches.PlayerControlPatches;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Factions;
@@ -29,6 +30,9 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
                 } else if (localRole?.Faction == Faction.Coven && otherRole?.Faction == Faction.Coven)
                 {
                     player.nameText.Color = Faction.Coven.Color;
+                } else if (AbilityBite.IsVampire(localPlayer) && AbilityBite.IsVampire(player))
+                {
+                    player.nameText.Color = Vampire.GetColor();
                 } else
                 {
                     player.nameText.Color = Color.white;

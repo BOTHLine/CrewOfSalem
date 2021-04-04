@@ -7,8 +7,8 @@ namespace CrewOfSalem.Roles
     public class Mafioso : RoleGeneric<Mafioso>
     {
         // Properties
-        protected override byte   RoleID => 233;
-        public override    string Name   => nameof(Mafioso);
+        public override byte   RoleID => 233;
+        public override string Name   => nameof(Mafioso);
 
         public override Faction   Faction   => Faction.Mafia;
         public override Alignment Alignment => Alignment.Killing;
@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityKill(this, 25F));
+            AddAbility<Mafioso, AbilityKill>();
         }
     }
 }

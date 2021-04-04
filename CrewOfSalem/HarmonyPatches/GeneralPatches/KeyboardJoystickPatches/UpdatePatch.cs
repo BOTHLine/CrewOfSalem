@@ -12,12 +12,20 @@ namespace CrewOfSalem.HarmonyPatches.KeyboardJoystickPatches
         [HarmonyPatch(nameof(KeyboardJoystick.Update))]
         public static void Postfix(KeyboardJoystick __instance)
         {
-            if (!Input.GetKeyDown(KeyCode.Q)) return;
-
-            IReadOnlyList<Ability> abilities = PlayerControl.LocalPlayer.GetAbilities();
-            if (abilities?.Count > 0)
+            if (Input.GetKeyDown(KeyCode.Q))
             {
-                abilities[0]?.TryUse();
+                IReadOnlyList<Ability> abilities = PlayerControl.LocalPlayer.GetAbilities();
+                if (abilities?.Count > 0)
+                {
+                    abilities[0]?.TryUse();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab) &&
+                LobbyBehaviour.Instance != null /*&& Object.FindObjectOfType<GameOptionsMenu>() == null*/)
+            {
+                Main.TurnPage();
+                // OptionPage.TurnPage();
             }
         }
     }

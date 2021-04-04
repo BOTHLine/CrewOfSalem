@@ -12,23 +12,22 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
     public static class MurderPlayerPatch
     {
-        private static bool isImpostor;
-
-        public static bool Prefix(PlayerControl __instance, PlayerControl PAIBDFDMIGK)
+        public static bool Prefix(PlayerControl __instance, PlayerControl PAIBDFDMIGK, out bool __state)
         {
-            isImpostor = __instance.Data.IsImpostor;
-            __instance.Data.IsImpostor = true;
+            __state = __instance.Data.IsImpostor;
             return true;
         }
 
-        public static void Postfix(PlayerControl __instance, PlayerControl PAIBDFDMIGK)
+        public static void Postfix(PlayerControl __instance, PlayerControl PAIBDFDMIGK, bool __state)
         {
-            __instance.Data.IsImpostor = isImpostor;
+            __instance.Data.IsImpostor = __state;
             DeadPlayers.Add(new DeadPlayer(PAIBDFDMIGK, __instance, DateTime.UtcNow));
-            if (__instance.GetRole().Faction != Faction.Mafia) return;
 
-            Role mafiaRole = Main.Roles.FirstOrDefault(role => role.Faction == Faction.Mafia && !role.Owner.Data.IsDead);
-            mafiaRole?.AddAbility(new AbilityKill(mafiaRole, 30F));
+            if (PAIBDFDMIGK.GetRole().Faction != Faction.Mafia) return;
+
+            Role mafiaRole =
+                Main.Roles.FirstOrDefault(role => role.Faction == Faction.Mafia && !role.Owner.Data.IsDead);
+            mafiaRole?.AddAbility<Mafioso, AbilityKill>();
         }
     }
 }

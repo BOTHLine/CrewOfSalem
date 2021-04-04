@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace CrewOfSalem.HarmonyPatches.VentPatches
+namespace CrewOfSalem.HarmonyPatches.RolePatches.SpyPatches
 {
     public static class PlayerVentTimeUtility
     {

@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Retributionist : RoleGeneric<Retributionist>
     {
         // Properties Role
-        protected override byte   RoleID => 224;
+        public override byte   RoleID => 224;
         public override    string Name   => nameof(Retributionist);
 
         public override Faction   Faction   => Faction.Crew;

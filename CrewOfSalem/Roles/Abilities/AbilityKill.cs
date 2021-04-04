@@ -66,7 +66,7 @@ namespace CrewOfSalem.Roles.Abilities
             if (owner.Faction == Faction.Mafia || owner.Faction == Faction.Coven)
             {
                 Button.SetTarget(PlayerTools.FindClosestTarget(owner.Owner,
-                    (player) => player.GetRole().Faction != owner.Faction));
+                    (player) => player.GetRole()?.Faction != owner.Faction));
             } else
             {
                 base.UpdateTarget();

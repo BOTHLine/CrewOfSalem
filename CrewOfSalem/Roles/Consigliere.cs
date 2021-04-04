@@ -7,8 +7,8 @@ namespace CrewOfSalem.Roles
     public class Consigliere : RoleGeneric<Consigliere>
     {
         // Properties Role
-        protected override byte   RoleID => 235;
-        public override    string Name   => nameof(Consigliere);
+        public override byte   RoleID => 235;
+        public override string Name   => nameof(Consigliere);
 
         public override Faction   Faction   => Faction.Mafia;
         public override Alignment Alignment => Alignment.Support;
@@ -18,7 +18,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityCheckRole(this, 50F));
+            AddAbility<Consigliere, AbilityCheckRole>();
         }
     }
 }

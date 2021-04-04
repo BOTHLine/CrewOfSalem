@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Spy : RoleGeneric<Spy>
     {
         // Properties Role
-        protected override byte   RoleID => 211;
+        public override byte   RoleID => 211;
         public override    string Name   => nameof(Spy);
 
         public override Faction   Faction   => Faction.Crew;

@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class GuardianAngel : RoleGeneric<GuardianAngel>
     {
         // Properties Role
-        protected override byte   RoleID => 238;
+        public override byte   RoleID => 238;
         public override    string Name   => "Guardian Angel";
 
         public override Faction   Faction   => Faction.Neutral;

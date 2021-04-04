@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Arsonist : RoleGeneric<Arsonist>
     {
         // Properties Role
-        protected override byte   RoleID => 247;
+        public override byte   RoleID => 247;
         public override    string Name   => nameof(Arsonist);
 
         public override Faction   Faction   => Faction.Neutral;

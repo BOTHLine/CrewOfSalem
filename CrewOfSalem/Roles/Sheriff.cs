@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Sheriff : RoleGeneric<Sheriff>
     {
         // Properties Role
-        protected override byte   RoleID => 210;
+        public override byte   RoleID => 210;
         public override    string Name   => nameof(Sheriff);
 
         public override Faction   Faction   => Faction.Crew;

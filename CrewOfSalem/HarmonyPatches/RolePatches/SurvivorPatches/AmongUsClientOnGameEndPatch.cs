@@ -5,7 +5,7 @@ using static CrewOfSalem.CrewOfSalem;
 namespace CrewOfSalem.HarmonyPatches.SurvivorPatches
 {
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
-    public static class OnGameEndPatch
+    public static class AmongUsClientOnGameEndPatch
     {
         public static bool Prefix(GameOverReason OFLKLGMHBEL)
         {

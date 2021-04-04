@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Godfather : RoleGeneric<Godfather>
     {
         // Properties Role
-        protected override byte   RoleID => 232;
+        public override byte   RoleID => 232;
         public override    string Name   => nameof(Godfather);
 
         public override Faction   Faction   => Faction.Mafia;

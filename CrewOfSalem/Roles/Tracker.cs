@@ -15,7 +15,7 @@ namespace CrewOfSalem.Roles
         };
 
         // Properties Role
-        protected override byte   RoleID => 212;
+        public override byte   RoleID => 212;
         public override    string Name   => nameof(Tracker);
 
         public override Faction   Faction   => Faction.Crew;

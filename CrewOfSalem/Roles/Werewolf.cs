@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Werewolf : RoleGeneric<Werewolf>
     {
         // Properties Role
-        protected override byte   RoleID => 250;
+        public override byte   RoleID => 250;
         public override    string Name   => nameof(Werewolf);
 
         public override Faction   Faction   => Faction.Neutral;

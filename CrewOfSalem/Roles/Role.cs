@@ -1,4 +1,5 @@
-﻿using CrewOfSalem.Roles.Alignments;
+﻿using System;
+using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using Hazel;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace CrewOfSalem.Roles
         private readonly List<Ability> abilities = new List<Ability>();
 
         // Properties
-        protected abstract byte   RoleID { get; }
-        public abstract    string Name   { get; }
+        public abstract byte   RoleID { get; }
+        public abstract string Name   { get; }
 
         public abstract Faction   Faction   { get; }
         public abstract Alignment Alignment { get; }
@@ -24,7 +25,7 @@ namespace CrewOfSalem.Roles
         protected virtual Color Color        => Faction.Color;
         protected virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
 
-        protected virtual string  RoleTask   => Alignment.GetColorizedTask(Faction);
+        public virtual    string  RoleTask   => Alignment.GetColorizedTask(Faction);
         protected virtual Vector3 TitleScale { get; } = new Vector3(1, 1, 1);
 
         public abstract string Description { get; }
@@ -40,6 +41,8 @@ namespace CrewOfSalem.Roles
 
         public static Faction GetFaction<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetFaction();
         public static Alignment GetAlignment<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetAlignment();
+
+        public static string GetRoleTask<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetRoleTask();
 
         // Constructors
         protected Role() { }
@@ -105,25 +108,31 @@ namespace CrewOfSalem.Roles
         public void ClearSettings()
         {
             Owner = null;
-            for (int i = abilities.Count; i >= 0; i--)
-            {
-                Ability ability = abilities[i];
-                abilities.RemoveAt(i);
-                ability.Destroy();
-            }
-
+            ClearAbilities();
             ClearSettingsInternal();
         }
 
-        public void AddAbility(Ability ability)
+        public void AddAbility<TRole, TAbility>()
+            where TRole : RoleGeneric<TRole>, new()
+            where TAbility : Ability
         {
-            abilities.Add(ability);
-            RefreshAbilityOffsets();
+            if (typeof(AbilityDuration).IsAssignableFrom(typeof(TAbility)))
+            {
+                AddAbility(Activator.CreateInstance(typeof(TAbility), this, Main.GetRoleCooldown<TRole, TAbility>(),
+                    Main.GetRoleDuration<TRole, TAbility>()) as TAbility);
+            } else
+            {
+                AddAbility(
+                    Activator.CreateInstance(typeof(TAbility), this, Main.GetRoleCooldown<TRole, TAbility>()) as
+                        TAbility);
+            }
         }
 
-        public void AddAbility(Ability ability, int index)
+        private void AddAbility(Ability ability, bool insertAtFront = false)
         {
-            abilities.Insert(index, ability);
+            if (insertAtFront) abilities.Insert(0, ability);
+            else abilities.Add(ability);
+
             RefreshAbilityOffsets();
         }
 
@@ -146,6 +155,16 @@ namespace CrewOfSalem.Roles
             return abilities;
         }
 
+        public void ClearAbilities()
+        {
+            foreach (Ability ability in abilities)
+            {
+                ability.Destroy();
+            }
+
+            abilities.Clear();
+        }
+
         // Virtual Methods
         protected abstract void InitializeAbilities();
 
@@ -159,12 +178,13 @@ namespace CrewOfSalem.Roles
 
         protected virtual void SetConfigSettingsInternal() { }
 
-        public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
+        public virtual void SetIntro(IntroCutscene._CoBegin_d__11 instance)
         {
             instance.__this.Title.Text = Name;
             instance.__this.Title.render?.material.SetColor(ShaderOutlineColor, OutlineColor);
             instance.__this.Title.transform.localScale = TitleScale;
-            instance.c = Color;
+            instance._impColor_5__4 = Color;
+            // instance.c = Color; // TODO: 2021.3.5s
             instance.__this.ImpostorText.Text = RoleTask;
             instance.__this.BackgroundBar.material.color = Color;
         }

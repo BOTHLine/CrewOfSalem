@@ -6,7 +6,7 @@ namespace CrewOfSalem.Roles
     public class Trapper : RoleGeneric<Trapper>
     {
         // Properties Role
-        protected override byte   RoleID => 220;
+        public override byte   RoleID => 220;
         public override    string Name   => nameof(Trapper);
 
         public override Faction   Faction   => Faction.Crew;

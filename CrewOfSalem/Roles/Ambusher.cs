@@ -11,7 +11,7 @@ namespace CrewOfSalem.Roles
         public int isKilling = 0;
 
         // Properties Role
-        protected override byte   RoleID => 231;
+        public override byte   RoleID => 231;
         public override    string Name   => nameof(Ambusher);
 
         public override Faction   Faction   => Faction.Mafia;
@@ -22,7 +22,7 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility(new AbilityKill(this, Main.GetRoleCooldown<Ambusher>()));
+            AddAbility<Ambusher, AbilityKill>();
         }
     }
 }
