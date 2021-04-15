@@ -2,6 +2,7 @@ using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
+using Hazel;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -29,7 +30,8 @@ namespace CrewOfSalem.Roles
         public override string RoleTask =>
             $"{base.RoleTask} to vote {ColorizedText(VoteTarget.name, Palette.PlayerColors[VoteTarget.Data.ColorId])}";
 
-        public override string Description => "You have to trick everyone else to vote your target. If they die before that, you will turn into a Jester";
+        public override string Description =>
+            "You have to trick everyone else to vote your target. If they die before that, you will turn into a Jester";
 
         // Methods
         public void RpcWin()
@@ -67,20 +69,16 @@ namespace CrewOfSalem.Roles
         // Also Investigator/Consigliere should get Jester Results.
         public void TurnIntoJester()
         {
+            /*
             var task = Owner.myTasks.ToArray()[0] as ImportantTextTask;
             if (task != null) task.Text = Jester.GetRoleTask();
             isJester = true;
-            /*
+            */
             PlayerControl player = Owner;
             ClearSettings();
-            var jester = new Jester();
-            AddSpecialRole(jester, player);
+            AddRole(Jester.Instance, player);
 
-            MessageWriter writer = GetWriter(RPC.SetRole);
-            writer.Write(Jester.GetRoleID());
-            writer.Write(jester.Owner.PlayerId);
-            CloseWriter(writer);
-            */
+            WriteRPC(RPC.SetRole, Jester.GetRoleID(), player.PlayerId);
         }
 
         // Methods Role

@@ -79,12 +79,18 @@ namespace CrewOfSalem
         // Methods
         private static void AddRole(Role role)
         {
+            if (PlayerNames.ContainsKey(role.Owner.Data.PlayerName))
+            {
+                PlayerNames.Remove(role.Owner.Data.PlayerName);
+            }
+
+            PlayerNames.Add(role.Owner.Data.PlayerName, role);
+
             if (AssignedRoles.ContainsKey(role.Owner.PlayerId))
             {
                 AssignedRoles.Remove(role.Owner.PlayerId);
             }
 
-            PlayerNames.Add(role.Owner.Data.PlayerName, role);
             AssignedRoles.Add(role.Owner.PlayerId, role);
         }
 

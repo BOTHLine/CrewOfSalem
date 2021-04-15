@@ -12,6 +12,7 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return true;
             if (TryGetSpecialRole(out Executioner executioner) && executioner.Owner == PlayerControl.LocalPlayer)
             {
+                /*
                 if (!executioner.IsJester)
                 {
                     if (executioner.VoteTarget.PlayerId == ExileController.Instance.exiled.PlayerId)
@@ -28,8 +29,8 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                         executioner.RpcWin();
                     }
                 }
+                */
 
-                /*
                 if (executioner.VoteTarget.Data.IsDead)
                 {
                     executioner.TurnIntoJester();
@@ -38,7 +39,6 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                     executioner.Win();
                     return true;
                 }
-                */
             }
 
             return true;
