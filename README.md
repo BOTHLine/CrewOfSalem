@@ -30,7 +30,7 @@ Lighter Color:	Lime, Orange, Pink, Teal, Yellow, White
 Darker Color:	Green, Grey, Brown, Red, Blue, Purple  
 
 #### Spy
-Kann venten.
+Kann venten und den Mafia internen Chat mitlesen.
 
 ### Crew Killing
 
