@@ -62,13 +62,11 @@ Das Medium kann Geister sehen. Dafür kann das Medium keine Farben oder Namen an
 Die Farben von Leichen kann das Medium (noch) sehen.
 
 ## Mafia
-#### Disguiser
-Kann alle Spieler für X Sekunden grau erscheinen lassen und alle Namen verschleiern.
 
 ### Mafia Deception
 
 #### Disguiser
-Kann alle Spieler grau färben und deren Namen ausblenden.
+Kann alle Spieler für X Sekunden grau erscheinen lassen und alle Namen verschleiern.
 
 ### Mafia Killing
 
