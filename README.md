@@ -10,21 +10,21 @@ Erhält der Psychic 3 Namen, so ist MINDESTENS einer davon böse.
 Erhält der Psychic 2 Namen, so ist MINDESTENS einer davon gut.
 Gut sind alle Mitglieder der Crew sowohl Neutral Benign (Amnesiac, Guardian Angel, Survivor).
 
-A vision revealed that X or Y is good!		
-The crew is too evil to find anyone good!		- Wenn der Psychic der einzig gute Spieler ist
-A vision revealed that X, Y, or Z is evil!
-The crew is too small to accurately find an evildoer!	- Wenn weniger als 3 Spieler leben
+*A vision revealed that X or Y is good!*		
+*The crew is too evil to find anyone good!*		- Wenn der Psychic der einzig gute Spieler ist
+*A vision revealed that X, Y, or Z is evil!*
+*The crew is too small to accurately find an evildoer!*	- Wenn weniger als 3 Spieler leben
 
 #### Sheriff
 Erhält extra Informationen, wenn er Leichen reportet. Je schneller, desto besser.
 Die zusätzlichen Informationen können sein:
 
-The victim was killed X seconds ago.
-The killer has a Lighter/Darker color.
-The victim was a(n) Rolle.
-The killer's name has the letter X.
-The killer has already killed a total of X players.	 - Aktueller Kill inklusive
-The killer was a(n) Rolle.
+*The victim was killed X seconds ago.*
+*The killer has a Lighter/Darker color.*
+*The victim was a(n) Rolle.*
+*The killer's name has the letter X.
+*The killer has already killed a total of X players.*	 - Aktueller Kill inklusive
+*The killer was a(n) Rolle.*
 
 Lighter Color:	Lime, Orange, Pink, Teal, Yellow, White
 Darker Color:	Green, Grey, Brown, Red, Blue, Purple
@@ -35,8 +35,7 @@ Kann venten.
 ### Crew Killing
 
 #### Veteran
-Cooldown-Duration Fähigkeit "Alert":
-Solange der Veteran auf "Alert" ist, tötet tötet er automatisch jeden Spieler, der in den nächsten X Sekunden versucht eine Fähigkeit auf ihn zu nutzen (Egal ob positiv oder negativ).
+Solange der Veteran auf **Alert** ist, tötet tötet er automatisch jeden Spieler, der in den nächsten X Sekunden versucht eine Fähigkeit auf ihn zu nutzen (Egal ob positiv oder negativ).
 
 #### Vigilante
 Kann auf andere Spieler schießen. Sollte er ein Spieler der Crew erwischen, stirbt er selber. Ansonsten wird sein Ziel getötet.
@@ -44,7 +43,7 @@ Kann auf andere Spieler schießen. Sollte er ein Spieler der Crew erwischen, sti
 ### Crew Protective
 
 #### Bodyguard
-Kann sein "Guard"-Fähigkeit aktivieren und deaktivieren. Während diese Fähigkeit aktiviert ist, kann kein Spieler in seiner Nähe getötet werden. Sollte ein Spieler dies versuchen, sterben stattdessen der Angreifer und der Bodyguard.
+Kann sein **Guard** aktivieren und deaktivieren. Während diese Fähigkeit aktiviert ist, kann kein Spieler in seiner Nähe getötet werden. Sollte ein Spieler dies versuchen, sterben stattdessen der Angreifer und der Bodyguard.
 Der Bodyguard kann sich nicht selber schützen.
 Der Bodyguard kann andere Spieler nicht beschützen, während er selber "beschäftigt" ist. (In einer Task, in Kameras, am Admin Table etc..)
 
