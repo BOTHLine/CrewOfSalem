@@ -5,29 +5,29 @@
 ### Crew Investigate
 
 #### Psychic
-Erhält bei jedem Body Report abwechselnd 2 oder 3 Namen von noch lebenden Mitspielenr (Sich selbst ausgeschlossen).
-Erhält der Psychic 3 Namen, so ist MINDESTENS einer davon böse.
-Erhält der Psychic 2 Namen, so ist MINDESTENS einer davon gut.
-Gut sind alle Mitglieder der Crew sowohl Neutral Benign (Amnesiac, Guardian Angel, Survivor).
+Erhält bei jedem Body Report abwechselnd 2 oder 3 Namen von noch lebenden Mitspielenr (Sich selbst ausgeschlossen).  
+Erhält der Psychic 3 Namen, so ist MINDESTENS einer davon böse.  
+Erhält der Psychic 2 Namen, so ist MINDESTENS einer davon gut.  
+Gut sind alle Mitglieder der Crew sowohl Neutral Benign (Amnesiac, Guardian Angel, Survivor).  
 
-A vision revealed that X or Y is good!
-The crew is too evil to find anyone good!	- Wenn der Psychic der einzig gute Spieler ist
-A vision revealed that X, Y, or Z is evil!
-The crew is too small to accurately find an evildoer!	- Wenn weniger als 3 Spieler leben
+*A vision revealed that X or Y is good!*  
+*The crew is too evil to find anyone good!*	- Wenn der Psychic der einzig gute Spieler ist  
+*A vision revealed that X, Y, or Z is evil!*  
+*The crew is too small to accurately find an evildoer!*	- Wenn weniger als 3 Spieler leben  
 
 #### Sheriff
 Erhält extra Informationen, wenn er Leichen reportet. Je schneller, desto besser.
 Die zusätzlichen Informationen können sein:
 
-The victim was killed X seconds ago.
-The killer has a Lighter/Darker color.
-The victim was a(n) Rolle.
-The killer's name has the letter X.
-The killer has already killed a total of X players.	 - Aktueller Kill inklusive
-The killer was a(n) Rolle.
+*The victim was killed X seconds ago.*  
+*The killer has a Lighter/Darker color.*  
+*The victim was a(n) Rolle.*  
+*The killer's name has the letter X.*  
+*The killer has already killed a total of X players.*	 - Aktueller Kill inklusive  
+*The killer was a(n) Rolle.*  
 
-Lighter Color:	Lime, Orange, Pink, Teal, Yellow, White
-Darker Color:	Green, Grey, Brown, Red, Blue, Purple
+Lighter Color:	Lime, Orange, Pink, Teal, Yellow, White  
+Darker Color:	Green, Grey, Brown, Red, Blue, Purple  
 
 #### Spy
 Kann venten.
@@ -43,13 +43,13 @@ Kann auf andere Spieler schießen. Sollte er ein Spieler der Crew erwischen, sti
 ### Crew Protective
 
 #### Bodyguard
-Kann sein **Guard** aktivieren und deaktivieren. Während diese Fähigkeit aktiviert ist, kann kein Spieler in seiner Nähe getötet werden. Sollte ein Spieler dies versuchen, sterben stattdessen der Angreifer und der Bodyguard.
-Der Bodyguard kann sich nicht selber schützen.
+Kann sein **Guard** aktivieren und deaktivieren. Während diese Fähigkeit aktiviert ist, kann kein Spieler in seiner Nähe getötet werden. Sollte ein Spieler dies versuchen, sterben stattdessen der Angreifer und der Bodyguard.  
+Der Bodyguard kann sich nicht selber schützen.  
 Der Bodyguard kann andere Spieler nicht beschützen, während er selber "beschäftigt" ist. (In einer Task, in Kameras, am Admin Table etc..)
 
 #### Doctor
-Kann einem anderen Spieler einen Schild geben, welcher diesen für die nächsten X Sekunden vor dem ersten Angriff schützt. Sollte ein Spiel dies versuchen, geht sein Kill auf Cooldown und der Schild verschwindet.
-Der Doctor kann nach einem Cooldown erneut sein Schild vergeben.
+Kann einem anderen Spieler einen Schild geben, welcher diesen für die nächsten X Sekunden vor dem ersten Angriff schützt. Sollte ein Spiel dies versuchen, geht sein Kill auf Cooldown und der Schild verschwindet.  
+Der Doctor kann nach einem Cooldown erneut sein Schild vergeben.  
 Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser nach einer gewissen Zeit automatisch verschwindet.
 
 ### Crew Support
@@ -58,11 +58,11 @@ Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser nach einer gewi
 Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller ihrer Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Vents benutzen.
 
 #### Medium
-Das Medium kann Geister sehen. Dafür kann das Medium keine Farben oder Namen an Spielern erkennen.
+Das Medium kann Geister sehen. Dafür kann das Medium keine Farben oder Namen an Spielern erkennen.  
 Die Farben von Leichen kann das Medium sehen.
 
 ## Mafia
-Disguiser
+#### Disguiser
 Kann alle Spieler für X Sekunden grau erscheinen lassen und alle Namen verschleiern.
 
 ### Mafia Deception
@@ -94,17 +94,17 @@ Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller ihrer Fä
 ### Neutral Benign
 
 #### Guardian Angel
-Bekommt am Anfang der Runde ein Ziel zuegewiesen, welches jede Rolle außer Guardian Angel, Executioner oder Jester sein kann. Der Guardian Angel gewinnt, solange sein Ziel bis zum Ende überlebt, auch wenn er selber bereits tot ist.
+Bekommt am Anfang der Runde ein Ziel zuegewiesen, welches jede Rolle außer Guardian Angel, Executioner oder Jester sein kann. Der Guardian Angel gewinnt, solange sein Ziel bis zum Ende überlebt, auch wenn er selber bereits tot ist.  
 Kann sein Ziel für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf das Ziel des Guardian Angels bringen nur den Kill auf Cooldown, töten es aber nicht. Kann auch aus dem Tod heraus genutzt werden.
 
 #### Survivor
-Möchte nur bis zum Ende überleben. Kann sowohl mit der Crew als auch mit Mafia gewinnen, solange er bis zum Ende überlebt. Außer wenn die Mafia durch Sabotage (Reactor, Oxygen) gewinnt.
+Möchte nur bis zum Ende überleben. Kann sowohl mit der Crew als auch mit Mafia gewinnen, solange er bis zum Ende überlebt. Außer wenn die Mafia durch Sabotage (Reactor, Oxygen) gewinnt.  
 Kann sich selber für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf den Survivor bringen nur den Kill auf cooldown, töten ihn aber nicht.
 
 ### Neutral Evil
 
 #### Executioner
-Bekommt am Anfang der Runde ein Ziel zugewiesen, welches immer Teil der Crew ist. Der Executioner gewinnt alleine, sobald dieses Ziel durch ein Meeting raus gevotet wird.
+Bekommt am Anfang der Runde ein Ziel zugewiesen, welches immer Teil der Crew ist. Der Executioner gewinnt alleine, sobald dieses Ziel durch ein Meeting raus gevotet wird.  
 Sollte das Ziel auf eine andere Art und Weise sterben, so wird der Executioner zum Jester.
 
 #### Jester
