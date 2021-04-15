@@ -12,7 +12,6 @@ Crew:
 		A vision revealed that X, Y, or Z is evil!
 		The crew is too small to accurately find an evildoer!	- Wenn weniger als 3 Spieler leben
 
-
 	Sheriff:
 		Erhält extra Informationen, wenn er Leichen reportet. Je schneller, desto besser.
 		Die zusätzlichen Informationen können sein:
@@ -26,7 +25,7 @@ Crew:
 
 		Lighter Color:	Lime, Orange, Pink, Teal, Yellow, White
 		Darker Color:	Green, Grey, Brown, Red, Blue, Purple
-17 
+
 	Spy:
 		Kann venten.
 
