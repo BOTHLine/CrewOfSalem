@@ -35,10 +35,10 @@ Kann venten.
 ### Crew Killing
 
 #### Veteran
-Solange der Veteran auf **Alert** ist, tötet tötet er automatisch jeden Spieler, der in den nächsten X Sekunden versucht eine Fähigkeit auf ihn zu nutzen (Egal ob positiv oder negativ).
+Solange der Veteran auf **Alert** ist, tötet er automatisch jeden Spieler, der in den nächsten X Sekunden versucht eine Fähigkeit auf ihn zu nutzen (Egal ob positiv oder negativ).
 
 #### Vigilante
-Kann auf andere Spieler schießen. Sollte er ein Spieler der Crew erwischen, stirbt er selber. Ansonsten wird sein Ziel getötet.
+Kann auf andere Spieler schießen. Sollte er einen Spieler der Crew erwischen, stirbt er selber. Ansonsten wird sein Ziel getötet.
 
 ### Crew Protective
 
@@ -48,18 +48,18 @@ Der Bodyguard kann sich nicht selber schützen.
 Der Bodyguard kann andere Spieler nicht beschützen, während er selber "beschäftigt" ist. (In einer Task, in Kameras, am Admin Table etc..)
 
 #### Doctor
-Kann einem anderen Spieler einen Schild geben, welcher diesen für die nächsten X Sekunden vor dem ersten Angriff schützt. Sollte ein Spiel dies versuchen, geht sein Kill auf Cooldown und der Schild verschwindet.  
+Kann einem anderen Spieler einen Schild geben, welcher diesen für die nächsten X Sekunden vor dem nächsten Angriff schützt. Sollte ein Spieler dies versuchen, geht sein Kill auf Cooldown und der Schild verschwindet.  
 Der Doctor kann nach einem Cooldown erneut sein Schild vergeben.  
 Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser nach einer gewissen Zeit automatisch verschwindet.
 
 ### Crew Support
 
 #### Escort
-Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller ihrer Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Vents benutzen.
+Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Vents benutzen.
 
 #### Medium
 Das Medium kann Geister sehen. Dafür kann das Medium keine Farben oder Namen an Spielern erkennen.  
-Die Farben von Leichen kann das Medium sehen.
+Die Farben von Leichen kann das Medium (noch) sehen.
 
 ## Mafia
 #### Disguiser
@@ -87,7 +87,7 @@ Kann einen Spieler pro Runde "blackmailen". Diese Person darf in dem nächsten M
 Kann einen Spieler untersuchen und die exakte Rolle herausfinden.
 
 #### Consort
-Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller ihrer Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Tasks machen.
+Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Tasks machen.
 
 ## Neutral
 
@@ -98,7 +98,7 @@ Bekommt am Anfang der Runde ein Ziel zuegewiesen, welches jede Rolle außer Guar
 Kann sein Ziel für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf das Ziel des Guardian Angels bringen nur den Kill auf Cooldown, töten es aber nicht. Kann auch aus dem Tod heraus genutzt werden.
 
 #### Survivor
-Möchte nur bis zum Ende überleben. Kann sowohl mit der Crew als auch mit Mafia gewinnen, solange er bis zum Ende überlebt. Außer wenn die Mafia durch Sabotage (Reactor, Oxygen) gewinnt.  
+Möchte nur bis zum Ende überleben. Kann sowohl mit der Crew als auch mit der Mafia gewinnen, solange er bis zum Ende überlebt. Außer wenn die Mafia durch Sabotage (Reactor, Oxygen) gewinnt.  
 Kann sich selber für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf den Survivor bringen nur den Kill auf cooldown, töten ihn aber nicht.
 
 ### Neutral Evil
@@ -108,4 +108,4 @@ Bekommt am Anfang der Runde ein Ziel zugewiesen, welches immer Teil der Crew ist
 Sollte das Ziel auf eine andere Art und Weise sterben, so wird der Executioner zum Jester.
 
 #### Jester
-Gewinnt alleine und nur dadurch, wenn er selber durch ein Meeting raus gevotet wird. 
+Gewinnt alleine, wenn er selber durch ein Meeting raus gevotet wird. 
