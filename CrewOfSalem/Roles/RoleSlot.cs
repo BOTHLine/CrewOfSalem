@@ -42,6 +42,28 @@ namespace CrewOfSalem.Roles
 
         // Methods
         [SuppressMessage("ReSharper", "LocalVariableHidesMember")]
+        public IEnumerable<Role> GetFittingRoles(IEnumerable<Role> roles)
+        {
+            Faction faction;
+
+            if (this.faction == null)
+            {
+                Role role = this.role;
+                return roles.Where(r => r.GetType() == role.GetType());
+            }
+
+            if (this.alignment == null)
+            {
+                faction = this.faction;
+                return roles.Where(r => r.Faction == faction);
+            }
+
+            faction = this.faction;
+            Alignment alignment = this.alignment;
+            return roles.Where(r => r.Faction == faction && r.Alignment == alignment);
+        }
+
+        [SuppressMessage("ReSharper", "LocalVariableHidesMember")]
         public Role GetRole(ref List<Role> availableRoles)
         {
             if (faction == null)
@@ -54,7 +76,7 @@ namespace CrewOfSalem.Roles
             {
                 Faction faction = this.faction;
                 Role[] possibleRoles = availableRoles.Where(r => r.Faction == faction).ToArray();
-                Role role = possibleRoles[Rng.Next(0, possibleRoles.Length)];
+                Role role = possibleRoles[Rng.Next(possibleRoles.Length)];
                 availableRoles.Remove(role);
                 return role;
             } else
@@ -63,7 +85,7 @@ namespace CrewOfSalem.Roles
                 Alignment alignment = this.alignment;
                 Role[] possibleRoles = availableRoles.Where(r => r.Faction == faction && r.Alignment == alignment)
                    .ToArray();
-                Role role = possibleRoles[Rng.Next(0, possibleRoles.Length)];
+                Role role = possibleRoles[Rng.Next(possibleRoles.Length)];
                 availableRoles.Remove(role);
                 return role;
             }

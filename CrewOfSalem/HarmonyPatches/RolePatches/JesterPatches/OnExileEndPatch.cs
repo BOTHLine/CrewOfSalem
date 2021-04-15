@@ -11,10 +11,9 @@ namespace CrewOfSalem.HarmonyPatches.JesterPatches
         {
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return true;
 
-            if (TryGetSpecialRole(out Jester jester) &&
-                jester.Owner.PlayerId == ExileController.Instance.exiled?.PlayerId)
+            if (TryGetSpecialRole(out Jester jester) && jester.Owner.PlayerId == ExileController.Instance.exiled?.PlayerId && jester.Owner == PlayerControl.LocalPlayer)
             {
-                jester.Win();
+                jester.RpcWin();
             }
 
             return true;

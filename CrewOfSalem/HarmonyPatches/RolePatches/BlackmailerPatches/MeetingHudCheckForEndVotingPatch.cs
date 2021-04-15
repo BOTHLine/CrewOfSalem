@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using CrewOfSalem.Roles.Abilities;
 
+
+/*
 namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
 {
     // [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
@@ -26,7 +24,9 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
                     array[playerVoteArea.TargetPlayerId] = playerVoteArea.GetState();
                 }
 
-                __instance.Method_0(array, exiled, tie);
+                // TODO: 2021.3.5s
+                // __instance.Method_0(array, exiled, tie);
+                __instance.JGCGLBIKKGO(array, exiled, tie);
             }
 
             return false;
@@ -56,3 +56,4 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
         }
     }
 }
+*/

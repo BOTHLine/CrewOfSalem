@@ -10,17 +10,14 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
         public static bool Prefix(UnityEngine.Object obj)
         {
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return true;
-
-            if (TryGetSpecialRole(out Executioner executioner))
+            if (TryGetSpecialRole(out Executioner executioner) && executioner.Owner == PlayerControl.LocalPlayer)
             {
                 if (!executioner.IsJester)
                 {
                     if (executioner.VoteTarget.PlayerId == ExileController.Instance.exiled.PlayerId)
                     {
-                        executioner.Win();
-                    }
-
-                    if (executioner.VoteTarget.Data.IsDead && executioner.Owner == PlayerControl.LocalPlayer)
+                        executioner.RpcWin();
+                    } else if (executioner.VoteTarget.Data.IsDead && executioner.Owner == PlayerControl.LocalPlayer)
                     {
                         executioner.RpcTurnIntoJester();
                     }
@@ -28,7 +25,7 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                 {
                     if (executioner.Owner.PlayerId == ExileController.Instance.exiled.PlayerId)
                     {
-                        executioner.Win();
+                        executioner.RpcWin();
                     }
                 }
 

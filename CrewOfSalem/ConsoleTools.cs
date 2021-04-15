@@ -8,7 +8,8 @@ namespace CrewOfSalem
         {
             ConsoleColor color = System.Console.ForegroundColor;
             System.Console.ForegroundColor = ConsoleColor.Yellow;
-            System.Console.WriteLine("[CrewOfSalem INF] " + message);
+            // TODO: Re-Add for debugging
+            // System.Console.WriteLine("[CrewOfSalem INF] " + message);
             System.Console.ForegroundColor = color;
         }
 

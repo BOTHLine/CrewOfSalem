@@ -9,13 +9,13 @@ namespace CrewOfSalem
     public class DeadPlayer
     {
         // Fields
-        private static readonly Func<DeadPlayer, string>[] Hints = new Func<DeadPlayer, string>[]
-        {
+        public static readonly Func<DeadPlayer, string>[] Hints = {
             GetKillAge,
             GetKillerColorType,
             GetVictimRole,
             GetKillerLetter,
-            GetKillerKillCount
+            GetKillerKillCount,
+            GetKillerRole
         };
 
         // Properties
@@ -32,12 +32,6 @@ namespace CrewOfSalem
             KillTime = killTime;
         }
 
-        // Methods
-        public string ParseBodyReport()
-        {
-            return Hints[Rng.Next(0, Hints.Length)].Invoke(this);
-        }
-
         // Hint Methods
         private static string GetKillAge(DeadPlayer deadPlayer)
         {
@@ -47,9 +41,10 @@ namespace CrewOfSalem
         private static string GetKillerColorType(DeadPlayer deadPlayer)
         {
             Color32 color = Palette.PlayerColors[deadPlayer.Killer.Data.ColorId];
-            int average = (color.r + color.g + color.a) / 3;
-            string colorType = average >= 128 ? "Lighter" : "Darker";
+            float average = (color.r + color.g + color.a) / 3F;
+            string colorType = average >= 0.465F ? "Lighter" : "Darker";
             return $"The killer has a {colorType} color.";
+            // TODO: Instead of using 0.465F use "Greyscale-Calculation" on this site to determine if the brightness is over 0.5? https://lodev.org/cgtutor/color.html
         }
 
         private static string GetVictimRole(DeadPlayer deadPlayer)
@@ -60,13 +55,18 @@ namespace CrewOfSalem
         private static string GetKillerLetter(DeadPlayer deadPlayer)
         {
             return
-                $"The killer's name has the letter '{deadPlayer.Killer.name[Rng.Next(0, deadPlayer.Killer.name.Length)].ToString()}'";
+                $"The killer's name has the letter '{deadPlayer.Killer.name[Rng.Next(deadPlayer.Killer.name.Length)].ToString()}'.";
         }
 
         private static string GetKillerKillCount(DeadPlayer deadPlayer)
         {
             return
                 $"The killer has already killed a total of {DeadPlayers.Count(player => player.Killer.PlayerId == deadPlayer.Killer.PlayerId).ToString()} players.";
+        }
+
+        private static string GetKillerRole(DeadPlayer deadPlayer)
+        {
+            return $"The killer was a(n) {deadPlayer.Killer.GetRole().Name}";
         }
     }
 }

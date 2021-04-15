@@ -1,8 +1,6 @@
 ﻿using CrewOfSalem.Roles;
 using HarmonyLib;
 using Hazel;
-using System.Collections.Generic;
-using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Abilities;
 using static CrewOfSalem.CrewOfSalem;
@@ -17,27 +15,33 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             return PlayerTools.GetPlayerById(reader.ReadByte());
         }
 
-        public static bool Prefix(byte ACCJCEHMKLN, MessageReader HFPCBBHJIPJ)
+        public static bool Prefix([HarmonyArgument(0)] byte data)
         {
-            ConsoleTools.Info("RPC: " + (RPC) ACCJCEHMKLN);
+            ConsoleTools.Info("RPC: " + (RPC) data);
             return true;
         }
 
-        public static void Postfix(byte ACCJCEHMKLN, MessageReader HFPCBBHJIPJ)
+        public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] byte data,
+            [HarmonyArgument(                                                 1)] MessageReader reader)
         {
-            MessageReader reader = HFPCBBHJIPJ;
-
-            PlayerControl source;
             PlayerControl target;
 
-            switch (ACCJCEHMKLN /*Packet ID*/)
+            switch (data /*Packet ID*/)
             {
-                case (byte) RPC.ReportDeadBody:
-                    if (TryGetSpecialRole(out Psychic psychic))
+                case (byte) RPC.SetInfected:
+                    foreach (Role role in AssignedRoles.Values)
                     {
-                        psychic.StartMeeting();
+                        role.InitializeRole();
                     }
 
+                    break;
+
+                case (byte) RPC.ForceEnd:
+                    DebugPatches.EndGamePatch.ForceEnd();
+                    break;
+
+                case (byte) RPC.ReportDeadBody:
+                    if (TryGetSpecialRole(out Psychic psychic)) psychic.StartMeeting();
                     break;
 
                 case (byte) RPC.SetRole:
@@ -48,279 +52,107 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     {
                         if (role.RoleID == roleId)
                         {
-                            AddSpecialRole(role, player);
+                            AddRole(role, player);
                         }
                     }
-                    /*
-                    switch (roleId)
-                    {
-                        case var value when value == Investigator.GetRoleID():
-                            AddSpecialRole(new Investigator(), player);
-                            break;
-
-                        case var value when value == Lookout.GetRoleID():
-                            AddSpecialRole(new Lookout(), player);
-                            break;
-
-                        case var value when value == Psychic.GetRoleID():
-                            AddSpecialRole(new Psychic(), player);
-                            break;
-
-                        case var value when value == Sheriff.GetRoleID():
-                            AddSpecialRole(new Sheriff(), player);
-                            break;
-
-                        case var value when value == Spy.GetRoleID():
-                            AddSpecialRole(new Spy(), player);
-                            break;
-
-                        case var value when value == Tracker.GetRoleID():
-                            AddSpecialRole(new Tracker(), player);
-                            break;
-
-                        case var value when value == Jailor.GetRoleID():
-                            AddSpecialRole(new Jailor(), player);
-                            break;
-
-                        case var value when value == VampireHunter.GetRoleID():
-                            AddSpecialRole(new VampireHunter(), player);
-                            break;
-
-                        case var value when value == Veteran.GetRoleID():
-                            AddSpecialRole(new Veteran(), player);
-                            break;
-
-                        case var value when value == Vigilante.GetRoleID():
-                            AddSpecialRole(new Vigilante(), player);
-                            break;
-
-                        case var value when value == Bodyguard.GetRoleID():
-                            AddSpecialRole(new Bodyguard(), player);
-                            break;
-
-                        case var value when value == Doctor.GetRoleID():
-                            AddSpecialRole(new Doctor(), player);
-                            break;
-
-                        case var value when value == Crusader.GetRoleID():
-                            AddSpecialRole(new Crusader(), player);
-                            break;
-
-                        case var value when value == Trapper.GetRoleID():
-                            AddSpecialRole(new Trapper(), player);
-                            break;
-
-                        case var value when value == Escort.GetRoleID():
-                            AddSpecialRole(new Escort(), player);
-                            break;
-
-                        case var value when value == Mayor.GetRoleID():
-                            AddSpecialRole(new Mayor(), player);
-                            break;
-
-                        case var value when value == Medium.GetRoleID():
-                            AddSpecialRole(new Medium(), player);
-                            break;
-
-                        case var value when value == Retributionist.GetRoleID():
-                            AddSpecialRole(new Retributionist(), player);
-                            break;
-
-                        case var value when value == Transporter.GetRoleID():
-                            AddSpecialRole(new Transporter(), player);
-                            break;
-
-                        case var value when value == Disguiser.GetRoleID():
-                            AddSpecialRole(new Disguiser(), player);
-                            break;
-
-                        case var value when value == Framer.GetRoleID():
-                            AddSpecialRole(new Framer(), player);
-                            break;
-
-                        case var value when value == Hypnotist.GetRoleID():
-                            AddSpecialRole(new Hypnotist(), player);
-                            break;
-
-                        case var value when value == Janitor.GetRoleID():
-                            AddSpecialRole(new Janitor(), player);
-                            break;
-
-                        case var value when value == Ambusher.GetRoleID():
-                            AddSpecialRole(new Ambusher(), player);
-                            break;
-
-                        case var value when value == Godfather.GetRoleID():
-                            AddSpecialRole(new Godfather(), player);
-                            break;
-
-                        case var value when value == Forger.GetRoleID():
-                            AddSpecialRole(new Forger(), player);
-                            break;
-
-                        case var value when value == Mafioso.GetRoleID():
-                            AddSpecialRole(new Mafioso(), player);
-                            break;
-
-                        case var value when value == Blackmailer.GetRoleID():
-                            AddSpecialRole(new Blackmailer(), player);
-                            break;
-
-                        case var value when value == Consigliere.GetRoleID():
-                            AddSpecialRole(new Consigliere(), player);
-                            break;
-
-                        case var value when value == Consort.GetRoleID():
-                            AddSpecialRole(new Consort(), player);
-                            break;
-
-                        case var value when value == Amnesiac.GetRoleID():
-                            AddSpecialRole(new Amnesiac(), player);
-                            break;
-
-                        case var value when value == GuardianAngel.GetRoleID():
-                            AddSpecialRole(new GuardianAngel(), player);
-                            break;
-
-                        case var value when value == Survivor.GetRoleID():
-                            AddSpecialRole(new Survivor(), player);
-                            break;
-
-                        case var value when value == Vampire.GetRoleID():
-                            AddSpecialRole(new Vampire(), player);
-                            break;
-
-                        case var value when value == Executioner.GetRoleID():
-                            AddSpecialRole(new Executioner(), player);
-                            break;
-
-                        case var value when value == Jester.GetRoleID():
-                            AddSpecialRole(new Jester(), player);
-                            break;
-
-                        case var value when value == Witch.GetRoleID():
-                            AddSpecialRole(new Witch(), player);
-                            break;
-
-                        case var value when value == Arsonist.GetRoleID():
-                            AddSpecialRole(new Arsonist(), player);
-                            break;
-
-                        case var value when value == SerialKiller.GetRoleID():
-                            AddSpecialRole(new SerialKiller(), player);
-                            break;
-
-                        case var value when value == Werewolf.GetRoleID():
-                            AddSpecialRole(new Werewolf(), player);
-                            break;
-                    }
-                    */
 
                     break;
-                case (byte) RPC.ResetVariables:
-                    List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
-                    foreach (Role role in assignedRoles)
-                    {
-                        role.ClearSettings();
-                    }
 
+                case (byte) RPC.AddKillAbility:
+                    reader.ReadPlayerControl().GetRole().AddAbility<Mafioso, AbilityKill>();
+                    break;
+
+                case (byte) RPC.ResetVariables:
                     ResetValues();
                     break;
 
                 // ---------- Special Role Conditions ----------
                 case (byte) RPC.Kill:
-                    source = reader.ReadPlayerControl();
+                    PlayerControl killer = reader.ReadPlayerControl();
                     target = reader.ReadPlayerControl();
-                    source.MurderPlayer(target);
+                    PlayerControl animation = reader.ReadPlayerControl();
+                    killer.KillPlayer(target, animation);
                     break;
 
                 case (byte) RPC.AlertStart:
-                    source = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityAlert>(null);
+                    __instance.UseAbility<AbilityAlert>(null);
                     break;
 
                 case (byte) RPC.AlertEnd:
-                    source = reader.ReadPlayerControl();
-                    source.EndAbility<AbilityAlert>();
+                    __instance.EndAbility<AbilityAlert>();
                     break;
 
                 case (byte) RPC.ToggleGuard:
-                    source = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityGuard>(null);
+                    __instance.UseAbility<AbilityGuard>(null);
                     break;
 
                 case (byte) RPC.ToggleInTask:
-                    source = reader.ReadPlayerControl();
-                    source.GetAbility<AbilityGuard>().ToggleInTask();
+                    __instance.GetAbility<AbilityGuard>().ToggleInTask();
                     break;
 
                 case (byte) RPC.ShieldStart:
-                    source = reader.ReadPlayerControl();
                     target = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityShield>(target);
+                    __instance.UseAbility<AbilityShield>(target);
                     break;
 
                 case (byte) RPC.ShieldEnd:
-                    source = reader.ReadPlayerControl();
-                    source.EndAbility<AbilityShield>();
+                    __instance.EndAbility<AbilityShield>();
                     break;
 
                 case (byte) RPC.Block:
-                    source = reader.ReadPlayerControl();
                     target = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityBlock>(target);
+                    __instance.UseAbility<AbilityBlock>(target);
                     break;
 
                 case (byte) RPC.BlockEnd:
-                    source = reader.ReadPlayerControl();
-                    source.EndAbility<AbilityBlock>();
+                    __instance.EndAbility<AbilityBlock>();
                     break;
 
                 case (byte) RPC.DisguiseStart:
-                    source = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityDisguise>(null);
+                    __instance.UseAbility<AbilityDisguise>(null);
                     break;
 
                 case (byte) RPC.DisguiseEnd:
-                    source = reader.ReadPlayerControl();
-                    source.EndAbility<AbilityDisguise>();
+                    __instance.EndAbility<AbilityDisguise>();
                     break;
 
                 case (byte) RPC.ForgeStart:
-                    source = reader.ReadPlayerControl();
                     target = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityForge>(target);
+                    __instance.GetAbility<AbilityForge>().ForgeStart(target);
                     break;
 
                 case (byte) RPC.ForgeEnd:
-                    source = reader.ReadPlayerControl();
-                    source.EndAbility<AbilityForge>();
+                    __instance.EndAbility<AbilityForge>();
                     break;
 
                 case (byte) RPC.Blackmail:
-                    source = reader.ReadPlayerControl();
                     target = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityBlackmail>(target);
+                    __instance.UseAbility<AbilityBlackmail>(target);
                     break;
 
                 case (byte) RPC.VestStart:
-                    source = reader.ReadPlayerControl();
-                    source.UseAbility<AbilityVest>(null);
+                    __instance.UseAbility<AbilityVest>(null);
                     break;
 
                 case (byte) RPC.VestEnd:
-                    source = reader.ReadPlayerControl();
-                    source.EndAbility<AbilityVest>();
+                    __instance.EndAbility<AbilityVest>();
                     break;
 
                 case (byte) RPC.VampireConvert:
-                    source = reader.ReadPlayerControl();
                     target = reader.ReadPlayerControl();
                     AbilityBite.ConvertVampire(target);
                     break;
 
+                case (byte) RPC.ExecutionerWin:
+                    if (TryGetSpecialRole(out Executioner executioner)) executioner.Win();
+                    break;
+
                 case (byte) RPC.ExecutionerToJester:
-                    if (TryGetSpecialRole(out Executioner executioner)) executioner.TurnIntoJester();
+                    if (TryGetSpecialRole(out executioner)) executioner.TurnIntoJester();
+                    break;
+
+                case (byte) RPC.JesterWin:
+                    if (TryGetSpecialRole(out Jester jester)) jester.Win();
                     break;
             }
         }

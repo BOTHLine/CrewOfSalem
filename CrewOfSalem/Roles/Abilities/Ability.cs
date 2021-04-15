@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hazel;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -28,11 +27,16 @@ namespace CrewOfSalem.Roles.Abilities
 
         private Vector3 offset;
 
+        // TODO: Make Kills to use AbilityKill (Like the one from Bodyguard, so that he/his target can be protected by shield)?
+        // TODO: Instead of only returning bool, return a struct with multiple states (doContinue, doSetOnCooldown etc.)
+        private static readonly SortedDictionary<int, Func<Ability, PlayerControl, bool>> OnBeforeUse =
+            new SortedDictionary<int, Func<Ability, PlayerControl, bool>>();
+
         // Properties
-        public             KillButtonManager Button      => button;
+        protected          KillButtonManager Button      => button;
         protected abstract bool              NeedsTarget { get; }
 
-        protected float Cooldown => cooldown;
+        public float Cooldown => cooldown;
 
         protected float CurrentCooldown
         {
@@ -51,12 +55,13 @@ namespace CrewOfSalem.Roles.Abilities
         }
 
         // Constructors
+        // TODO: Add Start-Cooldown and AfterMeeting-Cooldown?
         protected Ability(Role owner, float cooldown)
         {
             AddNewAbility();
 
             this.owner = owner;
-            this.cooldown = cooldown;
+            this.cooldown = cooldown > 0F ? cooldown : 1F;
 
             HudManager hudManager = HudManager.Instance;
             button = Object.Instantiate(hudManager.KillButton, hudManager.transform);
@@ -65,18 +70,39 @@ namespace CrewOfSalem.Roles.Abilities
             buttonClick.OnClick = new Button.ButtonClickedEvent();
             buttonClick.OnClick.AddListener((UnityAction) TryUse);
 
+            Button.name = GetType().Name;
+            Button.renderer.material.name = Button.name;
+
             CurrentCooldown = 10F;
 
-            Update(0F);
-
-            buttonClick.OnClick.Invoke();
             SetActive(false);
+
+            foreach (PlayerControl playerControl in PlayerControl.AllPlayerControls)
+            {
+                playerControl.GetComponent<SpriteRenderer>().material.SetFloat(ShaderOutline, 0F);
+            }
         }
 
         // Methods
+        public static void AddOnBeforeUse(Func<Ability, PlayerControl, bool> func, int priority)
+        {
+            while (OnBeforeUse.ContainsKey(priority))
+            {
+                priority++;
+            }
+
+            OnBeforeUse.Add(priority, func);
+        }
+
+        protected virtual bool ShouldShowButton()
+        {
+            return HudManager.Instance.UseButton.isActiveAndEnabled && !owner.Owner.Data.IsDead;
+        }
+
         protected virtual bool CanUse()
         {
-            return CurrentCooldown <= 0F && (!NeedsTarget || Button.CurrentTarget != null);
+            return Button.isActiveAndEnabled && CurrentCooldown <= 0F &&
+                   (!NeedsTarget || Button.CurrentTarget != null) && !owner.Owner.Data.IsDead;
         }
 
         public void TryUse()
@@ -91,13 +117,17 @@ namespace CrewOfSalem.Roles.Abilities
             var sendRpc = false;
             if (AmongUsClient.Instance.AmClient)
             {
-                Use(Button.CurrentTarget, out sendRpc);
+                PlayerControl target = Button.CurrentTarget;
+                foreach (KeyValuePair<int, Func<Ability, PlayerControl, bool>> keyValuePair in OnBeforeUse)
+                {
+                    if (!keyValuePair.Value.Invoke(this, target)) return;
+                }
+
+                Use(target, out sendRpc);
             }
 
             if (!sendRpc || RpcAction == RPC.None) return;
-            MessageWriter writer = GetWriter(RpcAction);
-            foreach (byte data in RpcData) writer.Write(data);
-            CloseWriter(writer);
+            WriteRPC(RpcAction, RpcData.ToArray());
         }
 
         public virtual void Use(PlayerControl target, out bool sendRpc)
@@ -113,7 +143,7 @@ namespace CrewOfSalem.Roles.Abilities
 
         public void Update(float deltaTime)
         {
-            if (HudManager.Instance.KillButton == null) Destroy();
+            if (HudManager.Instance.KillButton == null || Button == null) return;
             if (MeetingHud.Instance || ExileController.Instance) return;
             if (PlayerControl.LocalPlayer.Data == null)
             {
@@ -121,26 +151,35 @@ namespace CrewOfSalem.Roles.Abilities
                 return;
             }
 
-            SetActive(HudManager.Instance.isActiveAndEnabled);
+            SetActive(ShouldShowButton());
             UpdateCooldown(deltaTime);
-            UpdateButtonSprite();
             UpdateTarget();
+            UpdateButtonSprite();
             UpdatePosition();
+
+            CooldownHelpers.SetCooldownNormalizedUvs(Button.renderer);
 
             UpdateInternal(deltaTime);
         }
 
         private void SetActive(bool active)
         {
-            HudManager.Instance.KillButton.gameObject.SetActive(false);
-            HudManager.Instance.KillButton.renderer.enabled = false;
-            HudManager.Instance.KillButton.isActive = false;
-            HudManager.Instance.KillButton.enabled = false;
+            if (HudManager.Instance?.KillButton != null)
+            {
+                HudManager.Instance.KillButton.gameObject.SetActive(false);
+                HudManager.Instance.KillButton.renderer.enabled = false;
+                HudManager.Instance.KillButton.isActive = false;
+                HudManager.Instance.KillButton.enabled = false;
+                HudManager.Instance.KillButton.SetTarget(null);
+            }
 
-            Button.gameObject.SetActive(active);
-            Button.renderer.enabled = active;
-            Button.isActive = active;
-            Button.enabled = active;
+            if (Button != null)
+            {
+                Button.gameObject.SetActive(active);
+                Button.renderer.enabled = active;
+                Button.isActive = active;
+                Button.enabled = active;
+            }
         }
 
         private void UpdateCooldown(float deltaTime)
@@ -148,8 +187,21 @@ namespace CrewOfSalem.Roles.Abilities
             CurrentCooldown = Mathf.Max(0F, CurrentCooldown - deltaTime);
         }
 
-        protected void UpdateButtonCooldown()
+        protected virtual void UpdateButtonCooldown()
         {
+            /*
+            if (Button == null) return;
+            float percent = Mathf.Clamp01(CurrentCooldown / Cooldown);
+            ConsoleTools.Info("Percent: " + percent);
+            Button.renderer.material.SetFloat(ShaderPercent, percent);
+            Button.isCoolingDown = percent > 0F;
+            if (Button.isCoolingDown)
+            {
+                Button.TimerText.Text = Mathf.CeilToInt(CurrentCooldown).ToString();
+            }
+
+            Button.TimerText.gameObject.SetActive(Button.isCoolingDown);
+            */
             Button.SetCoolDown(CurrentCooldown, Cooldown);
         }
 
@@ -170,14 +222,16 @@ namespace CrewOfSalem.Roles.Abilities
 
         protected virtual void UpdateTarget()
         {
-            Button.SetTarget(PlayerTools.FindClosestTarget(owner.Owner));
+            Button.SetTarget(NeedsTarget && PlayerControl.LocalPlayer == owner.Owner
+                ? PlayerTools.FindClosestTarget(owner.Owner)
+                : null);
         }
 
         private void UpdatePosition()
         {
             if (Button.transform.position != HudManager.Instance.KillButton.transform.position) return;
 
-            Button.transform.position = HudManager.Instance.KillButton.transform.position + offset;
+            Button.transform.position = HudManager.Instance.KillButton.transform.position + Offset;
         }
 
         protected virtual void UpdateInternal(float deltaTime) { }
@@ -185,6 +239,16 @@ namespace CrewOfSalem.Roles.Abilities
         public void AddCooldown(float addedTime)
         {
             CurrentCooldown += addedTime;
+        }
+
+        public void SetCooldown(float cooldown)
+        {
+            CurrentCooldown = cooldown;
+        }
+
+        public void SetOnCooldown()
+        {
+            CurrentCooldown = Cooldown;
         }
 
         private void AddNewAbility()
@@ -209,7 +273,7 @@ namespace CrewOfSalem.Roles.Abilities
                 : new T[0];
         }
 
-        public void Destroy()
+        public virtual void Destroy()
         {
             Object.Destroy(Button);
             AllAbilities[GetType()].Remove(this);

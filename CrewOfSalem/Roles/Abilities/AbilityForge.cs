@@ -15,10 +15,10 @@ namespace CrewOfSalem.Roles.Abilities
         protected override bool NeedsTarget => currentSample == null;
 
         protected override RPC               RpcAction => RPC.ForgeStart;
-        protected override IEnumerable<byte> RpcData   => new[] {owner.Owner.PlayerId, currentSample.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new[] {currentSample.PlayerId};
 
         protected override RPC               RpcEndAction => RPC.ForgeEnd;
-        protected override IEnumerable<byte> RpcEndData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcEndData   => new byte[0];
 
         // Constructors
         public AbilityForge(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
@@ -39,16 +39,19 @@ namespace CrewOfSalem.Roles.Abilities
             owner.Owner.nameText.transform.localPosition =
                 new Vector3(0F, currentSample.Data.HatId == 0U ? 0.7F : 1.05F, -0.5F);
 
-            if (owner.Owner.MyPhysics.Skin.skin.ProdId != HatManager.Instance.AllSkins[(int) currentSample.Data.SkinId].ProdId)
+            if (owner.Owner.MyPhysics.Skin.skin.ProdId !=
+                HatManager.Instance.AllSkins.ToArray()[(int) currentSample.Data.SkinId].ProdId)
             {
                 SetSkinWithAnim(owner.Owner.MyPhysics, currentSample.Data.SkinId);
             }
 
             if (owner.Owner.CurrentPet == null ||
-                owner.Owner.CurrentPet.ProdId != HatManager.Instance.AllPets[(int) currentSample.Data.PetId].ProdId)
+                owner.Owner.CurrentPet.ProdId !=
+                HatManager.Instance.AllPets.ToArray()[(int) currentSample.Data.PetId].ProdId)
             {
                 if (owner.Owner.CurrentPet) Object.Destroy(owner.Owner.CurrentPet.gameObject);
-                owner.Owner.CurrentPet = Object.Instantiate(HatManager.Instance.AllPets[(int) currentSample.Data.PetId]);
+                owner.Owner.CurrentPet =
+                    Object.Instantiate(HatManager.Instance.AllPets.ToArray()[(int) currentSample.Data.PetId]);
                 owner.Owner.CurrentPet.transform.position = owner.Owner.transform.position;
                 owner.Owner.CurrentPet.Source = owner.Owner;
                 owner.Owner.CurrentPet.Visible = owner.Owner.Visible;
@@ -80,7 +83,6 @@ namespace CrewOfSalem.Roles.Abilities
                 currentSample = target;
                 CurrentCooldown = 1F;
                 isEffectActive = false;
-                return;
             } else
             {
                 ForgeStart(currentSample);
@@ -92,6 +94,17 @@ namespace CrewOfSalem.Roles.Abilities
         protected override void EffectEndInternal()
         {
             ForgeEnd();
+        }
+
+        protected override void UpdateButtonSprite()
+        {
+            if (HasDurationLeft || CurrentCooldown <= 0F && currentSample != null)
+            {
+                Button.renderer.color = Palette.PlayerColors[currentSample.Data.ColorId];
+            } else
+            {
+                base.UpdateButtonSprite();
+            }
         }
     }
 }

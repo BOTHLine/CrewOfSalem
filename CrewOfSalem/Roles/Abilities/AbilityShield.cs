@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -17,13 +19,29 @@ namespace CrewOfSalem.Roles.Abilities
         protected override bool   NeedsTarget => true;
 
         protected override RPC               RpcAction => RPC.ShieldStart;
-        protected override IEnumerable<byte> RpcData   => new[] {owner.Owner.PlayerId, Button.CurrentTarget.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
 
         protected override RPC               RpcEndAction => RPC.ShieldEnd;
-        protected override IEnumerable<byte> RpcEndData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcEndData   => new byte[0];
 
         // Constructors
-        public AbilityShield(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
+        public AbilityShield(Role owner, float cooldown, float duration) : base(owner, cooldown, duration)
+        {
+            AddOnBeforeUse(UseOnShielded, 30);
+        }
+
+        private static readonly Func<Ability, PlayerControl, bool> UseOnShielded = (source, target) =>
+        {
+            if (!(source is AbilityKill)) return true;
+
+            AbilityShield abilityShield = GetAllAbilities<AbilityShield>()
+               .FirstOrDefault(shield => shield.ShieldedPlayer == target && shield.HasDurationLeft);
+
+            if (abilityShield == null) return true;
+
+            source.SetOnCooldown();
+            return false;
+        };
 
         // Methods
         public bool CheckShieldedPlayer(PlayerControl player)
@@ -79,6 +97,11 @@ namespace CrewOfSalem.Roles.Abilities
         }
 
         // Methods Ability
+        protected override bool CanUse()
+        {
+            return base.CanUse() && ShieldedPlayer == null;
+        }
+
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
             shieldedPlayer = target;
@@ -91,6 +114,19 @@ namespace CrewOfSalem.Roles.Abilities
         {
             UnshowShieldedPlayer();
             shieldedPlayer = null;
+        }
+
+
+        protected override void UpdateButtonSprite()
+        {
+            if (ShieldedPlayer == null)
+            {
+                base.UpdateButtonSprite();
+            } else
+            {
+                Button.renderer.color = Palette.PlayerColors[ShieldedPlayer.Data.ColorId];
+                Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            }
         }
     }
 }

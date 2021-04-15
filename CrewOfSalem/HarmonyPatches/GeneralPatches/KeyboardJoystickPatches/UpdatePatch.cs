@@ -6,10 +6,9 @@ using UnityEngine;
 
 namespace CrewOfSalem.HarmonyPatches.KeyboardJoystickPatches
 {
-    [HarmonyPatch(typeof(KeyboardJoystick))]
+    [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
     public static class UpdatePatch
     {
-        [HarmonyPatch(nameof(KeyboardJoystick.Update))]
         public static void Postfix(KeyboardJoystick __instance)
         {
             if (Input.GetKeyDown(KeyCode.Q))
@@ -24,8 +23,7 @@ namespace CrewOfSalem.HarmonyPatches.KeyboardJoystickPatches
             if (Input.GetKeyDown(KeyCode.Tab) &&
                 LobbyBehaviour.Instance != null /*&& Object.FindObjectOfType<GameOptionsMenu>() == null*/)
             {
-                Main.TurnPage();
-                // OptionPage.TurnPage();
+                OptionPage.TurnPage();
             }
         }
     }

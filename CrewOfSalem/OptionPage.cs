@@ -50,14 +50,17 @@ namespace CrewOfSalem
         }
 
         // Constructors
-        public OptionPage(IEnumerable<CustomOption> options)
-        {
-            OptionPages.Add(this);
-            this.options.AddRange(options);
-            Enabled = OptionPages.Count == 1;
-        }
+        private OptionPage() { }
 
         // Methods
+        public static void CreateOptionPage(IEnumerable<CustomOption> options)
+        {
+            var optionPage = new OptionPage();
+            OptionPages.Add(optionPage);
+            optionPage.options.AddRange(options);
+            optionPage.Enabled = OptionPages.Count == 1;
+        }
+
         public static void TurnPage()
         {
             OptionPages[pageIndex].Enabled = false;

@@ -3,7 +3,6 @@ using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Abilities;
-using Hazel;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -26,10 +25,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
         {
             if (AmongUsClient.Instance.AmClient) ConvertVampire(target);
 
-            MessageWriter writer = GetWriter(RPC.VampireConvert);
-            writer.Write(owner.Owner.PlayerId);
-            writer.Write(target.PlayerId);
-            CloseWriter(writer);
+            WriteRPC(RPC.VampireConvert, owner.Owner.PlayerId, target.PlayerId);
         }
 
         public static void ConvertVampire(PlayerControl target)
@@ -52,45 +48,17 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             return base.CanUse() && vampires.FirstOrDefault(vampire => !vampire.Data.IsDead) == owner.Owner;
         }
 
+        protected override void UpdateTarget()
+        {
+            Button.SetTarget(PlayerControl.LocalPlayer == owner.Owner
+                ? PlayerTools.FindClosestTarget(owner.Owner, player => !vampires.Contains(player))
+                : null);
+        }
+
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
-            IReadOnlyList<AbilityGuard> abilityGuards = GetAllAbilities<AbilityGuard>();
-            foreach (AbilityGuard abilityGuard in abilityGuards)
-            {
-                if (abilityGuard.owner.Owner == target) continue;
-                if (!abilityGuard.IsGuarding || abilityGuard.IsInTask) continue;
-                if (!PlayerTools.IsPlayerInRange(abilityGuard.owner.Owner, target)) continue;
-
-                abilityGuard.owner.Owner.RpcMurderPlayer(owner.Owner);
-                abilityGuard.owner.Owner.RpcMurderPlayer(abilityGuard.owner.Owner);
-                sendRpc = false;
-                setCooldown = true;
-                return;
-            }
-
-            IReadOnlyList<AbilityVest> abilityVests = GetAllAbilities<AbilityVest>();
-            foreach (AbilityVest abilityVest in abilityVests)
-            {
-                if (abilityVest.owner.Owner != target) continue;
-
-                abilityVest.RpcEffectEnd();
-                sendRpc = false;
-                setCooldown = true;
-                return;
-            }
-
-            IReadOnlyList<AbilityShield> abilityShields = GetAllAbilities<AbilityShield>();
-            foreach (AbilityShield abilityShield in abilityShields)
-            {
-                if (abilityShield.ShieldedPlayer != target) continue;
-
-                abilityShield.RpcEffectEnd();
-                sendRpc = false;
-                setCooldown = true;
-                return;
-            }
-
-            owner.Owner.MurderPlayer(target);
+            // TODO: Bite convert instead of always kill
+            owner.Owner.RpcKillPlayer(target, owner.Owner);
             sendRpc = setCooldown = true;
         }
     }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Alignments;
@@ -25,33 +24,19 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Neutral;
         public override Alignment Alignment => Alignment.Evil;
 
-        protected override Color Color => new Color(172F / 255F, 172F / 255F, 172F / 255F, 1F);
+        public override Color Color => new Color(172F / 255F, 172F / 255F, 172F / 255F, 1F);
 
         public override string RoleTask =>
             $"{base.RoleTask} to vote {ColorizedText(VoteTarget.name, Palette.PlayerColors[VoteTarget.Data.ColorId])}";
 
-        public override string Description =>
-            "You have to trick everyone else to vote your target. If they die before that, you will turn into a Jester";
+        public override string Description => "You have to trick everyone else to vote your target. If they die before that, you will turn into a Jester";
 
         // Methods
-        public void ClearTasks()
+        public void RpcWin()
         {
-            if (Owner == null) return;
+            if (AmongUsClient.Instance.AmClient) Win();
 
-            var tasksToRemove = new List<PlayerTask>();
-            foreach (PlayerTask task in Owner.myTasks)
-            {
-                if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.ResetReactor &&
-                    task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy)
-                {
-                    tasksToRemove.Add(task);
-                }
-            }
-
-            foreach (PlayerTask task in tasksToRemove)
-            {
-                Owner.RemoveTask(task);
-            }
+            WriteRPC(RPC.ExecutionerWin);
         }
 
         public void Win()
@@ -74,7 +59,7 @@ namespace CrewOfSalem.Roles
         {
             if (AmongUsClient.Instance.AmClient) TurnIntoJester();
 
-            WriteImmediately(RPC.ExecutionerToJester);
+            WriteRPC(RPC.ExecutionerToJester);
         }
 
         // TODO: Don't assign Jester-Role to Executioner. Just make them appear to be a jester?
@@ -82,7 +67,7 @@ namespace CrewOfSalem.Roles
         // Also Investigator/Consigliere should get Jester Results.
         public void TurnIntoJester()
         {
-            var task = Owner.myTasks[0] as ImportantTextTask;
+            var task = Owner.myTasks.ToArray()[0] as ImportantTextTask;
             if (task != null) task.Text = Jester.GetRoleTask();
             isJester = true;
             /*
@@ -103,10 +88,12 @@ namespace CrewOfSalem.Roles
 
         protected override void InitializeRoleInternal()
         {
+            if (Owner != PlayerControl.LocalPlayer) return;
+
             PlayerControl[] players = PlayerControl.AllPlayerControls.ToArray()
                .Where(player => player.GetRole().Faction == Faction.Crew /* && !(role is Mayor || role is Jailor) */)
                .ToArray();
-            VoteTarget = players[Rng.Next(0, players.Length)];
+            VoteTarget = players[Rng.Next(players.Length)];
         }
     }
 }

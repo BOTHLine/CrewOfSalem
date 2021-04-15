@@ -10,11 +10,10 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.MediumPatches
         [HarmonyPriority(Priority.Last)]
         public static void Postfix()
         {
-            if (PlayerControl.LocalPlayer.GetRole() is Medium medium)
-            {
-                Medium.TurnAllGray();
-                Medium.MakeDeadVisible();
-            }
+            if (!(PlayerControl.LocalPlayer.GetRole() is Medium medium)) return;
+
+            Medium.TurnAllPlayersGrey();
+            Medium.MakeDeadVisible();
         }
     }
 }

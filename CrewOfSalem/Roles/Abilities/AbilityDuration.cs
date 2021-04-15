@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Hazel;
+using System.Linq;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -42,11 +42,7 @@ namespace CrewOfSalem.Roles.Abilities
         public void RpcEffectEnd()
         {
             if (RpcEndAction == RPC.None) return;
-
-            MessageWriter writer = GetWriter(RpcEndAction);
-            foreach (byte data in RpcEndData) writer.Write(data);
-            CloseWriter(writer);
-
+            WriteRPC(RpcEndAction, RpcEndData.ToArray());
             if (AmongUsClient.Instance.AmClient) EffectEnd();
         }
 
@@ -76,6 +72,30 @@ namespace CrewOfSalem.Roles.Abilities
             CurrentDuration = Duration;
         }
 
+        protected override void UpdateButtonCooldown()
+        {
+            if (HasDurationLeft)
+            {
+                Button.SetCoolDown(CurrentDuration, Duration);
+                Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            } else
+            {
+                base.UpdateButtonCooldown();
+            }
+        }
+
+        protected override void UpdateButtonSprite()
+        {
+            if (HasDurationLeft)
+            {
+                Button.renderer.color = Palette.PlayerColors[owner.Owner.Data.ColorId];
+                Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            } else
+            {
+                base.UpdateButtonSprite();
+            }
+        }
+
         protected sealed override void UpdateInternal(float deltaTime)
         {
             CurrentDuration = Mathf.Max(0F, CurrentDuration - deltaTime);
@@ -83,6 +103,12 @@ namespace CrewOfSalem.Roles.Abilities
 
             isEffectActive = false;
             RpcEffectEnd();
+        }
+
+        public override void Destroy()
+        {
+            base.Destroy();
+            if (HasDurationLeft) EffectEnd();
         }
     }
 }

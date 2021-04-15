@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using CrewOfSalem.Extensions;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -11,13 +14,26 @@ namespace CrewOfSalem.Roles.Abilities
         protected override bool   NeedsTarget => false;
 
         protected override RPC               RpcAction => RPC.AlertStart;
-        protected override IEnumerable<byte> RpcData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new byte[0];
 
         protected override RPC               RpcEndAction => RPC.AlertEnd;
-        protected override IEnumerable<byte> RpcEndData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcEndData   => new byte[0];
+
+        private static readonly Func<Ability, PlayerControl, bool> UseOnAlerted = (source, target) =>
+        {
+            AbilityAlert abilityAlert = GetAllAbilities<AbilityAlert>()
+               .FirstOrDefault(alert => alert.owner.Owner == target && alert.HasDurationLeft);
+            if (abilityAlert == null) return true;
+
+            source.owner.Owner.RpcKillPlayer(source.owner.Owner, abilityAlert.owner.Owner);
+            return false;
+        };
 
         // Constructors
-        public AbilityAlert(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
+        public AbilityAlert(Role owner, float cooldown, float duration) : base(owner, cooldown, duration)
+        {
+            AddOnBeforeUse(UseOnAlerted, 0);
+        }
 
         // Methods Ability
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
@@ -26,6 +42,8 @@ namespace CrewOfSalem.Roles.Abilities
         }
 
         // Methods Ability Duration
-        protected override void EffectEndInternal() { }
+        protected override void EffectEndInternal()
+        {
+        }
     }
 }

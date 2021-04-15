@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Abilities;
-using HarmonyLib;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.VeteranPatches
 {
-    [HarmonyPatch(typeof(Ability), nameof(Ability.Use))]
+    // [HarmonyPatch(typeof(Ability), nameof(Ability.Use))]
     public static class AbilityUsePatch
     {
         public static bool Prefix(Ability __instance, PlayerControl target, ref bool sendRpc)
@@ -14,7 +14,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.VeteranPatches
             {
                 if (abilityAlert.owner.Owner != target) continue;
 
-                __instance.owner.Owner.RpcMurderPlayer(__instance.owner.Owner);
+                __instance.owner.Owner.RpcKillPlayer(__instance.owner.Owner, abilityAlert.owner.Owner);
                 sendRpc = false;
                 return false;
             }

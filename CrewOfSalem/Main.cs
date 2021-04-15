@@ -6,6 +6,7 @@ using Essentials.Options;
 using CrewOfSalem.Roles;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
@@ -28,63 +29,82 @@ namespace CrewOfSalem
         public static readonly CustomStringOption OptionShowPlayerNames =
             CustomOption.AddString("Show Player Names", new[] {"Always", "Line of Sight", "Never"});
 
+        public static readonly CustomNumberOption OptionMafiaKillStart =
+            CustomOption.AddNumber("Mafia Kill Abilities Start", 2F, 1F, 4F, 1F);
+
+        public static readonly CustomNumberOption OptionMafiaKillAlways =
+            CustomOption.AddNumber("Mafia Kill Abilities Always", 1F, 1F, 3F, 1F);
+
+        public static readonly CustomStringOption OptionMafiaSharedKillCooldown =
+            CustomOption.AddString("Mafia Shared Kill Cooldown", new[] {"None", "Killer", "Self", "Custom"});
+
+        public static readonly CustomNumberOption OptionMafiaCustomSharedKillCooldown =
+            CustomOption.AddNumber("Mafia Shared Custom Kill Cooldown", 10F, 0F, 30F, 2.5F);
+
+        // public static readonly CustomToggleOption OptionEndScreenShowAllPlayers =
+        //    CustomOption.AddToggle("End Screen Show All Players", false);
+
         public static readonly Role[] Roles =
         {
-            RoleGeneric<Investigator>.Instance, // 0
-            RoleGeneric<Lookout>.Instance,      // 1
-            RoleGeneric<Psychic>.Instance,      // 2
-            RoleGeneric<Sheriff>.Instance,      // 3
-            RoleGeneric<Spy>.Instance,          // 4
-            RoleGeneric<Tracker>.Instance,      // 5
+            RoleGeneric<Investigator>.Instance, // Done
+            RoleGeneric<Lookout>.Instance,      // TODO
+            RoleGeneric<Psychic>.Instance,      // Done
+            RoleGeneric<Sheriff>.Instance,      // Done
+            RoleGeneric<Spy>.Instance,          // Done
+            RoleGeneric<Tracker>.Instance,      // TODO
 
-            RoleGeneric<Jailor>.Instance,        // 6
-            RoleGeneric<VampireHunter>.Instance, // 7
-            RoleGeneric<Veteran>.Instance,       // 8
-            RoleGeneric<Vigilante>.Instance,     // 9
+            RoleGeneric<Jailor>.Instance,        // TODO
+            RoleGeneric<VampireHunter>.Instance, // TODO
+            RoleGeneric<Veteran>.Instance,       // Done
+            RoleGeneric<Vigilante>.Instance,     // Done
 
-            RoleGeneric<Bodyguard>.Instance, // 10
-            RoleGeneric<Doctor>.Instance,    // 11
-            RoleGeneric<Crusader>.Instance,  // 12
-            RoleGeneric<Trapper>.Instance,   // 13
+            RoleGeneric<Bodyguard>.Instance, // Done
+            RoleGeneric<Doctor>.Instance,    // Done
+            RoleGeneric<Crusader>.Instance,  // TODO
+            RoleGeneric<Trapper>.Instance,   // TODO
 
-            RoleGeneric<Escort>.Instance,         // 14
-            RoleGeneric<Mayor>.Instance,          // 15
-            RoleGeneric<Medium>.Instance,         // 16
-            RoleGeneric<Retributionist>.Instance, // 17
-            RoleGeneric<Transporter>.Instance,    // 18
+            RoleGeneric<Escort>.Instance,         // TODO: Think about when to add cooldown, block tasks and vents
+            RoleGeneric<Mayor>.Instance,          // TODO
+            RoleGeneric<Medium>.Instance,         // TODO: Do show corpse colors?
+            RoleGeneric<Retributionist>.Instance, // TODO
+            RoleGeneric<Transporter>.Instance,    // TODO
 
-            RoleGeneric<Disguiser>.Instance, // 19
-            RoleGeneric<Framer>.Instance,    // 20
-            RoleGeneric<Hypnotist>.Instance, // 21
-            RoleGeneric<Janitor>.Instance,   // 22
+            RoleGeneric<Disguiser>.Instance, // TODO: Do show corpse colors?
+            RoleGeneric<Framer>.Instance,    // TODO
+            RoleGeneric<Hypnotist>.Instance, // TODO
+            RoleGeneric<Janitor>.Instance,   // TODO
 
-            RoleGeneric<Ambusher>.Instance,  // 23
-            RoleGeneric<Forger>.Instance,    // 24
-            RoleGeneric<Godfather>.Instance, // 25
-            RoleGeneric<Mafioso>.Instance,   // 26
+            RoleGeneric<Ambusher>.Instance,  // Done
+            RoleGeneric<Forger>.Instance,    // Done
+            RoleGeneric<Godfather>.Instance, // TODO: Godfather undying?
+            RoleGeneric<Mafioso>
+               .Instance, // TODO: Mafioso can see Godfather on map and will promote to Godfather if he dies?
 
-            RoleGeneric<Blackmailer>.Instance, // 27
-            RoleGeneric<Consigliere>.Instance, // 28
-            RoleGeneric<Consort>.Instance,     // 29
+            RoleGeneric<Blackmailer>.Instance, // Done
+            RoleGeneric<Consigliere>.Instance, // Done
+            RoleGeneric<Consort>.Instance,     // TODO: See Escort
 
-            RoleGeneric<Amnesiac>.Instance,      // 30
-            RoleGeneric<GuardianAngel>.Instance, // 31
-            RoleGeneric<Survivor>.Instance,      // 32
+            RoleGeneric<Amnesiac>.Instance,      // TODO
+            RoleGeneric<GuardianAngel>.Instance, // TODO
+            RoleGeneric<Survivor>.Instance,      // Done
 
-            RoleGeneric<Vampire>.Instance, // 33
+            RoleGeneric<Vampire>.Instance, //TODO
 
-            RoleGeneric<Executioner>.Instance, // 34
-            RoleGeneric<Jester>.Instance,      // 35
-            RoleGeneric<Witch>.Instance,       // 36
+            RoleGeneric<Executioner>.Instance, // Done
+            RoleGeneric<Jester>.Instance,      // Done
+            RoleGeneric<Witch>.Instance,       // TODO
 
-            RoleGeneric<Arsonist>.Instance,     // 37
-            RoleGeneric<SerialKiller>.Instance, // 38
-            RoleGeneric<Werewolf>.Instance      // 39
+            RoleGeneric<Arsonist>.Instance,     // TODO
+            RoleGeneric<SerialKiller>.Instance, // TODO
+            RoleGeneric<Werewolf>.Instance      // TODO
         };
 
+        private static readonly CustomStringOption[] RoleSlots = new CustomStringOption[10];
+
+        /*
         public static readonly RoleSlot[] RoleSlots =
         {
-            new RoleSlot(Faction.Crew),
+            new RoleSlot(GuardianAngel.Instance),
             new RoleSlot(Faction.Crew),
             new RoleSlot(Faction.Crew),
             new RoleSlot(Faction.Mafia,   Alignment.Killing),
@@ -95,16 +115,11 @@ namespace CrewOfSalem
             new RoleSlot(Faction.Crew),
             new RoleSlot(Faction.Mafia)
         };
+        */
 
         // AllowSpawn Options
-        private static readonly DictionaryKVP<Type, CustomToggleOption> RoleAllowSpawns =
-            new DictionaryKVP<Type, CustomToggleOption>();
-
-
-        private static KeyValuePair<Type, CustomToggleOption> GetRoleAllowSpawnOption(Role role)
-        {
-            return new KeyValuePair<Type, CustomToggleOption>(role.GetType(), CustomOption.AddToggle(role.Name, true));
-        }
+        private static readonly DictionaryKVP<Type, CustomNumberOption> RoleSpawnChances =
+            new DictionaryKVP<Type, CustomNumberOption>();
 
         // Cooldown Options
         private static readonly DictionaryKVP<TypePair, CustomNumberOption> RoleCooldowns =
@@ -130,13 +145,14 @@ namespace CrewOfSalem
                 CreateRoleCooldownOption<Consigliere, AbilityCheckRole>(),
                 CreateRoleCooldownOption<Consort, AbilityBlock>(),
 
+                CreateRoleCooldownOption<GuardianAngel, AbilityProtect>(),
                 CreateRoleCooldownOption<Survivor, AbilityVest>()
             };
 
         // private static readonly DictionaryKVP<Type, string> ActionNames = new DictionaryKVP<Type, string>();
 
         // Duration Options
-        public static readonly DictionaryKVP<TypePair, CustomNumberOption> RoleDurations =
+        private static readonly DictionaryKVP<TypePair, CustomNumberOption> RoleDurations =
             new DictionaryKVP<TypePair, CustomNumberOption>
             {
                 // CreateRoleDurationOption<Spy>("Spy"),
@@ -153,67 +169,54 @@ namespace CrewOfSalem
 
                 CreateRoleDurationOption<Consort, AbilityBlock>(),
 
+                CreateRoleDurationOption<GuardianAngel, AbilityProtect>(),
                 CreateRoleDurationOption<Survivor, AbilityVest>()
             };
 
         // Additional Options
+        public static readonly CustomNumberOption OptionSheriffMaxHintAmount =
+            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Max Hint Amount", 3F, 1F, DeadPlayer.Hints.Length, 1F);
+
+        public static readonly CustomNumberOption OptionSheriffHintDecreaseInterval =
+            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Hint Decrease Interval", 5F, 0F, 15F, 1F);
+
+        public static readonly CustomNumberOption OptionSheriffMinHintAmount =
+            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Min Hint Amount", 1F, 0F, DeadPlayer.Hints.Length, 1F);
+
         public static readonly CustomStringOption OptionDoctorShowShieldedPlayer =
             CustomOption.AddString(Role.GetName<Doctor>() + ": Show Shielded Owner",
                 new[] {"Doctor", "Target", "Doctor & Target", "Everyone"});
-
-        private static readonly List<IEnumerable<CustomOption>>
-            AllCustomOptions = new List<IEnumerable<CustomOption>>();
-
-        private static int customPageIndex;
-
-        public static void TurnPage()
-        {
-            foreach (CustomOption option in AllCustomOptions[customPageIndex])
-            {
-                option.HudVisible = option.MenuVisible = false;
-            }
-
-            customPageIndex = ++customPageIndex % AllCustomOptions.Count;
-
-            foreach (CustomOption option in AllCustomOptions[customPageIndex])
-            {
-                option.HudVisible = option.MenuVisible = true;
-            }
-        }
 
         public override void Load()
         {
             foreach (Role role in Roles)
             {
                 // RoleAllowSpawns.Add(GetRoleAllowSpawnOption(role));
-                // RoleSpawnChances.Add(CreateRoleSpawnChanceOption(role));
+                RoleSpawnChances.Add(CreateRoleSpawnChanceOption(role));
             }
 
-            AllCustomOptions.Add(new[] {OptionShowPlayerNames, OptionDoctorShowShieldedPlayer});
-            AllCustomOptions.Add(RoleCooldowns.Values);
-            AllCustomOptions.Add(RoleDurations.Values);
-
-            var doSkip = true;
-            foreach (IEnumerable<CustomOption> customOptions in AllCustomOptions)
+            for (var i = 0; i < RoleSlots.Length; i++)
             {
-                if (doSkip)
-                {
-                    doSkip = false;
-                    continue;
-                }
-
-                foreach (CustomOption option in customOptions)
-                {
-                    option.HudVisible = option.MenuVisible = false;
-                }
+                RoleSlots[i] = CustomOption.AddString("Role Slot " + (i + 1),
+                    new[]
+                    {
+                        "Crew", "Crew Investigative", "Crew Killing", "Crew Protective", "Crew Support", "Mafia",
+                        "Mafia Deception", "Mafia Killing", "Mafia Support", "Neutral", "Neutral Benign",
+                        "Neutral Chaos", "Neutral Evil", "Neutral Killing"
+                    });
             }
 
-            // new OptionPage(new[] {OptionShowPlayerNames, OptionDoctorShowShieldedPlayer});
-            // new OptionPage(RoleSpawnChances.Values);
-            // new OptionPage(RoleCooldowns.Values);
-            // new OptionPage(RoleDurations.Values);
 
-            // TODO: Add Assets?
+            OptionPage.CreateOptionPage(new CustomOption[]
+            {
+                OptionShowPlayerNames, OptionMafiaSharedKillCooldown, OptionMafiaCustomSharedKillCooldown,
+                OptionMafiaKillStart, OptionMafiaKillAlways, OptionSheriffMaxHintAmount,
+                OptionSheriffHintDecreaseInterval, OptionSheriffMinHintAmount, OptionDoctorShowShieldedPlayer
+            });
+            OptionPage.CreateOptionPage(RoleSlots);
+            OptionPage.CreateOptionPage(RoleSpawnChances.Values);
+            OptionPage.CreateOptionPage(RoleCooldowns.Values);
+            OptionPage.CreateOptionPage(RoleDurations.Values);
 
             // Disable the https://github.com/DorCoMaNdO/Reactor-Essentials watermark.
             // The code said that you were allowed, as long as you provided credit elsewhere. 
@@ -222,6 +225,62 @@ namespace CrewOfSalem
             // BothLine#9610
             CustomOption.ShamelessPlug = false;
             Harmony.PatchAll();
+        }
+
+        public static IEnumerable<RoleSlot> GetRoleSlots()
+        {
+            var roleSlots = new RoleSlot[RoleSlots.Length];
+
+            for (var i = 0; i < roleSlots.Length; i++)
+            {
+                switch (RoleSlots[i].GetValue())
+                {
+                    case 0:
+                        roleSlots[i] = new RoleSlot(Faction.Crew);
+                        break;
+                    case 1:
+                        roleSlots[i] = new RoleSlot(Faction.Crew, Alignment.Investigative);
+                        break;
+                    case 2:
+                        roleSlots[i] = new RoleSlot(Faction.Crew, Alignment.Killing);
+                        break;
+                    case 3:
+                        roleSlots[i] = new RoleSlot(Faction.Crew, Alignment.Protective);
+                        break;
+                    case 4:
+                        roleSlots[i] = new RoleSlot(Faction.Crew, Alignment.Support);
+                        break;
+                    case 5:
+                        roleSlots[i] = new RoleSlot(Faction.Mafia);
+                        break;
+                    case 6:
+                        roleSlots[i] = new RoleSlot(Faction.Mafia, Alignment.Deception);
+                        break;
+                    case 7:
+                        roleSlots[i] = new RoleSlot(Faction.Mafia, Alignment.Killing);
+                        break;
+                    case 8:
+                        roleSlots[i] = new RoleSlot(Faction.Mafia, Alignment.Support);
+                        break;
+                    case 9:
+                        roleSlots[i] = new RoleSlot(Faction.Neutral);
+                        break;
+                    case 10:
+                        roleSlots[i] = new RoleSlot(Faction.Neutral, Alignment.Benign);
+                        break;
+                    case 11:
+                        roleSlots[i] = new RoleSlot(Faction.Neutral, Alignment.Chaos);
+                        break;
+                    case 12:
+                        roleSlots[i] = new RoleSlot(Faction.Neutral, Alignment.Evil);
+                        break;
+                    case 13:
+                        roleSlots[i] = new RoleSlot(Faction.Neutral, Alignment.Killing);
+                        break;
+                }
+            }
+
+            return roleSlots;
         }
 
         private static KeyValuePair<Type, CustomNumberOption> CreateRoleSpawnChanceOption<T>(float value = 50F,
@@ -243,6 +302,11 @@ namespace CrewOfSalem
             CustomNumberOption customNumberOption = CustomOption.AddNumber(
                 $"({role.Faction.Name} {role.Alignment.Name}) {role.Name}", value, min, max, increment);
             return new KeyValuePair<Type, CustomNumberOption>(role.GetType(), customNumberOption);
+        }
+
+        public static float GetRoleSpawnChance(Type type)
+        {
+            return RoleSpawnChances.TryGetValue(type, out CustomNumberOption value) ? value.GetValue() : 0F;
         }
 
         /*

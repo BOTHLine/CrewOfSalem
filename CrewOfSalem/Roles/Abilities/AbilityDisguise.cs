@@ -11,10 +11,10 @@ namespace CrewOfSalem.Roles.Abilities
         protected override bool   NeedsTarget => false;
 
         protected override RPC               RpcAction => RPC.DisguiseStart;
-        protected override IEnumerable<byte> RpcData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new byte[0];
 
         protected override RPC               RpcEndAction => RPC.DisguiseEnd;
-        protected override IEnumerable<byte> RpcEndData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcEndData   => new byte[0];
 
         // Constructors
         public AbilityDisguise(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
@@ -22,28 +22,12 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods
         public static void Disguise()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
-                player.nameText.Text = "";
-                player.myRend.material.SetColor(ShaderBackColor, Color.grey);
-                player.myRend.material.SetColor(ShaderBodyColor, Color.grey);
-                player.HatRenderer.SetHat(0, 0);
-                SetSkinWithAnim(player.MyPhysics, 0);
-                if (player.CurrentPet) Object.Destroy(player.CurrentPet.gameObject);
-            }
+            TurnAllPlayersGrey();
         }
 
         private static void DisguiseEnd()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
-                player.SetName(player.Data.PlayerName);
-                player.SetHat(player.Data.HatId, player.Data.ColorId);
-                SetSkinWithAnim(player.MyPhysics, player.Data.SkinId);
-                player.SetPet(player.Data.PetId);
-                player.CurrentPet.Visible = player.Visible;
-                player.SetColor(player.Data.ColorId);
-            }
+            ResetPlayerColors();
         }
 
         // Methods Ability

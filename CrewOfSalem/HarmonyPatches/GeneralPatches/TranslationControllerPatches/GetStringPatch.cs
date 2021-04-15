@@ -5,19 +5,19 @@ using UnhollowerBaseLib;
 
 namespace CrewOfSalem.HarmonyPatches.TranslationControllerPatches
 {
-    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString),
-        new[] {typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)})]
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames),
+        typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
     public static class GetStringPatch
     {
-        public static void Postfix(ref string __result, StringNames DKEHCKOHMOH,
-            Il2CppReferenceArray<Il2CppSystem.Object> DKBJCINDDCD)
+        public static void Postfix(ref string __result, [HarmonyArgument(0)] StringNames id,
+            [HarmonyArgument(1)] Il2CppReferenceArray<Il2CppSystem.Object> parts)
         {
             if (ExileController.Instance == null || ExileController.Instance.exiled == null) return;
 
             byte playerId = ExileController.Instance.exiled.Object.PlayerId;
             Role role = ExileController.Instance.exiled.Object.GetRole();
 
-            switch (DKEHCKOHMOH)
+            switch (id)
             {
                 case StringNames.ExileTextPN:
                 case StringNames.ExileTextSN:

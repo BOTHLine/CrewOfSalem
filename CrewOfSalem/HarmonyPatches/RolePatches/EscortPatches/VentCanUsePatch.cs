@@ -5,11 +5,11 @@ using HarmonyLib;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.EscortPatches
 {
-    [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
+    // [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
     public static class VentCanUsePatch
     {
         [HarmonyPriority(Priority.HigherThanNormal)]
-        public static bool Prefix(ref bool OFPIPGCNGAK, ref bool KHBPLGBBIEC)
+        public static bool Prefix([HarmonyArgument(1)] ref bool canUse, [HarmonyArgument(2)] ref bool couldUse)
         {
             AbilityBlock[] blockAbilities = Ability.GetAllAbilities<AbilityBlock>();
             if (!blockAbilities.Any(blockAbility =>
@@ -18,7 +18,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.EscortPatches
                 return true;
             }
 
-            OFPIPGCNGAK = KHBPLGBBIEC = false;
+            canUse = couldUse = false;
             return false;
         }
     }

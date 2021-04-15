@@ -14,7 +14,7 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Neutral;
         public override Alignment Alignment => Alignment.Benign;
 
-        protected override Color Color => new Color(200F / 255F, 200F / 255F, 0F / 255F, 1F);
+        public override Color Color => new Color(200F / 255F, 200F / 255F, 0F / 255F, 1F);
 
         public override string RoleTask => "Survive until the end";
 

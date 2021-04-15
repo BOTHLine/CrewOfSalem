@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
-using Hazel;
+using System.Linq;
+using CrewOfSalem.Extensions;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -12,17 +14,34 @@ namespace CrewOfSalem.Roles.Abilities
         private bool isInTask   = false;
 
         // Properties
-        public bool IsGuarding => isGuarding;
+        public bool IsGuarding => isGuarding && !isInTask && !owner.Owner.Data.IsDead;
         public bool IsInTask   => isInTask;
 
         // Properties Ability
-        public AbilityGuard(Role owner, float cooldown) : base(owner, cooldown) { }
         protected override Sprite Sprite => ButtonGuard;
 
         protected override bool NeedsTarget => false;
 
         protected override RPC               RpcAction => RPC.ToggleGuard;
-        protected override IEnumerable<byte> RpcData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new byte[0];
+
+        public AbilityGuard(Role owner, float cooldown) : base(owner, cooldown)
+        {
+            AddOnBeforeUse(UseOnGuarded, 10);
+        }
+
+        private static readonly Func<Ability, PlayerControl, bool> UseOnGuarded = (source, target) =>
+        {
+            if (!(source is AbilityKill)) return true;
+
+            AbilityGuard abilityGuard = GetAllAbilities<AbilityGuard>().FirstOrDefault(guard =>
+                guard.isGuarding && PlayerTools.IsPlayerInRange(guard.owner.Owner, target));
+            if (abilityGuard == null) return true;
+
+            abilityGuard.owner.Owner.RpcKillPlayer(source.owner.Owner);
+            abilityGuard.owner.Owner.RpcKillPlayer(abilityGuard.owner.Owner, source.owner.Owner);
+            return false;
+        };
 
         // Methods
         public void RpcToggleInTask(bool inTask)
@@ -31,9 +50,7 @@ namespace CrewOfSalem.Roles.Abilities
 
             if (AmongUsClient.Instance.AmClient) ToggleInTask();
 
-            MessageWriter writer = GetWriter(RPC.ToggleInTask);
-            writer.Write(owner.Owner.PlayerId);
-            CloseWriter(writer);
+            WriteRPC(RPC.ToggleInTask);
         }
 
         public void ToggleInTask()
@@ -52,14 +69,28 @@ namespace CrewOfSalem.Roles.Abilities
         {
             Button.renderer.sprite = Sprite;
 
-            if (isGuarding)
+            if (CanUse())
             {
-                Button.renderer.color = Palette.EnabledColor;
-                Button.renderer.material.SetFloat(ShaderDesat, 0F);
+                if (isGuarding)
+                {
+                    Button.renderer.color = new Color(0F / 255F, 255F / 255F, 0F / 255F, 128F / 255F);
+                    Button.renderer.material.SetFloat(ShaderDesat, 0F);
+                } else
+                {
+                    Button.renderer.color = Palette.EnabledColor;
+                    Button.renderer.material.SetFloat(ShaderDesat, 0F);
+                }
             } else
             {
-                Button.renderer.color = Palette.DisabledColor;
-                Button.renderer.material.SetFloat(ShaderDesat, 1F);
+                if (isGuarding)
+                {
+                    Button.renderer.color = new Color(0F / 255F, 128F / 255F, 0F / 255F, 255F / 255F);
+                    Button.renderer.material.SetFloat(ShaderDesat, 1F);
+                } else
+                {
+                    Button.renderer.color = Palette.DisabledColor;
+                    Button.renderer.material.SetFloat(ShaderDesat, 1F);
+                }
             }
         }
     }

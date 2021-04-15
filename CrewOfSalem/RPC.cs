@@ -36,11 +36,10 @@ namespace CrewOfSalem
 
         // --- Custom RPCs --- TODO:
         None,
-        SetRole         = 43,
-        SetLocalPlayers = 44,
-        SendWhisperChat = 45,
-        SendMafiaChat   = 46,
-        SendLoversChat  = 47,
+        ForceEnd,
+        SetRole,
+        AddKillAbility,
+        SetLocalPlayers,
         ResetVariables,
 
         Kill,
@@ -50,7 +49,7 @@ namespace CrewOfSalem
 
         ToggleGuard,
         ToggleInTask,
-        
+
         ShieldStart,
         ShieldEnd,
 
@@ -61,23 +60,26 @@ namespace CrewOfSalem
 
         DisguiseStart,
         DisguiseEnd,
-        
+
         Frame,
 
         Hypnotize,
-        
+
         ForgeStart,
         ForgeEnd,
 
         Blackmail,
-        
+
         Protect,
 
         VestStart,
         VestEnd,
-        
+
         VampireConvert,
+
+        ExecutionerWin,
+        ExecutionerToJester,
         
-        ExecutionerToJester
+        JesterWin
     }
 }

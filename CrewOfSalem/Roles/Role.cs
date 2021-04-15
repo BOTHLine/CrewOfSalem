@@ -1,7 +1,6 @@
 ﻿using System;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using Hazel;
 using System.Collections.Generic;
 using System.Linq;
 using CrewOfSalem.Roles.Abilities;
@@ -22,7 +21,7 @@ namespace CrewOfSalem.Roles
         public abstract Faction   Faction   { get; }
         public abstract Alignment Alignment { get; }
 
-        protected virtual Color Color        => Faction.Color;
+        public virtual    Color Color        => Faction.Color;
         protected virtual Color OutlineColor { get; } = new Color(0, 0, 0, 1);
 
         public virtual    string  RoleTask   => Alignment.GetColorizedTask(Faction);
@@ -30,7 +29,7 @@ namespace CrewOfSalem.Roles
 
         public abstract string Description { get; }
 
-        public PlayerControl Owner { get; protected set; }
+        public PlayerControl Owner { get; set; }
 
         // Methods
         private static byte GetRoleID<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetRoleID();
@@ -53,33 +52,33 @@ namespace CrewOfSalem.Roles
         }
 
         // Methods
+        public static void RpcSetRole(Role role, PlayerControl player)
+        {
+            if (AmongUsClient.Instance.AmClient) SetRole(role, player);
+            WriteRPC(RPC.SetRole, role.RoleID, player.PlayerId);
+        }
+
         public static void SetRole(Role role, PlayerControl player)
         {
-            AddSpecialRole(role, player);
-            MessageWriter writer = GetWriter(RPC.SetRole);
-            writer.Write(role.RoleID);
-            writer.Write(player.PlayerId);
-            CloseWriter(writer);
+            AddRole(role, player);
         }
 
-        public void InitializeRole(PlayerControl player)
+        public void InitializeRole()
         {
-            Owner = player;
-            InitializeAbilities();
-            SetConfigSettingsInternal();
             InitializeRoleInternal();
-            SetRoleTask();
+            SetConfigSettingsInternal();
+            InitializeAbilities();
         }
 
-        public void SetNameColor()
+        public void SetMeetingHudNameColor()
         {
             if (MeetingHud.Instance != null)
             {
-                foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                foreach (PlayerVoteArea playerVoteArea in MeetingHud.Instance.playerStates)
                 {
-                    if (Owner.PlayerId == playerVote.TargetPlayerId)
+                    if (Owner.PlayerId == playerVoteArea.TargetPlayerId)
                     {
-                        playerVote.NameText.Color = Color;
+                        playerVoteArea.NameText.Color = Color;
                     }
                 }
             } else
@@ -88,11 +87,26 @@ namespace CrewOfSalem.Roles
             }
         }
 
+        public void SetMeetingHudRoleName()
+        {
+            if (MeetingHud.Instance != null)
+            {
+                foreach (PlayerVoteArea playerVoteArea in MeetingHud.Instance.playerStates)
+                {
+                    if (Owner.PlayerId == playerVoteArea.TargetPlayerId)
+                    {
+                        playerVoteArea.NameText.Text = $"{Owner.Data.PlayerName}\n({Name})";
+                        playerVoteArea.NameText.scale = 0.8F;
+                    }
+                }
+            }
+        }
+
         public void SetRoleTask()
         {
             if (Owner != PlayerControl.LocalPlayer) return;
 
-            if (Owner.Data.IsImpostor)
+            if (Owner.Data.IsImpostor && Owner.myTasks.Count > 0)
             {
                 Owner.myTasks.RemoveAt(0);
             }
@@ -112,23 +126,27 @@ namespace CrewOfSalem.Roles
             ClearSettingsInternal();
         }
 
-        public void AddAbility<TRole, TAbility>()
+        public TAbility AddAbility<TRole, TAbility>(bool insertAtFront = false)
             where TRole : RoleGeneric<TRole>, new()
             where TAbility : Ability
         {
+            TAbility ability;
             if (typeof(AbilityDuration).IsAssignableFrom(typeof(TAbility)))
             {
-                AddAbility(Activator.CreateInstance(typeof(TAbility), this, Main.GetRoleCooldown<TRole, TAbility>(),
-                    Main.GetRoleDuration<TRole, TAbility>()) as TAbility);
+                ability = Activator.CreateInstance(typeof(TAbility), this, Main.GetRoleCooldown<TRole, TAbility>(),
+                    Main.GetRoleDuration<TRole, TAbility>()) as TAbility;
             } else
             {
-                AddAbility(
+                ability =
                     Activator.CreateInstance(typeof(TAbility), this, Main.GetRoleCooldown<TRole, TAbility>()) as
-                        TAbility);
+                        TAbility;
             }
+
+            AddAbility(ability, insertAtFront);
+            return ability;
         }
 
-        private void AddAbility(Ability ability, bool insertAtFront = false)
+        private void AddAbility(Ability ability, bool insertAtFront)
         {
             if (insertAtFront) abilities.Insert(0, ability);
             else abilities.Add(ability);
@@ -178,13 +196,13 @@ namespace CrewOfSalem.Roles
 
         protected virtual void SetConfigSettingsInternal() { }
 
-        public virtual void SetIntro(IntroCutscene._CoBegin_d__11 instance)
+        public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
         {
             instance.__this.Title.Text = Name;
+            instance.__this.Title.Color = Color;
             instance.__this.Title.render?.material.SetColor(ShaderOutlineColor, OutlineColor);
             instance.__this.Title.transform.localScale = TitleScale;
-            instance._impColor_5__4 = Color;
-            // instance.c = Color; // TODO: 2021.3.5s
+            instance.c = Color;
             instance.__this.ImpostorText.Text = RoleTask;
             instance.__this.BackgroundBar.material.color = Color;
         }

@@ -35,13 +35,14 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
                     player.nameText.Color = Vampire.GetColor();
                 } else
                 {
-                    player.nameText.Color = Color.white;
+                    player.nameText.Color = Palette.White;
                 }
             }
 
             AbilityShield.CheckShowShieldedPlayers();
 
-            localRole?.SetNameColor();
+            localRole?.SetMeetingHudNameColor();
+            localRole?.SetMeetingHudRoleName();
             if (!localPlayer.Data.IsDead) localRole?.UpdateAbilities(Time.deltaTime);
 
             // Add Mafia / Coven / Lover Chat

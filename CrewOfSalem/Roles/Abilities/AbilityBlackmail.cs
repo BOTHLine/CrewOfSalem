@@ -14,7 +14,7 @@ namespace CrewOfSalem.Roles.Abilities
         protected override bool   NeedsTarget => true;
 
         protected override RPC               RpcAction => RPC.Blackmail;
-        protected override IEnumerable<byte> RpcData   => new[] {owner.Owner.PlayerId, Button.CurrentTarget.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
 
         // Constructors
         public AbilityBlackmail(Role owner, float cooldown) : base(owner, cooldown) { }
@@ -28,9 +28,20 @@ namespace CrewOfSalem.Roles.Abilities
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
             BlackmailedPlayer = target;
-            CurrentCooldown = float.MaxValue;
             sendRpc = true;
             setCooldown = false;
+        }
+
+        protected override void UpdateButtonSprite()
+        {
+            if (BlackmailedPlayer == null)
+            {
+                base.UpdateButtonSprite();
+            } else
+            {
+                Button.renderer.color = Palette.PlayerColors[BlackmailedPlayer.Data.ColorId];
+                Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            }
         }
     }
 }

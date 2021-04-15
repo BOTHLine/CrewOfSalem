@@ -11,7 +11,6 @@ namespace CrewOfSalem.Roles
         // Singleton
         private static T instance = null;
 
-        // ReSharper disable once StaticMemberInGenericType
         private static readonly object Lock = new object();
 
         public static T Instance
@@ -27,11 +26,6 @@ namespace CrewOfSalem.Roles
 
         // Constructors
         protected RoleGeneric()
-        {
-            instance = (T) this;
-        }
-
-        protected RoleGeneric(PlayerControl owner) : base(owner)
         {
             instance = (T) this;
         }

@@ -1,5 +1,6 @@
-﻿using HarmonyLib;
+﻿
 
+/*
 namespace CrewOfSalem.HarmonyPatches.IntroCutscenePatches
 {
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
@@ -11,3 +12,4 @@ namespace CrewOfSalem.HarmonyPatches.IntroCutscenePatches
         }
     }
 }
+*/

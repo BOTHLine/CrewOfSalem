@@ -18,10 +18,10 @@ namespace CrewOfSalem.Roles.Abilities
         protected override bool   NeedsTarget => true;
 
         protected override RPC               RpcAction => RPC.Block;
-        protected override IEnumerable<byte> RpcData   => new[] {owner.Owner.PlayerId, Button.CurrentTarget.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
 
         protected override RPC               RpcEndAction => RPC.BlockEnd;
-        protected override IEnumerable<byte> RpcEndData   => new[] {owner.Owner.PlayerId};
+        protected override IEnumerable<byte> RpcEndData   => new byte[0];
 
         // Constructors
         public AbilityBlock(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
@@ -41,6 +41,18 @@ namespace CrewOfSalem.Roles.Abilities
         protected override void EffectEndInternal()
         {
             blockedPlayer = null;
+        }
+        
+        protected override void UpdateButtonSprite()
+        {
+            if (BlockedPlayer == null)
+            {
+                base.UpdateButtonSprite();
+            } else
+            {
+                Button.renderer.color = Palette.PlayerColors[BlockedPlayer.Data.ColorId];
+                Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            }
         }
     }
 }

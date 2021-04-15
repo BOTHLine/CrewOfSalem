@@ -9,19 +9,19 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SpyPatches
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
     public static class VentCanUsePatch
     {
-        public static bool Prefix(Vent __instance, ref float __result, GameData.PlayerInfo OMBNGHLFKPJ,
-            out bool OFPIPGCNGAK, out bool KHBPLGBBIEC)
+        public static bool Prefix(Vent __instance, ref float __result, [HarmonyArgument(0)] GameData.PlayerInfo pc,
+            [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
         {
             var distance = float.MaxValue;
-            PlayerControl player = OMBNGHLFKPJ.Object;
+            PlayerControl player = pc.Object;
 
-            OFPIPGCNGAK = !player.Data.IsDead && (player.Data.IsImpostor || player.GetRole() is Spy);
-            KHBPLGBBIEC = OFPIPGCNGAK;
+            couldUse = !player.Data.IsDead && (player.Data.IsImpostor || player.GetRole() is Spy);
+            canUse = false;
 
             if ((DateTime.UtcNow - PlayerVentTimeUtility.GetLastVent(player.PlayerId)).TotalMilliseconds > 100F)
             {
                 distance = Vector2.Distance(player.GetTruePosition(), __instance.transform.position);
-                KHBPLGBBIEC &= distance <= __instance.UsableDistance;
+                canUse = couldUse & distance <= __instance.UsableDistance;
             }
 
             __result = distance;

@@ -14,7 +14,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
             foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
             {
                 if (blackmailAbilities.Any(blackmailAbility =>
-                    blackmailAbility.BlackmailedPlayer.PlayerId == playerVoteArea.TargetPlayerId))
+                    blackmailAbility.BlackmailedPlayer?.PlayerId == playerVoteArea.TargetPlayerId))
                 {
                     playerVoteArea.didVote = true;
                     playerVoteArea.votedFor = -2;

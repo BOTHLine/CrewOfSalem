@@ -5,14 +5,12 @@ using HarmonyLib;
 
 namespace CrewOfSalem.HarmonyPatches.ChatControllerPatches
 {
-    [HarmonyPatch(typeof(ChatController))]
+    [HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))]
     public class AddChatPatch
     {
-        [HarmonyPatch(nameof(ChatController.AddChat))]
-        public static bool Prefix(PlayerControl AHKBPEIJEEO, string KLNJLCOMCAI)
+        public static bool Prefix([HarmonyArgument(0)] PlayerControl source,[HarmonyArgument(1)] string message)
         {
             PlayerControl local = PlayerControl.LocalPlayer;
-            PlayerControl source = AHKBPEIJEEO;
             if (local == null) return true;
             if (LobbyBehaviour.Instance) return true;
             if (MeetingHud.Instance) return true;
@@ -33,7 +31,7 @@ namespace CrewOfSalem.HarmonyPatches.ChatControllerPatches
             if (localRole is Spy && !sourceRole.Owner.Data.IsDead &&
                 (sourceRole.Faction == Faction.Mafia || sourceRole.Faction == Faction.Coven))
             {
-                HudManager.Instance.Chat.AddChat(local, sourceRole.Faction.Name + ": " + KLNJLCOMCAI);
+                HudManager.Instance.Chat.AddChat(local, sourceRole.Faction.Name + ": " + message);
                 return false;
             }
 
