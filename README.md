@@ -93,6 +93,7 @@ Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner F�
 #### Guardian Angel
 Bekommt am Anfang der Runde ein Ziel zuegewiesen, welches jede Rolle außer Guardian Angel, Executioner oder Jester sein kann. Der Guardian Angel gewinnt, solange sein Ziel bis zum Ende überlebt, auch wenn er selber bereits tot ist.  
 Kann sein Ziel für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf das Ziel des Guardian Angels bringen nur den Kill auf Cooldown, töten es aber nicht. Kann auch aus dem Tod heraus genutzt werden.  
+Sollte das Ziel vor dem Guardian Angel sterben, so wird der Guardian Angel zum Survivor.
 
 #### Survivor
 Möchte nur bis zum Ende überleben. Kann sowohl mit der Crew als auch mit der Mafia gewinnen, solange er bis zum Ende überlebt. Außer wenn die Mafia durch Sabotage (Reactor, Oxygen) gewinnt.  
