@@ -31,7 +31,7 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                 }
                 */
 
-                if (executioner.VoteTarget.Data.IsDead)
+                if (executioner.VoteTarget.Data.IsDead && !executioner.Owner.Data.IsDead)
                 {
                     executioner.TurnIntoJester();
                 } else if (executioner.VoteTarget.PlayerId == ExileController.Instance.exiled?.PlayerId)

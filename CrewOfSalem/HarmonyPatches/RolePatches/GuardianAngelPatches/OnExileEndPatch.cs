@@ -10,7 +10,8 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.GuardianAngelPatches
         public static bool Prefix(UnityEngine.Object obj)
         {
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return true;
-            if (TryGetSpecialRole(out GuardianAngel guardianAngel) && guardianAngel.Owner == LocalPlayer)
+            if (TryGetSpecialRole(out GuardianAngel guardianAngel) && guardianAngel.Owner == LocalPlayer &&
+                !guardianAngel.Owner.Data.IsDead)
             {
                 if (guardianAngel.ProtectTarget.Data.IsDead)
                 {
