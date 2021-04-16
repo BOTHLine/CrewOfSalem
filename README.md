@@ -48,9 +48,9 @@ Der Bodyguard kann sich nicht selber schützen.
 Der Bodyguard kann andere Spieler nicht beschützen, während er selber "beschäftigt" ist. (In einer Task, in Kameras, am Admin Table etc..)
 
 #### Doctor
-Kann einem anderen Spieler einen Schild geben, welcher diesen für die nächsten X Sekunden vor dem nächsten Angriff schützt. Sollte ein Spieler dies versuchen, geht sein Kill auf Cooldown und der Schild verschwindet.  
-Der Doctor kann nach einem Cooldown erneut sein Schild vergeben.  
-Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser nach einer gewissen Zeit automatisch verschwindet.
+Kann einem anderen Spieler einen Schild geben, welcher bis zum nächsten Meeting hält. Der erste Angriff auf das geschildete Ziel macht den Schild kaputt.
+Sobald der Schild weg ist (durch Meeting oder Angriff), beginnt der Cooldown für die Schild-Fähigkeit des Doctors. 
+Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser auf andere Art und Weise bricht.
 
 ### Crew Support
 
