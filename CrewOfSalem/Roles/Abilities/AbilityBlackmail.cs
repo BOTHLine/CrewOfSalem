@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CrewOfSalem.Extensions;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -39,7 +40,7 @@ namespace CrewOfSalem.Roles.Abilities
                 base.UpdateButtonSprite();
             } else
             {
-                Button.renderer.color = Palette.PlayerColors[BlackmailedPlayer.Data.ColorId];
+                Button.renderer.color = BlackmailedPlayer.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             }
         }

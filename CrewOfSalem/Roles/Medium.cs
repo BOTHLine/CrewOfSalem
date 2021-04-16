@@ -24,7 +24,7 @@ namespace CrewOfSalem.Roles
 
         public static void MakeDeadVisible()
         {
-            foreach (PlayerControl playerControl in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl playerControl in AllPlayers)
             {
                 playerControl.Visible = !playerControl.inVent;
             }

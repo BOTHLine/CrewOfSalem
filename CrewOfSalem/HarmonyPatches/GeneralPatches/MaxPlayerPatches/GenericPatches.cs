@@ -2,6 +2,7 @@
 using HarmonyLib;
 using UnhollowerBaseLib;
 using UnityEngine;
+using static CrewOfSalem.CrewOfSalem;
 
 /*
 using static CrowdedMod.Patches.CreateGameOptionsPatches.CreateOptionsPickerStart;
@@ -65,7 +66,7 @@ namespace CrowdedMod.Patches
         {
             public static bool Prefix(PlayerTab __instance)
             {
-                PlayerControl.SetPlayerMaterialColors(PlayerControl.LocalPlayer.Data.ColorId, __instance.DemoImage);
+                PlayerControl.SetPlayerMaterialColors(LocalData.ColorId, __instance.DemoImage);
                 for (var i = 0; i < Palette.PlayerColors.Length; i++)
                 {
                     __instance.AvailableColors.Add(i);

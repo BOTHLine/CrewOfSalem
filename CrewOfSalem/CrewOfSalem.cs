@@ -5,6 +5,7 @@ using Hazel;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using CrewOfSalem.Extensions;
 using Reactor.Extensions;
 using UnityEngine;
 
@@ -22,7 +23,6 @@ namespace CrewOfSalem
         public static readonly int ShaderDesat         = Shader.PropertyToID("_Desat");
         public static readonly int ShaderMask          = Shader.PropertyToID("_Mask");
         public static readonly int ShaderNormalizedUvs = Shader.PropertyToID("_NormalizedUvs");
-
 
         public static readonly Dictionary<string, Role> PlayerNames   = new Dictionary<string, Role>();
         public static readonly Dictionary<byte, Role>   AssignedRoles = new Dictionary<byte, Role>();
@@ -54,6 +54,11 @@ namespace CrewOfSalem
         private static Sprite buttonBite;
 
         // Properties
+        public static IEnumerable<PlayerControl> AllPlayers  => PlayerControl.AllPlayerControls.ToArray();
+        public static PlayerControl              LocalPlayer => PlayerControl.LocalPlayer;
+        public static GameData.PlayerInfo        LocalData   => LocalPlayer?.Data;
+        public static Role                       LocalRole   => LocalPlayer?.GetRole();
+
         public static Sprite ButtonInvestigate =>
             buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png");
 
@@ -124,8 +129,7 @@ namespace CrewOfSalem
 
         public static MessageWriter GetWriter(RPC action)
         {
-            return AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte) action,
-                SendOption.None, -1);
+            return AmongUsClient.Instance.StartRpcImmediately(LocalPlayer.NetId, (byte) action, SendOption.None, -1);
         }
 
         public static void CloseWriter(MessageWriter writer)
@@ -211,7 +215,7 @@ namespace CrewOfSalem
 
         public static void TurnAllPlayersGrey()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl player in AllPlayers)
             {
                 player.nameText.Text = "";
                 player.myRend.material.SetColor(ShaderBackColor, Color.grey);
@@ -224,7 +228,7 @@ namespace CrewOfSalem
 
         public static void ResetPlayerColors()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl player in AllPlayers)
             {
                 player.SetName(player.Data.PlayerName);
                 player.SetHat(player.Data.HatId, player.Data.ColorId);

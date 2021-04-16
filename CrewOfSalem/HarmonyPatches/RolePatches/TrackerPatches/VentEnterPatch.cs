@@ -1,6 +1,6 @@
-﻿using CrewOfSalem.Extensions;
-using CrewOfSalem.Roles;
+﻿using CrewOfSalem.Roles;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.TrackerPatches
 {
@@ -9,7 +9,7 @@ namespace CrewOfSalem.HarmonyPatches.TrackerPatches
     {
         public static void Postfix()
         {
-            if (PlayerControl.LocalPlayer.GetRole() is Tracker tracker)
+            if (LocalRole is Tracker tracker)
             {
                 tracker.SendChatMessage(Tracker.MessageType.PlayerEnteredVent);
             }

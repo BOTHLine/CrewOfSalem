@@ -1,6 +1,7 @@
 using System.Linq;
 using CrewOfSalem.Roles.Abilities;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
 {
@@ -10,8 +11,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
         public static bool Prefix()
         {
             AbilityBlackmail[] blackmailAbilities = Ability.GetAllAbilities<AbilityBlackmail>();
-            return blackmailAbilities.All(blackmailAbility =>
-                blackmailAbility.BlackmailedPlayer != PlayerControl.LocalPlayer);
+            return blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != LocalPlayer);
         }
     }
 }

@@ -104,7 +104,7 @@ namespace CrewOfSalem.Roles
 
         public void SetRoleTask()
         {
-            if (Owner != PlayerControl.LocalPlayer) return;
+            if (Owner != LocalPlayer) return;
 
             if (Owner.Data.IsImpostor && Owner.myTasks.Count > 0)
             {

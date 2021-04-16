@@ -2,6 +2,7 @@ using System;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Abilities;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.BodyguardPatches
 {
@@ -10,7 +11,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BodyguardPatches
     {
         public static bool Prefix()
         {
-            PlayerControl.LocalPlayer.GetAbility<AbilityGuard>()?.RpcToggleInTask(false);
+            LocalPlayer.GetAbility<AbilityGuard>()?.RpcToggleInTask(false);
             return true;
         }
     }

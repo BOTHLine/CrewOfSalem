@@ -2,36 +2,31 @@ using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Factions;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.ChatControllerPatches
 {
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))]
-    public class AddChatPatch
+    public static class AddChatPatch
     {
         public static bool Prefix([HarmonyArgument(0)] PlayerControl source,[HarmonyArgument(1)] string message)
         {
-            PlayerControl local = PlayerControl.LocalPlayer;
-            if (local == null) return true;
+            if (LocalPlayer == null) return true;
             if (LobbyBehaviour.Instance) return true;
             if (MeetingHud.Instance) return true;
-            if (local.PlayerId == source.PlayerId) return true;
-            if (local.Data.IsDead && source.Data.IsDead) return true;
-            Role localRole = local.GetRole();
-            Role sourceRole = source.GetRole();
-            if (localRole == null || sourceRole == null) return false;
-            if (localRole.Faction == Faction.Mafia && sourceRole.Faction == Faction.Mafia &&
-                local.Data.IsDead) return true;
-            if (localRole.Faction == Faction.Mafia && sourceRole.Faction == Faction.Mafia &&
-                local.Data.IsDead == source.Data.IsDead) return true;
-            if (localRole.Faction == Faction.Coven && sourceRole.Faction == Faction.Coven &&
-                local.Data.IsDead) return true;
-            if (localRole.Faction == Faction.Coven && sourceRole.Faction == Faction.Coven &&
-                local.Data.IsDead == source.Data.IsDead) return true;
+            if (LocalPlayer.PlayerId == source.PlayerId) return true;
+            if (LocalPlayer.Data.IsDead && source.Data.IsDead) return true;
+            Role role = source.GetRole();
+            if (LocalRole == null || role == null) return false;
+            if (LocalRole.Faction == Faction.Mafia && role.Faction == Faction.Mafia && LocalData.IsDead) return true;
+            if (LocalRole.Faction == Faction.Mafia && role.Faction == Faction.Mafia && LocalData.IsDead == source.Data.IsDead) return true;
+            if (LocalRole.Faction == Faction.Coven && role.Faction == Faction.Coven && LocalData.IsDead) return true;
+            if (LocalRole.Faction == Faction.Coven && role.Faction == Faction.Coven && LocalData.IsDead == source.Data.IsDead) return true;
 
-            if (localRole is Spy && !sourceRole.Owner.Data.IsDead &&
-                (sourceRole.Faction == Faction.Mafia || sourceRole.Faction == Faction.Coven))
+            if (LocalRole is Spy && !role.Owner.Data.IsDead &&
+                (role.Faction == Faction.Mafia || role.Faction == Faction.Coven))
             {
-                HudManager.Instance.Chat.AddChat(local, sourceRole.Faction.Name + ": " + message);
+                HudManager.Instance.Chat.AddChat(LocalPlayer, role.Faction.Name + ": " + message);
                 return false;
             }
 

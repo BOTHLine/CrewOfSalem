@@ -4,6 +4,7 @@ using CrewOfSalem.HarmonyPatches.GeneralPatches;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Factions;
+using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Extensions
@@ -25,25 +26,53 @@ namespace CrewOfSalem.Extensions
             KillOverlayShowOnePatch.killerAnimation = killerAnimation?.Data;
             killer.MurderPlayer(target);
 
-            if (killerAnimation.GetRole().Faction != Faction.Mafia ||
-                PlayerControl.LocalPlayer.GetRole().Faction != Faction.Mafia ||
-                killerAnimation == PlayerControl.LocalPlayer) return;
+            if (killerAnimation.GetRole().Faction != Faction.Mafia || LocalRole.Faction != Faction.Mafia ||
+                killerAnimation == LocalPlayer) return;
 
             switch (Main.OptionMafiaSharedKillCooldown.GetValue())
             {
                 case 0: // None
                     break;
                 case 1: // Killer
-                    PlayerControl.LocalPlayer.GetAbility<AbilityKill>()?.SetCooldown(killerAnimation.GetAbility<AbilityKill>().Cooldown);
+                    LocalPlayer.GetAbility<AbilityKill>()
+                      ?.SetCooldown(killerAnimation.GetAbility<AbilityKill>().Cooldown);
                     break;
                 case 2: // Self
-                    PlayerControl.LocalPlayer.GetAbility<AbilityKill>()?.SetOnCooldown();
+                    LocalPlayer.GetAbility<AbilityKill>()?.SetOnCooldown();
                     break;
                 case 3: // Custom
                     float cooldown = Main.OptionMafiaCustomSharedKillCooldown.GetValue();
-                    PlayerControl.LocalPlayer.GetAbility<AbilityKill>()?.SetCooldown(cooldown);
+                    LocalPlayer.GetAbility<AbilityKill>()?.SetCooldown(cooldown);
                     break;
             }
+        }
+
+        public static void RpcStartMeetingCustom(this PlayerControl playerControl, GameData.PlayerInfo info)
+        {
+            if (AmongUsClient.Instance.AmClient) playerControl.StartMeetingCustom(info);
+            WriteRPC(RPC.StartMeetingCustom, info?.PlayerId ?? byte.MaxValue);
+        }
+
+        public static void StartMeetingCustom(this PlayerControl playerControl, GameData.PlayerInfo info)
+        {
+            foreach (PlayerControl player in AllPlayers)
+            {
+                IReadOnlyList<Ability> abilities = player.GetAbilities();
+                foreach (Ability ability in abilities)
+                {
+                    switch (ability)
+                    {
+                        case AbilityDuration {HasDurationLeft: true} abilityDuration:
+                            abilityDuration.EffectEnd();
+                            break;
+                        case AbilityShield abilityShield when abilityShield.ShieldedPlayer != null:
+                            abilityShield.BreakShield();
+                            break;
+                    }
+                }
+            }
+
+            if (LocalRole is Psychic psychic) psychic.StartMeeting(info);
         }
 
         public static void ClearTasks(this PlayerControl playerControl, bool keepSabotageTasks = true)
@@ -90,6 +119,16 @@ namespace CrewOfSalem.Extensions
             where T : AbilityDuration
         {
             playerControl.GetAbility<T>().EffectEnd();
+        }
+
+        public static Color GetPlayerColor(this PlayerControl playerControl)
+        {
+            return Palette.PlayerColors[playerControl.Data.ColorId];
+        }
+
+        public static Color GetShadowColor(this PlayerControl playerControl)
+        {
+            return Palette.ShadowColors[playerControl.Data.ColorId];
         }
     }
 }

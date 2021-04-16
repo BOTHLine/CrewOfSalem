@@ -50,9 +50,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
         protected override void UpdateTarget()
         {
-            Button.SetTarget(PlayerControl.LocalPlayer == owner.Owner
-                ? PlayerTools.FindClosestTarget(owner.Owner, player => !vampires.Contains(player))
-                : null);
+            Button.SetTarget(LocalPlayer == owner.Owner ? PlayerTools.FindClosestTarget(owner.Owner, player => !vampires.Contains(player)) : null);
         }
 
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)

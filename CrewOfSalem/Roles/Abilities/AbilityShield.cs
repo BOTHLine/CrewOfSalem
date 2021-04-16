@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CrewOfSalem.Extensions;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles.Abilities
 {
-    public class AbilityShield : AbilityDuration
+    public class AbilityShield : Ability
     {
         // Fields
         private PlayerControl shieldedPlayer;
@@ -18,14 +19,11 @@ namespace CrewOfSalem.Roles.Abilities
         protected override Sprite Sprite      => ButtonShield;
         protected override bool   NeedsTarget => true;
 
-        protected override RPC               RpcAction => RPC.ShieldStart;
+        protected override RPC               RpcAction => RPC.Shield;
         protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
 
-        protected override RPC               RpcEndAction => RPC.ShieldEnd;
-        protected override IEnumerable<byte> RpcEndData   => new byte[0];
-
         // Constructors
-        public AbilityShield(Role owner, float cooldown, float duration) : base(owner, cooldown, duration)
+        public AbilityShield(Role owner, float cooldown) : base(owner, cooldown)
         {
             AddOnBeforeUse(UseOnShielded, 30);
         }
@@ -35,18 +33,30 @@ namespace CrewOfSalem.Roles.Abilities
             if (!(source is AbilityKill)) return true;
 
             AbilityShield abilityShield = GetAllAbilities<AbilityShield>()
-               .FirstOrDefault(shield => shield.ShieldedPlayer == target && shield.HasDurationLeft);
+               .FirstOrDefault(shield => shield.ShieldedPlayer == target);
 
             if (abilityShield == null) return true;
 
             source.SetOnCooldown();
+            abilityShield.RpcBreakShield();
             return false;
         };
 
         // Methods
-        public bool CheckShieldedPlayer(PlayerControl player)
+        public void RpcBreakShield()
         {
-            return shieldedPlayer != null && shieldedPlayer.PlayerId == player.PlayerId;
+            if (AmongUsClient.Instance.AmClient)
+            {
+                BreakShield();
+            }
+            WriteRPC(RPC.ShieldBreak, owner.Owner.PlayerId);
+        }
+        
+        public void BreakShield()
+        {
+            UnshowShieldedPlayer();
+            shieldedPlayer = null;
+            SetOnCooldown();
         }
 
         private void CheckShowShieldedPlayer()
@@ -56,17 +66,17 @@ namespace CrewOfSalem.Roles.Abilities
             switch (Main.OptionDoctorShowShieldedPlayer.GetValue())
             {
                 case 0:
-                    if (PlayerControl.LocalPlayer == owner.Owner) ShowShieldedPlayer();
+                    if (LocalPlayer == owner.Owner) ShowShieldedPlayer(); // Doctor
                     break;
                 case 1:
-                    if (PlayerControl.LocalPlayer == shieldedPlayer) ShowShieldedPlayer();
+                    if (LocalPlayer == shieldedPlayer) ShowShieldedPlayer(); // Target
                     break;
                 case 2:
-                    if (PlayerControl.LocalPlayer == owner.Owner || PlayerControl.LocalPlayer == shieldedPlayer)
+                    if (LocalPlayer == owner.Owner || LocalPlayer == shieldedPlayer) // Doctor & Target
                         ShowShieldedPlayer();
                     break;
                 case 3:
-                    ShowShieldedPlayer();
+                    ShowShieldedPlayer(); // All
                     break;
             }
         }
@@ -81,6 +91,8 @@ namespace CrewOfSalem.Roles.Abilities
         private void UnshowShieldedPlayer()
         {
             if (shieldedPlayer == null) return;
+            if (shieldedPlayer.myRend.material.GetColor(ShaderVisorColor) != ModdedPalette.shieldedColor) return;
+            
             shieldedPlayer.myRend.material.SetColor(ShaderVisorColor, Palette.VisorColor);
             shieldedPlayer.myRend.material.SetFloat(ShaderOutline, 0F);
         }
@@ -106,17 +118,11 @@ namespace CrewOfSalem.Roles.Abilities
         {
             shieldedPlayer = target;
             CheckShowShieldedPlayer();
-            sendRpc = setCooldown = true;
+            sendRpc = true;
+            setCooldown = false;
         }
 
         // Methods AbilityDuration
-        protected override void EffectEndInternal()
-        {
-            UnshowShieldedPlayer();
-            shieldedPlayer = null;
-        }
-
-
         protected override void UpdateButtonSprite()
         {
             if (ShieldedPlayer == null)
@@ -124,8 +130,9 @@ namespace CrewOfSalem.Roles.Abilities
                 base.UpdateButtonSprite();
             } else
             {
-                Button.renderer.color = Palette.PlayerColors[ShieldedPlayer.Data.ColorId];
+                Button.renderer.color = shieldedPlayer.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
+                Button.TimerText.gameObject.SetActive(false);
             }
         }
     }

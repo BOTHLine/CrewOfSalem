@@ -5,7 +5,6 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.DebugPatches
 {
-    // TODO: Remove for real Games
     // [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
     public static class EndGamePatch
     {
@@ -24,7 +23,7 @@ namespace CrewOfSalem.DebugPatches
 
         public static void ForceEnd()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl player in AllPlayers)
             {
                 if (!player.Data.IsImpostor)
                 {

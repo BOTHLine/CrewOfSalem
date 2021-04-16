@@ -2,6 +2,7 @@ using System.Linq;
 using CrewOfSalem.Roles.Abilities;
 using HarmonyLib;
 using UnityEngine;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
 {
@@ -15,7 +16,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
             if (__instance != HudManager.Instance.Chat.TextArea) return true;
             
             AbilityBlackmail[] blackmailAbilities = Ability.GetAllAbilities<AbilityBlackmail>();
-            if (blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != PlayerControl.LocalPlayer)) return true;
+            if (blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != LocalPlayer)) return true;
 
             var lastChar = ' ';
             foreach (char c in input) lastChar = c;

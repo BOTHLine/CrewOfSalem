@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using CrewOfSalem.Extensions;
 using UnityEngine;
@@ -37,9 +36,14 @@ namespace CrewOfSalem.Roles.Abilities
         }
 
         // Methods Ability
+        protected override bool ShouldShowButton()
+        {
+            return true;
+        }
+
         protected override bool CanUse()
         {
-            return Button.isActiveAndEnabled && CurrentCooldown <= 0F && CurrentDuration <= 0F;
+            return CurrentCooldown <= 0F && CurrentDuration <= 0F;
         }
 
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
@@ -53,7 +57,7 @@ namespace CrewOfSalem.Roles.Abilities
         {
             if (HasDurationLeft)
             {
-                Button.renderer.color = Palette.PlayerColors[ProtectTarget.Data.ColorId];
+                Button.renderer.color = ProtectTarget.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             } else
             {

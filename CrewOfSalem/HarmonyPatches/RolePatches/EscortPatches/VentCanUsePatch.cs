@@ -2,6 +2,7 @@ using System.Linq;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Abilities;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.EscortPatches
 {
@@ -13,7 +14,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.EscortPatches
         {
             AbilityBlock[] blockAbilities = Ability.GetAllAbilities<AbilityBlock>();
             if (!blockAbilities.Any(blockAbility =>
-                blockAbility.owner is Escort && blockAbility.BlockedPlayer == PlayerControl.LocalPlayer))
+                blockAbility.owner is Escort && blockAbility.BlockedPlayer == LocalPlayer))
             {
                 return true;
             }

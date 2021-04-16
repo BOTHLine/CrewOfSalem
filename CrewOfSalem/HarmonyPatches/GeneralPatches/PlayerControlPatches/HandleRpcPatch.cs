@@ -17,7 +17,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
         public static bool Prefix([HarmonyArgument(0)] byte data)
         {
-            ConsoleTools.Info("RPC: " + (RPC) data);
+            // ConsoleTools.Info("RPC: " + (RPC) data);
             return true;
         }
 
@@ -40,19 +40,15 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     DebugPatches.EndGamePatch.ForceEnd();
                     break;
 
-                case (byte) RPC.ReportDeadBody:
-                    if (TryGetSpecialRole(out Psychic psychic)) psychic.StartMeeting();
-                    break;
-
                 case (byte) RPC.SetRole:
                     byte roleId = reader.ReadByte();
-                    PlayerControl player = reader.ReadPlayerControl();
+                    target = reader.ReadPlayerControl();
 
                     foreach (Role role in Main.Roles)
                     {
                         if (role.RoleID == roleId)
                         {
-                            AddRole(role, player);
+                            AddRole(role, target);
                         }
                     }
 
@@ -62,8 +58,8 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     reader.ReadPlayerControl().GetRole().AddAbility<Mafioso, AbilityKill>();
                     break;
 
-                case (byte) RPC.ResetVariables:
-                    ResetValues();
+                case (byte) RPC.StartMeetingCustom:
+                    __instance.StartMeetingCustom(GameData.Instance.GetPlayerById(reader.ReadByte()));
                     break;
 
                 // ---------- Special Role Conditions ----------
@@ -90,13 +86,14 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     __instance.GetAbility<AbilityGuard>().ToggleInTask();
                     break;
 
-                case (byte) RPC.ShieldStart:
+                case (byte) RPC.Shield:
                     target = reader.ReadPlayerControl();
                     __instance.UseAbility<AbilityShield>(target);
                     break;
 
-                case (byte) RPC.ShieldEnd:
-                    __instance.EndAbility<AbilityShield>();
+                case (byte) RPC.ShieldBreak:
+                    target = reader.ReadPlayerControl();
+                    target.GetAbility<AbilityShield>().BreakShield();
                     break;
 
                 case (byte) RPC.Block:

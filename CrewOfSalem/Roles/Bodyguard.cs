@@ -13,7 +13,8 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Protective;
 
-        public override string Description { get; }
+        public override string Description =>
+            "While your Guard is active, any kill attempt around you will be stopped. You and the potential killer will die in the process";
 
         // Methods Role
         protected override void InitializeAbilities()

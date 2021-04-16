@@ -11,7 +11,7 @@ using static CrewOfSalem.CrewOfSalem;
 namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetInfected))]
-    public class RpcSetInfectedPatch
+    public static class RpcSetInfectedPatch
     {
         public static bool Prefix([HarmonyArgument(0)] ref Il2CppReferenceArray<GameData.PlayerInfo> playerInfos)
         {
@@ -28,7 +28,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             List<Role> availableRoles = Main.Roles.ToList();
 
             List<RoleSlot> roleSlots = Main.GetRoleSlots().ToList();
-            List<PlayerControl> availablePlayers = PlayerControl.AllPlayerControls.ToArray().ToList();
+            List<PlayerControl> availablePlayers = AllPlayers.ToList();
             for (var i = 0; i < roleSlots.Count && availablePlayers.Count > 0; i++)
             {
                 RoleSlot roleSlot = roleSlots[i];
@@ -37,8 +37,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 var roleSpawnChances = new List<RoleSpawnChancePair>();
                 foreach (Role possibleRole in possibleRoles)
                 {
-                    roleSpawnChances.Add(new RoleSpawnChancePair(possibleRole,
-                        spawnChance += (int) Main.GetRoleSpawnChance(possibleRole.GetType())));
+                    roleSpawnChances.Add(new RoleSpawnChancePair(possibleRole, spawnChance += (int) Main.GetRoleSpawnChance(possibleRole.GetType())));
                 }
 
                 // IEnumerable<RoleSpawnChancePair> roleSpawnChances = roleSlot.GetFittingRoles(availableRoles).Select(role => new RoleSpawnChancePair(role, spawnChance += (int) Main.GetRoleSpawnChance(role.GetType())));
@@ -90,7 +89,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 Role role = roles[i];
                 if (role.Faction != Faction.Mafia || role.GetAbility<AbilityKill>() != null) continue;
 
-                role.AddAbility<Mafioso, AbilityKill>();
+                role.AddAbility<Mafioso, AbilityKill>(true);
                 WriteRPC(RPC.AddKillAbility, role.Owner.PlayerId);
                 killAbilitiesToAdd--;
             }
@@ -102,8 +101,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
         public static void Postfix([HarmonyArgument(0)] Il2CppReferenceArray<GameData.PlayerInfo> playerInfos)
         {
             MessageWriter writer = GetWriter(RPC.SetLocalPlayers);
-            writer.WriteBytesAndSize(PlayerControl.AllPlayerControls.ToArray().Select(player => player.PlayerId)
-               .ToArray());
+            writer.WriteBytesAndSize(AllPlayers.Select(player => player.PlayerId).ToArray());
             CloseWriter(writer);
         }
 

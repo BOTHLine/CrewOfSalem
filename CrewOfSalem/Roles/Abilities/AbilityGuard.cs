@@ -35,7 +35,7 @@ namespace CrewOfSalem.Roles.Abilities
             if (!(source is AbilityKill)) return true;
 
             AbilityGuard abilityGuard = GetAllAbilities<AbilityGuard>().FirstOrDefault(guard =>
-                guard.isGuarding && PlayerTools.IsPlayerInRange(guard.owner.Owner, target));
+                guard.IsGuarding && PlayerTools.IsPlayerInRange(guard.owner.Owner, target, Main.OptionBodyguardGuardRange.GetValue()));
             if (abilityGuard == null) return true;
 
             abilityGuard.owner.Owner.RpcKillPlayer(source.owner.Owner);
@@ -73,7 +73,7 @@ namespace CrewOfSalem.Roles.Abilities
             {
                 if (isGuarding)
                 {
-                    Button.renderer.color = new Color(0F / 255F, 255F / 255F, 0F / 255F, 128F / 255F);
+                    Button.renderer.color = owner.Owner.GetPlayerColor();
                     Button.renderer.material.SetFloat(ShaderDesat, 0F);
                 } else
                 {
@@ -84,7 +84,7 @@ namespace CrewOfSalem.Roles.Abilities
             {
                 if (isGuarding)
                 {
-                    Button.renderer.color = new Color(0F / 255F, 128F / 255F, 0F / 255F, 255F / 255F);
+                    Button.renderer.color = owner.Owner.GetShadowColor();
                     Button.renderer.material.SetFloat(ShaderDesat, 1F);
                 } else
                 {
@@ -92,6 +92,15 @@ namespace CrewOfSalem.Roles.Abilities
                     Button.renderer.material.SetFloat(ShaderDesat, 1F);
                 }
             }
+
+            // TODO: Show when ability is on/off. Text doesn't work because of font.
+            /*
+            if (CurrentCooldown <= 0F)
+            {
+                Button.TimerText.Text = isGuarding ? "On" : "Off";
+                Button.TimerText.gameObject.SetActive(true);
+            }
+            */
         }
     }
 }

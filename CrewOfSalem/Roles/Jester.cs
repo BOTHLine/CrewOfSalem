@@ -29,7 +29,7 @@ namespace CrewOfSalem.Roles
 
         public void Win()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl player in AllPlayers)
             {
                 if (player == Owner) continue;
                 player.RemoveInfected();

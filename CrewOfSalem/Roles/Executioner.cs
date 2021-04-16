@@ -2,7 +2,6 @@ using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
-using Hazel;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -28,7 +27,7 @@ namespace CrewOfSalem.Roles
         public override Color Color => new Color(172F / 255F, 172F / 255F, 172F / 255F, 1F);
 
         public override string RoleTask =>
-            $"{base.RoleTask} to vote {ColorizedText(VoteTarget.name, Palette.PlayerColors[VoteTarget.Data.ColorId])}";
+            $"{base.RoleTask} to vote {ColorizedText(VoteTarget.name, VoteTarget.GetPlayerColor())}";
 
         public override string Description =>
             "You have to trick everyone else to vote your target. If they die before that, you will turn into a Jester";
@@ -43,7 +42,7 @@ namespace CrewOfSalem.Roles
 
         public void Win()
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl player in AllPlayers)
             {
                 if (player == Owner) continue;
                 player.RemoveInfected();
@@ -77,6 +76,9 @@ namespace CrewOfSalem.Roles
             PlayerControl player = Owner;
             ClearSettings();
             AddRole(Jester.Instance, player);
+            
+            player.ClearTasks();
+            Jester.Instance.SetRoleTask();
 
             WriteRPC(RPC.SetRole, Jester.GetRoleID(), player.PlayerId);
         }
@@ -86,9 +88,9 @@ namespace CrewOfSalem.Roles
 
         protected override void InitializeRoleInternal()
         {
-            if (Owner != PlayerControl.LocalPlayer) return;
+            if (Owner != LocalPlayer) return;
 
-            PlayerControl[] players = PlayerControl.AllPlayerControls.ToArray()
+            PlayerControl[] players = AllPlayers
                .Where(player => player.GetRole().Faction == Faction.Crew /* && !(role is Mayor || role is Jailor) */)
                .ToArray();
             VoteTarget = players[Rng.Next(players.Length)];

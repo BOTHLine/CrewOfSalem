@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
@@ -13,7 +12,7 @@ namespace CrewOfSalem.Roles
     {
         // Properties
         public PlayerControl ProtectTarget { get; private set; }
-        
+
         // Properties Role
         public override byte   RoleID => 238;
         public override string Name   => "Guardian Angel";
@@ -22,8 +21,27 @@ namespace CrewOfSalem.Roles
         public override Alignment Alignment => Alignment.Benign;
         public override Color     Color     => Color.white;
 
-        public override string RoleTask => $"Protect {ColorizedText(ProtectTarget.name, Palette.PlayerColors[ProtectTarget.Data.ColorId])}";
+        public override string RoleTask => $"Protect {ColorizedText(ProtectTarget.name, ProtectTarget.GetPlayerColor())}";
+
         public override string Description => "You can protect your target to prevent the next attack within a given time. You win if they live until they end";
+
+        // Methods
+        public void TurnIntoSurvivor()
+        {
+            /*
+            var task = Owner.myTasks.ToArray()[0] as ImportantTextTask;
+            if (task != null) task.Text = Jester.GetRoleTask();
+            isJester = true;
+            */
+            PlayerControl player = Owner;
+            ClearSettings();
+            AddRole(Survivor.Instance, player);
+            
+            player.ClearTasks();
+            Survivor.Instance.SetRoleTask();
+
+            WriteRPC(RPC.SetRole, Survivor.GetRoleID(), player.PlayerId);
+        }
 
         // Methods Role
         protected override void InitializeAbilities()
@@ -33,10 +51,10 @@ namespace CrewOfSalem.Roles
 
         protected override void InitializeRoleInternal()
         {
-            if (Owner != PlayerControl.LocalPlayer) return;
+            if (Owner != LocalPlayer) return;
 
-            var playerControls = new List<PlayerControl>();
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            var players = new List<PlayerControl>();
+            foreach (PlayerControl player in AllPlayers)
             {
                 Role role = player.GetRole();
                 switch (role)
@@ -46,12 +64,17 @@ namespace CrewOfSalem.Roles
                     case Jester _:
                         continue;
                     default:
-                        playerControls.Add(player);
+                        players.Add(player);
                         break;
                 }
             }
 
-            ProtectTarget = playerControls[Rng.Next(playerControls.Count)];
+            ProtectTarget = players[Rng.Next(players.Count)];
+        }
+
+        protected override void ClearSettingsInternal()
+        {
+            ProtectTarget = null;
         }
     }
 }

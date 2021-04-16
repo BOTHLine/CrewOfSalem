@@ -40,7 +40,7 @@ namespace CrewOfSalem
         SetRole,
         AddKillAbility,
         SetLocalPlayers,
-        ResetVariables,
+        StartMeetingCustom,
 
         Kill,
 
@@ -50,8 +50,8 @@ namespace CrewOfSalem
         ToggleGuard,
         ToggleInTask,
 
-        ShieldStart,
-        ShieldEnd,
+        Shield,
+        ShieldBreak,
 
         CrusaderGuard,
 

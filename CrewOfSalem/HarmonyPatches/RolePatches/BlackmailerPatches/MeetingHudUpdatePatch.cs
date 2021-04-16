@@ -17,9 +17,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
             if (blackmailedTextRenderer != null || __instance?.TitleText == null) return;
 
             AbilityBlackmail[] blackmailAbilities = Ability.GetAllAbilities<AbilityBlackmail>();
-            if (blackmailAbilities.All(blackmailAbility =>
-                blackmailAbility.BlackmailedPlayer != PlayerControl.LocalPlayer)) return;
-
+            if (blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != LocalPlayer)) return;
 
             blackmailedTextRenderer = Object.Instantiate(__instance.TitleText, __instance.TitleText.transform.parent);
             blackmailedTextRenderer.Text = ColorizedText("You are blackmailed.", Faction.Mafia.Color);

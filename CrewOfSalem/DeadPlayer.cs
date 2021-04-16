@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CrewOfSalem.Extensions;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace CrewOfSalem
             GetKillerRole
         };
 
+        public readonly IEnumerable<string> hintMessages;
+
         // Properties
         public PlayerControl Victim   { get; }
         public PlayerControl Killer   { get; }
@@ -30,6 +33,8 @@ namespace CrewOfSalem
             Victim = victim;
             Killer = killer;
             KillTime = killTime;
+
+            hintMessages = Hints.Select(hint => hint.Invoke(this));
         }
 
         // Hint Methods
@@ -40,8 +45,8 @@ namespace CrewOfSalem
 
         private static string GetKillerColorType(DeadPlayer deadPlayer)
         {
-            Color32 color = Palette.PlayerColors[deadPlayer.Killer.Data.ColorId];
-            float average = (color.r + color.g + color.a) / 3F;
+            Color32 color = deadPlayer.Killer.GetPlayerColor();
+            float average = (color.r + color.g + color.b) / 255F / 3F;
             string colorType = average >= 0.465F ? "Lighter" : "Darker";
             return $"The killer has a {colorType} color.";
             // TODO: Instead of using 0.465F use "Greyscale-Calculation" on this site to determine if the brightness is over 0.5? https://lodev.org/cgtutor/color.html

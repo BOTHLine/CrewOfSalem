@@ -1,14 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
+using static CrewOfSalem.CrewOfSalem;
 
-/*
-using PlayerControl = FFGALNAPKCD;
-using PlayerTask = PILBGHDHJLH;
-using VitalsMinigame = JOFALPIHHOI;
-using VitalsPanel = KMDJIBIMJIH;
-using Palette = LOCPGOACAJF;
-using HudOverrideTask = LFOILEODBMA;
-*/
 
 namespace CrowdedMod.Patches
 {
@@ -16,7 +9,7 @@ namespace CrowdedMod.Patches
     {
         private static int currentPage = 0;
         private const  int MAXPerPage  = 10;
-        private static int MAXPages => Mathf.CeilToInt((float) PlayerControl.AllPlayerControls.Count / MAXPerPage);
+        private static int MAXPages => Mathf.CeilToInt((float) AllPlayers.Count() / MAXPerPage);
 
         //[HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Begin))]
         public static class VitalsGuiPatchBegin
@@ -46,7 +39,7 @@ namespace CrowdedMod.Patches
         {
             public static void Postfix(VitalsMinigame __instance)
             {
-                if (PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(PlayerControl.LocalPlayer))
+                if (PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(LocalPlayer))
                     return;
                 //Allow to switch pages
                 if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.mouseScrollDelta.y > 0f)

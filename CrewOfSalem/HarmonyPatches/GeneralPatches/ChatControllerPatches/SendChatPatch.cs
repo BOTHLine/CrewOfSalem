@@ -1,5 +1,5 @@
-using CrewOfSalem.Extensions;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.ChatControllerPatches
 {
@@ -10,7 +10,7 @@ namespace CrewOfSalem.HarmonyPatches.ChatControllerPatches
         {
             if (!__instance.TextArea.text.Equals("-help")) return true;
 
-            __instance.AddChat(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.GetRole().Description);
+            __instance.AddChat(LocalPlayer, LocalRole.Description);
             __instance.TextArea.Clear();
             return false;
         }

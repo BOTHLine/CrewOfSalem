@@ -1,4 +1,4 @@
-﻿
+﻿using static CrewOfSalem.CrewOfSalem;
 
 /*
 using KeyMinigame = AMKEIECODLC;
@@ -24,14 +24,14 @@ namespace CrowdedMod.Patches
         {
             public static bool Prefix(ref KeyMinigame __instance, out byte __state)
             {
-                __state = PlayerControl.LocalPlayer.PlayerId;
-                PlayerControl.LocalPlayer.PlayerId %= 10;
+                __state = LocalPlayer.PlayerId;
+                LocalPlayer.PlayerId %= 10;
                 return true;
             }
 
             public static void Postfix(ref KeyMinigame __instance, byte __state)
             {
-                PlayerControl.LocalPlayer.PlayerId = __state;
+                LocalPlayer.PlayerId = __state;
             }
         }
     }

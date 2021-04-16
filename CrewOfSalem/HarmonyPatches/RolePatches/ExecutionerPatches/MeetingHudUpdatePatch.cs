@@ -10,8 +10,7 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
     {
         public static void Postfix()
         {
-            if (!TryGetSpecialRole(out Executioner executioner) ||
-                executioner.Owner != PlayerControl.LocalPlayer) return;
+            if (!TryGetSpecialRole(out Executioner executioner) || executioner.Owner != LocalPlayer) return;
 
             if (MeetingHud.Instance == null) return;
 

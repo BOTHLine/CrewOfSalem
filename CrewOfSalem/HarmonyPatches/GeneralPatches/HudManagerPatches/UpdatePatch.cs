@@ -7,6 +7,7 @@ using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Factions;
 using HarmonyLib;
 using UnityEngine;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 {
@@ -15,22 +16,18 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
     {
         public static void Postfix(HudManager __instance)
         {
-            PlayerControl localPlayer = PlayerControl.LocalPlayer;
-
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
 
-            Role localRole = localPlayer.GetRole();
-
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl player in AllPlayers)
             {
-                Role otherRole = player.GetRole();
-                if (localRole?.Faction == Faction.Mafia && otherRole?.Faction == Faction.Mafia)
+                Role role = player.GetRole();
+                if (LocalRole?.Faction == Faction.Mafia && role?.Faction == Faction.Mafia)
                 {
                     player.nameText.Color = Faction.Mafia.Color;
-                } else if (localRole?.Faction == Faction.Coven && otherRole?.Faction == Faction.Coven)
+                } else if (LocalRole?.Faction == Faction.Coven && role?.Faction == Faction.Coven)
                 {
                     player.nameText.Color = Faction.Coven.Color;
-                } else if (AbilityBite.IsVampire(localPlayer) && AbilityBite.IsVampire(player))
+                } else if (AbilityBite.IsVampire(LocalPlayer) && AbilityBite.IsVampire(player))
                 {
                     player.nameText.Color = Vampire.GetColor();
                 } else
@@ -41,9 +38,8 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
             AbilityShield.CheckShowShieldedPlayers();
 
-            localRole?.SetMeetingHudNameColor();
-            localRole?.SetMeetingHudRoleName();
-            if (!localPlayer.Data.IsDead) localRole?.UpdateAbilities(Time.deltaTime);
+            LocalRole?.SetMeetingHudNameColor();
+            LocalRole?.SetMeetingHudRoleName();
 
             // Add Mafia / Coven / Lover Chat
             // if (role?.Faction == Faction.Mafia || role?.Faction == Faction.Coven || role is Investigator || role is Spy)
@@ -69,20 +65,34 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
             int showPlayerNames = Main.OptionShowPlayerNames.GetValue();
             if (showPlayerNames != 1) return;
-            Vector2 fromPosition = PlayerControl.LocalPlayer.GetTruePosition();
+            Vector2 fromPosition = LocalPlayer.GetTruePosition();
 
-            PlayerControl[] allPlayers = PlayerControl.AllPlayerControls.ToArray();
-            foreach (PlayerControl player in allPlayers)
+            foreach (PlayerControl player in AllPlayers)
             {
+                if (player == LocalPlayer) continue;
+
                 Vector2 distanceVector = player.GetTruePosition() - fromPosition;
                 float distance = distanceVector.magnitude;
                 if (PhysicsHelpers.AnyNonTriggersBetween(fromPosition, distanceVector.normalized, distance,
                     Constants.ShipOnlyMask))
                 {
-                    player.nameText.enabled = false;
+                    player.nameText.Text = "";
                 } else
                 {
-                    player.nameText.enabled = player.Visible;
+                    if (!player.Visible) continue;
+                    
+                    Role role = player.GetRole();
+                    string name = player.Data.PlayerName;
+                    
+                    if (LocalRole?.Faction == Faction.Mafia && role?.Faction == Faction.Mafia)
+                    {
+                        name = CrewOfSalem.ColorizedText(player.Data.PlayerName, role!.Color);
+                    } else if (LocalRole is Executioner executioner && executioner.VoteTarget == player)
+                    {
+                        name = CrewOfSalem.ColorizedText(player.Data.PlayerName, Faction.Crew.Color);
+                    }
+
+                    player.nameText.Text = name;
                 }
             }
         }

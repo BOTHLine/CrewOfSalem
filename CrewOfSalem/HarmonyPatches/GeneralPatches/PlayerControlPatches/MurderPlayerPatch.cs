@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
@@ -37,7 +36,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             if (mafiaWithoutKill.Length == 0) return;
 
             Role newKiller = mafiaWithoutKill[Rng.Next(mafiaWithoutKill.Length)];
-            newKiller.AddAbility<Mafioso, AbilityKill>();
+            newKiller.AddAbility<Mafioso, AbilityKill>(true);
             WriteRPC(RPC.AddKillAbility, newKiller.Owner.PlayerId);
         }
     }

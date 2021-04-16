@@ -14,7 +14,7 @@ namespace CrewOfSalem.Roles
 
         // Properties Role
         public override byte   RoleID => 209;
-        public override    string Name   => nameof(Psychic);
+        public override string Name   => nameof(Psychic);
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
@@ -23,12 +23,13 @@ namespace CrewOfSalem.Roles
             "You get 3 or 2 in an alternating pattern. Within 3 names AT LEAST 1 person is evil, within 2 names AT LEAST 1 person is good";
 
         // Methods
-        public void StartMeeting()
+        public void StartMeeting(GameData.PlayerInfo info)
         {
+            if (info == null) return;
+            if (LocalPlayer.PlayerId != Owner.PlayerId || Owner.Data.IsDead) return;
             evenMeeting = !evenMeeting;
-            if (PlayerControl.LocalPlayer.PlayerId != Owner.PlayerId || Owner.Data.IsDead) return;
 
-            List<PlayerControl> alivePlayers = PlayerControl.AllPlayerControls.ToArray()
+            List<PlayerControl> alivePlayers = AllPlayers
                .Where(player => !player.Data.IsDead && player.PlayerId != Owner.PlayerId).ToArray().ToList();
 
             PlayerControl[] goodPlayers = alivePlayers.Where(player =>

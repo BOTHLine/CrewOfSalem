@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CrewOfSalem.Extensions;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -56,6 +57,11 @@ namespace CrewOfSalem.Roles.Abilities
         protected abstract void EffectEndInternal();
 
         // Methods Ability
+        protected override bool ShouldShowButton()
+        {
+            return base.ShouldShowButton() || HasDurationLeft;
+        }
+
         protected override bool CanUse()
         {
             return base.CanUse() && CurrentDuration <= 0F;
@@ -88,7 +94,7 @@ namespace CrewOfSalem.Roles.Abilities
         {
             if (HasDurationLeft)
             {
-                Button.renderer.color = Palette.PlayerColors[owner.Owner.Data.ColorId];
+                Button.renderer.color = owner.Owner.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             } else
             {

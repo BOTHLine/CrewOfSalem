@@ -50,7 +50,7 @@ namespace CrewOfSalem.Roles.Abilities
                 base.UpdateButtonSprite();
             } else
             {
-                Button.renderer.color = Palette.PlayerColors[BlockedPlayer.Data.ColorId];
+                Button.renderer.color = BlockedPlayer.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             }
         }

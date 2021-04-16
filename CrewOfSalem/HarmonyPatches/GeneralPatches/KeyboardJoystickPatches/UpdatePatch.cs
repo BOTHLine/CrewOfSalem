@@ -3,6 +3,7 @@ using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Abilities;
 using HarmonyLib;
 using UnityEngine;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.KeyboardJoystickPatches
 {
@@ -13,7 +14,7 @@ namespace CrewOfSalem.HarmonyPatches.KeyboardJoystickPatches
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                IReadOnlyList<Ability> abilities = PlayerControl.LocalPlayer.GetAbilities();
+                IReadOnlyList<Ability> abilities = LocalPlayer.GetAbilities();
                 if (abilities?.Count > 0)
                 {
                     abilities[0]?.TryUse();

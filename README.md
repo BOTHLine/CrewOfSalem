@@ -58,8 +58,7 @@ Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser nach einer gewi
 Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Vents benutzen.
 
 #### Medium
-Das Medium kann Geister sehen. Dafür kann das Medium keine Farben oder Namen an Spielern erkennen.  
-Die Farben von Leichen kann das Medium (noch) sehen.
+Das Medium kann Geister sehen. (Aktuell keine Nachteile)
 
 ## Mafia
 
@@ -93,17 +92,20 @@ Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner F�
 
 #### Guardian Angel
 Bekommt am Anfang der Runde ein Ziel zuegewiesen, welches jede Rolle außer Guardian Angel, Executioner oder Jester sein kann. Der Guardian Angel gewinnt, solange sein Ziel bis zum Ende überlebt, auch wenn er selber bereits tot ist.  
-Kann sein Ziel für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf das Ziel des Guardian Angels bringen nur den Kill auf Cooldown, töten es aber nicht. Kann auch aus dem Tod heraus genutzt werden.
+Kann sein Ziel für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf das Ziel des Guardian Angels bringen nur den Kill auf Cooldown, töten es aber nicht. Kann auch aus dem Tod heraus genutzt werden.  
 
 #### Survivor
 Möchte nur bis zum Ende überleben. Kann sowohl mit der Crew als auch mit der Mafia gewinnen, solange er bis zum Ende überlebt. Außer wenn die Mafia durch Sabotage (Reactor, Oxygen) gewinnt.  
-Kann sich selber für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf den Survivor bringen nur den Kill auf cooldown, töten ihn aber nicht.
+Kann sich selber für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf den Survivor bringen nur den Kill auf cooldown, töten ihn aber nicht.  
+Der Survivor macht keine Tasks.
 
 ### Neutral Evil
 
 #### Executioner
 Bekommt am Anfang der Runde ein Ziel zugewiesen, welches immer Teil der Crew ist. Der Executioner gewinnt alleine, sobald dieses Ziel durch ein Meeting raus gevotet wird.  
-Sollte das Ziel auf eine andere Art und Weise sterben, so wird der Executioner zum Jester.
+Sollte das Ziel auf eine andere Art und Weise sterben, so wird der Executioner zum Jester.  
+Der Executioner macht keine Tasks.
 
 #### Jester
-Gewinnt alleine, wenn er selber durch ein Meeting raus gevotet wird. 
+Gewinnt alleine, wenn er selber durch ein Meeting raus gevotet wird.  
+Der Jester macht keine Tasks.

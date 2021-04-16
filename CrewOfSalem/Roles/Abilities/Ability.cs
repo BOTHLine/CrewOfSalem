@@ -77,7 +77,7 @@ namespace CrewOfSalem.Roles.Abilities
 
             SetActive(false);
 
-            foreach (PlayerControl playerControl in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl playerControl in AllPlayers)
             {
                 playerControl.GetComponent<SpriteRenderer>().material.SetFloat(ShaderOutline, 0F);
             }
@@ -96,13 +96,14 @@ namespace CrewOfSalem.Roles.Abilities
 
         protected virtual bool ShouldShowButton()
         {
-            return HudManager.Instance.UseButton.isActiveAndEnabled && !owner.Owner.Data.IsDead;
+            return !owner.Owner.Data.IsDead;
         }
 
         protected virtual bool CanUse()
         {
             return Button.isActiveAndEnabled && CurrentCooldown <= 0F &&
-                   (!NeedsTarget || Button.CurrentTarget != null) && !owner.Owner.Data.IsDead;
+                   (!NeedsTarget || Button.CurrentTarget != null) && !owner.Owner.Data.IsDead &&
+                   Minigame.Instance == null;
         }
 
         public void TryUse()
@@ -143,9 +144,9 @@ namespace CrewOfSalem.Roles.Abilities
 
         public void Update(float deltaTime)
         {
-            if (HudManager.Instance.KillButton == null || Button == null) return;
+            if (Button == null) return;
             if (MeetingHud.Instance || ExileController.Instance) return;
-            if (PlayerControl.LocalPlayer.Data == null)
+            if (LocalData == null)
             {
                 SetActive(false);
                 return;
@@ -222,7 +223,7 @@ namespace CrewOfSalem.Roles.Abilities
 
         protected virtual void UpdateTarget()
         {
-            Button.SetTarget(NeedsTarget && PlayerControl.LocalPlayer == owner.Owner
+            Button.SetTarget(NeedsTarget && LocalPlayer == owner.Owner
                 ? PlayerTools.FindClosestTarget(owner.Owner)
                 : null);
         }

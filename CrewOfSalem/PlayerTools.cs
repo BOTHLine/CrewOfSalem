@@ -9,23 +9,14 @@ namespace CrewOfSalem
     {
         public static PlayerControl GetPlayerById(byte id)
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
-                if (player.PlayerId == id)
-                {
-                    return player;
-                }
-            }
-
-            return null;
+            return GameData.Instance.GetPlayerById(id).Object;
         }
 
         public static PlayerControl FindClosestTarget(PlayerControl fromPlayer,
             Func<PlayerControl, bool> predicate = null)
         {
             PlayerControl closest = null;
-            float maxDistance =
-                GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
+            float maxDistance = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
             if (!ShipStatus.Instance) return null;
             Vector2 fromPosition = fromPlayer.GetTruePosition();
             GameData.PlayerInfo[] allPlayers = GameData.Instance.AllPlayers.ToArray();
@@ -62,9 +53,12 @@ namespace CrewOfSalem
             return closest;
         }
 
-        public static bool IsPlayerInRange(PlayerControl fromPlayer, PlayerControl toPlayer)
+        public static bool IsPlayerInRange(PlayerControl fromPlayer, PlayerControl toPlayer, float range = 0F)
         {
-            float maxDistance = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
+            float maxDistance = range > 0F
+                ? range
+                : GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
+
             if (!ShipStatus.Instance) return false;
             Vector2 fromPosition = fromPlayer.GetTruePosition();
             Vector2 distanceVector = toPlayer.GetTruePosition() - fromPosition;

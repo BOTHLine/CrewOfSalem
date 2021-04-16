@@ -43,6 +43,12 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.EndGameManagerPatches
                 }
             }
 
+            foreach (DeadPlayer deadPlayer in DeadPlayers)
+            {
+                ConsoleTools.Info(deadPlayer.Killer.Data.PlayerName + " killed " + deadPlayer.Victim.Data.PlayerName +
+                                  " at " + deadPlayer.KillTime);
+            }
+
             ResetValues();
         }
     }

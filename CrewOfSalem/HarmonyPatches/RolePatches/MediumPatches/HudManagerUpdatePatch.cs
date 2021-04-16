@@ -1,18 +1,18 @@
-using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.MediumPatches
 {
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    public class HudManagerUpdatePatch
+    public static class HudManagerUpdatePatch
     {
         [HarmonyPriority(Priority.Last)]
         public static void Postfix()
         {
-            if (!(PlayerControl.LocalPlayer.GetRole() is Medium medium)) return;
+            if (!(LocalRole is Medium medium)) return;
 
-            Medium.TurnAllPlayersGrey();
+            // Medium.TurnAllPlayersGrey(); // TODO: Testing
             Medium.MakeDeadVisible();
         }
     }

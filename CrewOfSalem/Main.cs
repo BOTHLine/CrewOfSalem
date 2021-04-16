@@ -6,7 +6,6 @@ using Essentials.Options;
 using CrewOfSalem.Roles;
 using System.Collections.Generic;
 using System;
-using System.Linq;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
@@ -20,10 +19,8 @@ namespace CrewOfSalem
     {
         private const string  Id      = "gg.reactor.crewofsalem";
         public const  string  Name    = "Crew Of Salem";
-        public const  string  Version = "0.1";
+        public const  string  Version = "0.2";
         private       Harmony Harmony { get; } = new Harmony(Id);
-
-        //This section uses the https://github.com/DorCoMaNdO/Reactor-Essentials framework
 
         // General Game Options
         public static readonly CustomStringOption OptionShowPlayerNames =
@@ -183,6 +180,9 @@ namespace CrewOfSalem
         public static readonly CustomNumberOption OptionSheriffMinHintAmount =
             CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Min Hint Amount", 1F, 0F, DeadPlayer.Hints.Length, 1F);
 
+        public static readonly CustomNumberOption OptionBodyguardGuardRange =
+            CustomOption.AddNumber(Role.GetName<Bodyguard>() + ": Guard Range", 0.75F, 0.25F, 2F, 0.25F);
+
         public static readonly CustomStringOption OptionDoctorShowShieldedPlayer =
             CustomOption.AddString(Role.GetName<Doctor>() + ": Show Shielded Owner",
                 new[] {"Doctor", "Target", "Doctor & Target", "Everyone"});
@@ -211,7 +211,8 @@ namespace CrewOfSalem
             {
                 OptionShowPlayerNames, OptionMafiaSharedKillCooldown, OptionMafiaCustomSharedKillCooldown,
                 OptionMafiaKillStart, OptionMafiaKillAlways, OptionSheriffMaxHintAmount,
-                OptionSheriffHintDecreaseInterval, OptionSheriffMinHintAmount, OptionDoctorShowShieldedPlayer
+                OptionSheriffHintDecreaseInterval, OptionSheriffMinHintAmount, OptionBodyguardGuardRange,
+                OptionDoctorShowShieldedPlayer
             });
             OptionPage.CreateOptionPage(RoleSlots);
             OptionPage.CreateOptionPage(RoleSpawnChances.Values);

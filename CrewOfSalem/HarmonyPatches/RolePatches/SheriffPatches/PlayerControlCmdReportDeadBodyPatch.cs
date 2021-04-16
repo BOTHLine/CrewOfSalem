@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.CoreScripts;
-using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using HarmonyLib;
 using static CrewOfSalem.CrewOfSalem;
@@ -15,9 +14,9 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SheriffPatches
         // TODO: Move Functionality to Sheriff-Class and only call from here
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
         {
-            if (__instance == null || PlayerControl.LocalPlayer == null || DeadPlayers.Count <= 0) return;
+            if (__instance == null || LocalPlayer == null || DeadPlayers.Count <= 0) return;
 
-            if (!(PlayerControl.LocalPlayer.GetRole() is Sheriff sheriff)) return;
+            if (!(LocalRole is Sheriff sheriff)) return;
 
             DeadPlayer deadPlayer =
                 DeadPlayers.FirstOrDefault(x => target != null && x.Victim?.PlayerId == target.PlayerId);
@@ -25,7 +24,8 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SheriffPatches
 
             if (__instance.PlayerId != sheriff.Owner.PlayerId) return;
 
-            List<Func<DeadPlayer, string>> possibleHints = DeadPlayer.Hints.ToList();
+            List<string> hints = deadPlayer.hintMessages.ToList();
+
             var hintAmount = (int) (Main.OptionSheriffMaxHintAmount.GetValue() -
                                     (int) (deadPlayer.KillAge / 1000F /
                                            Main.OptionSheriffHintDecreaseInterval.GetValue()));
@@ -35,19 +35,16 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SheriffPatches
 
             for (var i = 0; i < hintAmount; i++)
             {
-                Func<DeadPlayer, string> hint = possibleHints[Rng.Next(possibleHints.Count)];
-                possibleHints.Remove(hint);
-                string reportMsg = hint.Invoke(deadPlayer);
+                string hint = hints[Rng.Next(hints.Count)];
 
-                if (string.IsNullOrWhiteSpace(reportMsg)) return;
+                if (string.IsNullOrWhiteSpace(hint)) return;
 
                 if (AmongUsClient.Instance.AmClient && HudManager.Instance)
                 {
-                    HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer,
-                        $"{deadPlayer.Victim.Data.PlayerName}: {reportMsg}");
+                    HudManager.Instance.Chat.AddChat(LocalPlayer, $"{deadPlayer.Victim.Data.PlayerName}: {hint}");
                 }
 
-                if (reportMsg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (hint.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     Telemetry.Instance.SendWho();
                 }

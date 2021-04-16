@@ -1,5 +1,5 @@
-﻿using CrewOfSalem.Extensions;
-using HarmonyLib;
+﻿using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.IntroCutscenePatches
 {
@@ -9,7 +9,7 @@ namespace CrewOfSalem.HarmonyPatches.IntroCutscenePatches
     {
         public static bool Prefix(IntroCutscene.CoBegin__d __instance)
         {
-            PlayerControl.LocalPlayer.GetRole().SetIntro(__instance);
+            LocalRole.SetIntro(__instance);
             __instance.__this.ImpostorText.gameObject.SetActive(true);
             return true;
         }

@@ -1,6 +1,6 @@
-using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.SpyPatches
 {
@@ -9,9 +9,9 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SpyPatches
     {
         public static void Postfix()
         {
-            if (!(PlayerControl.LocalPlayer.GetRole() is Spy spy)) return;
+            if (!(LocalRole is Spy spy)) return;
 
-            PlayerVentTimeUtility.SetLastVent(PlayerControl.LocalPlayer.PlayerId);
+            PlayerVentTimeUtility.SetLastVent(LocalPlayer.PlayerId);
         }
     }
 }
