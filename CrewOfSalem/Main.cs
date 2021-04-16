@@ -44,56 +44,55 @@ namespace CrewOfSalem
         public static readonly Role[] Roles =
         {
             RoleGeneric<Investigator>.Instance, // Done
-            RoleGeneric<Lookout>.Instance,      // TODO
+            // RoleGeneric<Lookout>.Instance,      // TODO
             RoleGeneric<Psychic>.Instance,      // Done
             RoleGeneric<Sheriff>.Instance,      // Done
             RoleGeneric<Spy>.Instance,          // Done
             RoleGeneric<Tracker>.Instance,      // TODO
 
-            RoleGeneric<Jailor>.Instance,        // TODO
-            RoleGeneric<VampireHunter>.Instance, // TODO
+            // RoleGeneric<Jailor>.Instance,        // TODO
+            // RoleGeneric<VampireHunter>.Instance, // TODO
             RoleGeneric<Veteran>.Instance,       // Done
             RoleGeneric<Vigilante>.Instance,     // Done
 
             RoleGeneric<Bodyguard>.Instance, // Done
             RoleGeneric<Doctor>.Instance,    // Done
-            RoleGeneric<Crusader>.Instance,  // TODO
-            RoleGeneric<Trapper>.Instance,   // TODO
+            // RoleGeneric<Crusader>.Instance,  // TODO
+            // RoleGeneric<Trapper>.Instance,   // TODO
 
             RoleGeneric<Escort>.Instance,         // TODO: Think about when to add cooldown, block tasks and vents
-            RoleGeneric<Mayor>.Instance,          // TODO
+            // RoleGeneric<Mayor>.Instance,          // TODO
             RoleGeneric<Medium>.Instance,         // TODO: Do show corpse colors?
-            RoleGeneric<Retributionist>.Instance, // TODO
-            RoleGeneric<Transporter>.Instance,    // TODO
+            // RoleGeneric<Retributionist>.Instance, // TODO
+            // RoleGeneric<Transporter>.Instance,    // TODO
 
             RoleGeneric<Disguiser>.Instance, // TODO: Do show corpse colors?
-            RoleGeneric<Framer>.Instance,    // TODO
-            RoleGeneric<Hypnotist>.Instance, // TODO
-            RoleGeneric<Janitor>.Instance,   // TODO
+            // RoleGeneric<Framer>.Instance,    // TODO
+            // RoleGeneric<Hypnotist>.Instance, // TODO
+            // RoleGeneric<Janitor>.Instance,   // TODO
 
             RoleGeneric<Ambusher>.Instance,  // Done
             RoleGeneric<Forger>.Instance,    // Done
-            RoleGeneric<Godfather>.Instance, // TODO: Godfather undying?
-            RoleGeneric<Mafioso>
-               .Instance, // TODO: Mafioso can see Godfather on map and will promote to Godfather if he dies?
+            // RoleGeneric<Godfather>.Instance, // TODO: Godfather undying?
+            // RoleGeneric<Mafioso>.Instance, // TODO: Mafioso can see Godfather on map and will promote to Godfather if he dies?
 
             RoleGeneric<Blackmailer>.Instance, // Done
             RoleGeneric<Consigliere>.Instance, // Done
             RoleGeneric<Consort>.Instance,     // TODO: See Escort
 
-            RoleGeneric<Amnesiac>.Instance,      // TODO
+            // RoleGeneric<Amnesiac>.Instance,      // TODO
             RoleGeneric<GuardianAngel>.Instance, // TODO
             RoleGeneric<Survivor>.Instance,      // Done
 
-            RoleGeneric<Vampire>.Instance, //TODO
+            // RoleGeneric<Vampire>.Instance, //TODO
 
             RoleGeneric<Executioner>.Instance, // Done
             RoleGeneric<Jester>.Instance,      // Done
-            RoleGeneric<Witch>.Instance,       // TODO
+            // RoleGeneric<Witch>.Instance,       // TODO
 
-            RoleGeneric<Arsonist>.Instance,     // TODO
-            RoleGeneric<SerialKiller>.Instance, // TODO
-            RoleGeneric<Werewolf>.Instance      // TODO
+            // RoleGeneric<Arsonist>.Instance,     // TODO
+            // RoleGeneric<SerialKiller>.Instance, // TODO
+            // RoleGeneric<Werewolf>.Instance      // TODO
         };
 
         private static readonly CustomStringOption[] RoleSlots = new CustomStringOption[10];
@@ -155,8 +154,6 @@ namespace CrewOfSalem
                 // CreateRoleDurationOption<Spy>("Spy"),
 
                 CreateRoleDurationOption<Veteran, AbilityAlert>(),
-
-                CreateRoleDurationOption<Doctor, AbilityShield>(),
 
                 CreateRoleDurationOption<Escort, AbilityBlock>(),
 
