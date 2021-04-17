@@ -139,9 +139,11 @@ namespace CrewOfSalem
 
         public static void WriteRPC(RPC action, params byte[] data)
         {
+            // ConsoleTools.Info("Writing RPC: " + action);
             MessageWriter writer = GetWriter(action);
             foreach (byte b in data)
             {
+                // ConsoleTools.Info("RPC Data: " + b);
                 writer.Write(b);
             }
 

@@ -19,30 +19,6 @@ namespace CrewOfSalem.Roles
         public override string RoleTask    => $"{base.RoleTask} to vote {ColorizedText("you", Color)}";
         public override string Description => "You have to trick everyone else to vote you";
 
-        // Methods
-        public void RpcWin()
-        {
-            if (AmongUsClient.Instance.AmClient) Win();
-            
-            WriteRPC(RPC.JesterWin);
-        }
-
-        public void Win()
-        {
-            foreach (PlayerControl player in AllPlayers)
-            {
-                if (player == Owner) continue;
-                player.RemoveInfected();
-                player.Die(DeathReason.Exile);
-                player.Data.IsDead = true;
-                player.Data.IsImpostor = false;
-            }
-
-            Owner.Revive();
-            Owner.Data.IsDead = false;
-            Owner.Data.IsImpostor = true;
-        }
-
         // Methods Role
         protected override void InitializeAbilities() { }
     }

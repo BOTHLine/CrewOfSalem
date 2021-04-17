@@ -20,10 +20,10 @@ namespace CrewOfSalem.Extensions
         }
 
         public static void KillPlayer(this PlayerControl killer, PlayerControl target,
-            PlayerControl killerAnimation = null)
+            PlayerControl killerAnimation)
         {
             DeadPlayers.Add(new DeadPlayer(target, killerAnimation, DateTime.UtcNow));
-            KillOverlayShowOnePatch.killerAnimation = killerAnimation?.Data;
+            KillOverlayShowOnePatch.killerAnimation = killerAnimation.Data;
             killer.MurderPlayer(target);
 
             if (killerAnimation.GetRole().Faction != Faction.Mafia || LocalRole.Faction != Faction.Mafia ||
@@ -112,7 +112,7 @@ namespace CrewOfSalem.Extensions
         public static void UseAbility<T>(this PlayerControl playerControl, PlayerControl target)
             where T : Ability
         {
-            playerControl.GetAbility<T>()?.Use(target, out bool sendRpc);
+            playerControl.GetAbility<T>()?.Use(target, out bool _);
         }
 
         public static void EndAbility<T>(this PlayerControl playerControl)
@@ -129,6 +129,32 @@ namespace CrewOfSalem.Extensions
         public static Color GetShadowColor(this PlayerControl playerControl)
         {
             return Palette.ShadowColors[playerControl.Data.ColorId];
+        }
+
+        public static void RpcSoloWin(this PlayerControl winner)
+        {
+            if (AmongUsClient.Instance.AmClient) WinSolo(winner);
+            
+            WriteRPC(RPC.SoloWin, winner.Data.PlayerId);
+        }
+
+        public static void WinSolo(this PlayerControl winner)
+        {
+            foreach (PlayerControl player in AllPlayers)
+            {
+                if (player == winner) continue;
+                player.RemoveInfected();
+                player.Die(DeathReason.Exile);
+                player.Data.IsDead = true;
+                player.Data.IsImpostor = false;
+            }
+
+            winner.Revive();
+            winner.Data.IsDead = false;
+            winner.Data.IsImpostor = true;
+
+            TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>(0);
+            TempData.winners.Add(new WinningPlayerData(winner.Data));
         }
     }
 }

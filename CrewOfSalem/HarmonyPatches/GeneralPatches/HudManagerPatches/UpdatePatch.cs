@@ -73,17 +73,17 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
 
                 Vector2 distanceVector = player.GetTruePosition() - fromPosition;
                 float distance = distanceVector.magnitude;
-                if (PhysicsHelpers.AnyNonTriggersBetween(fromPosition, distanceVector.normalized, distance,
-                    Constants.ShipOnlyMask))
+                if (!LocalPlayer.Data.IsDead && PhysicsHelpers.AnyNonTriggersBetween(fromPosition,
+                    distanceVector.normalized, distance, Constants.ShipOnlyMask))
                 {
                     player.nameText.Text = "";
                 } else
                 {
                     if (!player.Visible) continue;
-                    
+
                     Role role = player.GetRole();
                     string name = player.Data.PlayerName;
-                    
+
                     if (LocalRole?.Faction == Faction.Mafia && role?.Faction == Faction.Mafia)
                     {
                         name = CrewOfSalem.ColorizedText(player.Data.PlayerName, role!.Color);

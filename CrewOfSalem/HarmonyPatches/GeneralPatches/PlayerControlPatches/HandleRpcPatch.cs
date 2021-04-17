@@ -17,7 +17,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
         public static bool Prefix([HarmonyArgument(0)] byte data)
         {
-            // ConsoleTools.Info("RPC: " + (RPC) data);
+            // ConsoleTools.Info("Reading RPC: " + (RPC) data);
             return true;
         }
 
@@ -139,17 +139,15 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     target = reader.ReadPlayerControl();
                     AbilityBite.ConvertVampire(target);
                     break;
-
-                case (byte) RPC.ExecutionerWin:
-                    if (TryGetSpecialRole(out Executioner executioner)) executioner.Win();
+                
+                case (byte) RPC.GuardianAngelTarget:
+                    target = reader.ReadPlayerControl();
+                    if (TryGetSpecialRole(out GuardianAngel guardianAngel)) guardianAngel.ProtectTarget = target;
                     break;
 
-                case (byte) RPC.ExecutionerToJester:
-                    if (TryGetSpecialRole(out executioner)) executioner.TurnIntoJester();
-                    break;
-
-                case (byte) RPC.JesterWin:
-                    if (TryGetSpecialRole(out Jester jester)) jester.Win();
+                case (byte) RPC.ExecutionerTarget:
+                    target = reader.ReadPlayerControl();
+                    if (TryGetSpecialRole(out Executioner executioner)) executioner.VoteTarget = target;
                     break;
             }
         }

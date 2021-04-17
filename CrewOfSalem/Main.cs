@@ -19,7 +19,7 @@ namespace CrewOfSalem
     {
         private const string  Id      = "gg.reactor.crewofsalem";
         public const  string  Name    = "Crew Of Salem";
-        public const  string  Version = "0.2";
+        public const  string  Version = "0.3";
         private       Harmony Harmony { get; } = new Harmony(Id);
 
         // General Game Options

@@ -11,7 +11,7 @@ namespace CrewOfSalem.Roles
     public class GuardianAngel : RoleGeneric<GuardianAngel>
     {
         // Properties
-        public PlayerControl ProtectTarget { get; private set; }
+        public PlayerControl ProtectTarget { get; set; }
 
         // Properties Role
         public override byte   RoleID => 238;
@@ -36,7 +36,7 @@ namespace CrewOfSalem.Roles
             PlayerControl player = Owner;
             ClearSettings();
             AddRole(Survivor.Instance, player);
-            
+
             player.ClearTasks();
             Survivor.Instance.SetRoleTask();
 
@@ -70,6 +70,8 @@ namespace CrewOfSalem.Roles
             }
 
             ProtectTarget = players[Rng.Next(players.Count)];
+
+            WriteRPC(RPC.GuardianAngelTarget, ProtectTarget.PlayerId);
         }
 
         protected override void ClearSettingsInternal()

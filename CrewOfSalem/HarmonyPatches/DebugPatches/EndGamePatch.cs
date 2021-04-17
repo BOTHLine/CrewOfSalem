@@ -5,7 +5,7 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.DebugPatches
 {
-    // [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
+    [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
     public static class EndGamePatch
     {
         public static void Postfix()

@@ -36,6 +36,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SheriffPatches
             for (var i = 0; i < hintAmount; i++)
             {
                 string hint = hints[Rng.Next(hints.Count)];
+                hints.Remove(hint);
 
                 if (string.IsNullOrWhiteSpace(hint)) return;
 

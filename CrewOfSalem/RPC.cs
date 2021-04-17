@@ -41,6 +41,7 @@ namespace CrewOfSalem
         AddKillAbility,
         SetLocalPlayers,
         StartMeetingCustom,
+        SoloWin,
 
         Kill,
 
@@ -76,10 +77,9 @@ namespace CrewOfSalem
         VestEnd,
 
         VampireConvert,
-
-        ExecutionerWin,
-        ExecutionerToJester,
         
-        JesterWin
+        GuardianAngelTarget,
+
+        ExecutionerTarget
     }
 }

@@ -101,9 +101,17 @@ namespace CrewOfSalem.Roles.Abilities
 
         protected virtual bool CanUse()
         {
+            if (MeetingHud.Instance) return false;
+            if (ExileController.Instance) return false;
+            if (Minigame.Instance) return false;
+            if (Button == null)
+            {
+                ConsoleTools.Error("Button is Null!");
+                return false;
+            }
+
             return Button.isActiveAndEnabled && CurrentCooldown <= 0F &&
-                   (!NeedsTarget || Button.CurrentTarget != null) && !owner.Owner.Data.IsDead &&
-                   Minigame.Instance == null;
+                   (!NeedsTarget || Button.CurrentTarget != null) && !owner.Owner.Data.IsDead;
         }
 
         public void TryUse()

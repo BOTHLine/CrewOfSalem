@@ -34,8 +34,8 @@ namespace CrewOfSalem.Roles.Abilities
         public void Forge()
         {
             owner.Owner.nameText.Text = currentSample.Data.PlayerName;
-            owner.Owner.myRend.material.SetColor(ShaderBackColor, currentSample.GetPlayerColor());
-            owner.Owner.myRend.material.SetColor(ShaderBodyColor, currentSample.GetShadowColor());
+            owner.Owner.myRend.material.SetColor(ShaderBackColor, currentSample.GetShadowColor());
+            owner.Owner.myRend.material.SetColor(ShaderBodyColor, currentSample.GetPlayerColor());
             owner.Owner.HatRenderer.SetHat(currentSample.Data.HatId, currentSample.Data.ColorId);
             owner.Owner.nameText.transform.localPosition =
                 new Vector3(0F, currentSample.Data.HatId == 0U ? 0.7F : 1.05F, -0.5F);

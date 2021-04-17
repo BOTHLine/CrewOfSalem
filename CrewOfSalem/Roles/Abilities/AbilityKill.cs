@@ -12,8 +12,10 @@ namespace CrewOfSalem.Roles.Abilities
         protected override Sprite Sprite      => ButtonKill;
         protected override bool   NeedsTarget => true;
 
-        protected override RPC               RpcAction => RPC.Kill;
-        protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
+        protected override RPC RpcAction => RPC.Kill;
+
+        protected override IEnumerable<byte> RpcData => new[]
+            {owner.Owner.PlayerId, Button.CurrentTarget.PlayerId, owner.Owner.PlayerId};
 
         // Constructors
         public AbilityKill(Role owner, float cooldown) : base(owner, cooldown) { }
@@ -21,7 +23,7 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods Ability
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
-            owner.Owner.RpcKillPlayer(target, owner.Owner);
+            owner.Owner.KillPlayer(target, owner.Owner);
             sendRpc = setCooldown = true;
         }
 

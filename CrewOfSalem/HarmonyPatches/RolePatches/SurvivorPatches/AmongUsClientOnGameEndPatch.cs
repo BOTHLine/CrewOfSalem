@@ -1,5 +1,7 @@
+using System.Linq;
 using CrewOfSalem.Roles;
 using HarmonyLib;
+using Il2CppSystem.Collections.Generic;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.SurvivorPatches
@@ -14,12 +16,16 @@ namespace CrewOfSalem.HarmonyPatches.SurvivorPatches
             if (TempData.DidHumansWin(gameOverReason))
             {
                 survivor.Owner.Data.IsImpostor = survivor.Owner.Data.IsDead;
-            } else if (gameOverReason != GameOverReason.ImpostorBySabotage)
+                if (!survivor.Owner.Data.IsDead) return true;
+
+                TempData.winners.Remove(TempData.winners.ToArray()
+                   .FirstOrDefault(winner => winner.Name.Equals(survivor.Owner.Data.PlayerName)));
+            } else if (gameOverReason != GameOverReason.ImpostorBySabotage) // Impostor won without Sabotage
             {
                 survivor.Owner.Data.IsImpostor = !survivor.Owner.Data.IsDead;
-            } else
-            {
-                survivor.Owner.Data.IsImpostor = false;
+                if (survivor.Owner.Data.IsDead) return true;
+
+                TempData.winners.Add(new WinningPlayerData(survivor.Owner.Data));
             }
 
             return true;
