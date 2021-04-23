@@ -5,6 +5,9 @@ namespace CrewOfSalem.Roles
 {
     public class Transporter : RoleGeneric<Transporter>
     {
+        public PlayerControl Transported1;
+        public PlayerControl Transported2;
+        
         // Properties Role
         public override byte   RoleID => 225;
         public override    string Name   => nameof(Transporter);

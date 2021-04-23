@@ -11,19 +11,18 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
     public static class MurderPlayerPatch
     {
-        public static bool Prefix(PlayerControl __instance, out bool __state, [HarmonyArgument(0)] PlayerControl target)
+        public static void Prefix(PlayerControl __instance, out bool __state, [HarmonyArgument(0)] PlayerControl target)
         {
             __state = __instance.Data.IsImpostor;
             __instance.Data.IsImpostor = true;
-            return true;
         }
 
-        public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl victim, bool __state)
+        public static void Postfix(PlayerControl __instance, bool __state, [HarmonyArgument(0)] PlayerControl target)
         {
             __instance.Data.IsImpostor = __state;
 
             if (!AmongUsClient.Instance.AmHost) return;
-            if (victim.GetRole().Faction != Faction.Mafia) return;
+            if (target.GetRole().Faction != Faction.Mafia) return;
 
             if (AssignedRoles.Values.Count(role =>
                     role.Faction == Faction.Mafia && !role.Owner.Data.IsDead &&

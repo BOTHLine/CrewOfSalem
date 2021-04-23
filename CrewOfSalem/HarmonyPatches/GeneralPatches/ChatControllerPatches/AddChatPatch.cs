@@ -14,8 +14,8 @@ namespace CrewOfSalem.HarmonyPatches.ChatControllerPatches
             if (LocalPlayer == null) return true;
             if (LobbyBehaviour.Instance) return true;
             if (MeetingHud.Instance) return true;
-            if (LocalPlayer.PlayerId == source.PlayerId) return true;
-            if (LocalPlayer.Data.IsDead && source.Data.IsDead) return true;
+            if (LocalPlayer == source) return true;
+            if (LocalData.IsDead && source.Data.IsDead) return true;
             Role role = source.GetRole();
             if (LocalRole == null || role == null) return false;
             if (LocalRole.Faction == Faction.Mafia && role.Faction == Faction.Mafia && LocalData.IsDead) return true;

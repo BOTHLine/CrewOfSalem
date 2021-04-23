@@ -1,4 +1,3 @@
-using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using HarmonyLib;
 using static CrewOfSalem.CrewOfSalem;
@@ -18,8 +17,8 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.GuardianAngelPatches
             {
                 if (guardianAngel.ProtectTarget.PlayerId != playerVoteArea.TargetPlayerId) continue;
 
-                playerVoteArea.NameText.Text = $"{guardianAngel.ProtectTarget.Data.PlayerName}\n(Target)";
-                playerVoteArea.NameText.scale = 0.8F;
+                playerVoteArea.NameText.text = $"{guardianAngel.ProtectTarget.Data.PlayerName}\n(Target)";
+                playerVoteArea.NameText.m_max_numberOfLines = 2;
             }
         }
     }

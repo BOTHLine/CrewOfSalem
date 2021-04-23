@@ -1,4 +1,5 @@
 ﻿using CrewOfSalem.Roles.Factions;
+using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles.Alignments
@@ -25,10 +26,8 @@ namespace CrewOfSalem.Roles.Alignments
         public abstract string Task                { get; }
         public abstract bool   IsTaskForOwnFaction { get; }
 
-        public string GetTask(Faction faction) => $"{Task} {faction.Enemy}";
-
         public string GetColorizedTask(Faction faction) =>
-            $"{Task} {ColorizedText(IsTaskForOwnFaction ? faction.Name : faction.Enemy.Name, IsTaskForOwnFaction ? faction.Color : faction.Enemy.Color)}";
+            $"{ColorizedText(Task, Color.white)} {ColorizedText(IsTaskForOwnFaction ? faction.Name : faction.Enemy.Name, IsTaskForOwnFaction ? faction.Color : faction.Enemy.Color)}";
     }
 
     public class Investigative : Alignment

@@ -19,7 +19,7 @@ namespace CrewOfSalem
     {
         private const string  Id      = "gg.reactor.crewofsalem";
         public const  string  Name    = "Crew Of Salem";
-        public const  string  Version = "0.3";
+        public const  string  Version = "1.0";
         private       Harmony Harmony { get; } = new Harmony(Id);
 
         // General Game Options
@@ -43,36 +43,36 @@ namespace CrewOfSalem
 
         public static readonly Role[] Roles =
         {
-            RoleGeneric<Investigator>.Instance, // Done
-            // RoleGeneric<Lookout>.Instance,      // TODO
-            RoleGeneric<Psychic>.Instance,      // Done
-            RoleGeneric<Sheriff>.Instance,      // Done
-            RoleGeneric<Spy>.Instance,          // Done
-            RoleGeneric<Tracker>.Instance,      // TODO
+            // RoleGeneric<Investigator>.Instance, // Done
+            RoleGeneric<Lookout>.Instance, // Done
+            RoleGeneric<Psychic>.Instance, // Done
+            RoleGeneric<Sheriff>.Instance, // Done
+            RoleGeneric<Spy>.Instance,     // Done
+            // RoleGeneric<Tracker>.Instance,      // TODO
 
             // RoleGeneric<Jailor>.Instance,        // TODO
             // RoleGeneric<VampireHunter>.Instance, // TODO
-            RoleGeneric<Veteran>.Instance,       // Done
-            RoleGeneric<Vigilante>.Instance,     // Done
+            RoleGeneric<Veteran>.Instance,   // Done
+            RoleGeneric<Vigilante>.Instance, // Done
 
             RoleGeneric<Bodyguard>.Instance, // Done
             RoleGeneric<Doctor>.Instance,    // Done
             // RoleGeneric<Crusader>.Instance,  // TODO
             // RoleGeneric<Trapper>.Instance,   // TODO
 
-            RoleGeneric<Escort>.Instance,         // TODO: Think about when to add cooldown, block tasks and vents
-            // RoleGeneric<Mayor>.Instance,          // TODO
-            RoleGeneric<Medium>.Instance,         // TODO: Do show corpse colors?
+            RoleGeneric<Escort>.Instance, // TODO: Think about when to add cooldown, block tasks and vents
+            RoleGeneric<Mayor>.Instance,  // TODO
+            RoleGeneric<Medium>.Instance, // TODO: Do show corpse colors?
             // RoleGeneric<Retributionist>.Instance, // TODO
             // RoleGeneric<Transporter>.Instance,    // TODO
 
             RoleGeneric<Disguiser>.Instance, // TODO: Do show corpse colors?
             // RoleGeneric<Framer>.Instance,    // TODO
-            // RoleGeneric<Hypnotist>.Instance, // TODO
+            RoleGeneric<Hypnotist>.Instance, // TODO
             // RoleGeneric<Janitor>.Instance,   // TODO
 
-            RoleGeneric<Ambusher>.Instance,  // Done
-            RoleGeneric<Forger>.Instance,    // Done
+            RoleGeneric<Ambusher>.Instance, // Done
+            RoleGeneric<Forger>.Instance,   // Done
             // RoleGeneric<Godfather>.Instance, // TODO: Godfather undying?
             // RoleGeneric<Mafioso>.Instance, // TODO: Mafioso can see Godfather on map and will promote to Godfather if he dies?
 
@@ -122,27 +122,31 @@ namespace CrewOfSalem
             new DictionaryKVP<TypePair, CustomNumberOption>
             {
                 CreateRoleCooldownOption<Investigator, AbilityInvestigate>(),
-                // CreateRoleCooldownOption<Spy>(),
 
-                CreateRoleCooldownOption<Veteran, AbilityAlert>(),
-                CreateRoleCooldownOption<Vigilante, AbilityKill>(),
+                CreateRoleCooldownOption<Lookout, AbilityMap>(35F),
+                CreateRoleCooldownOption<Lookout, AbilitySurveillance>(35F),
+                CreateRoleCooldownOption<Lookout, AbilityVitals>(35F),
 
-                CreateRoleCooldownOption<Doctor, AbilityShield>(),
+                CreateRoleCooldownOption<Veteran, AbilityAlert>(27.5F),
+                CreateRoleCooldownOption<Vigilante, AbilityKill>(32.5F),
 
-                CreateRoleCooldownOption<Escort, AbilityBlock>(),
+                CreateRoleCooldownOption<Doctor, AbilityShield>(27.5F),
 
-                CreateRoleCooldownOption<Disguiser, AbilityDisguise>(),
+                CreateRoleCooldownOption<Escort, AbilityBlock>(27.5F),
+                CreateRoleCooldownOption<Medium, AbilitySeance>(),
+
+                CreateRoleCooldownOption<Disguiser, AbilityDisguise>(32.5F),
 
                 CreateRoleCooldownOption<Ambusher, AbilityKill>(),
                 CreateRoleCooldownOption<Forger, AbilityKill>(),
-                CreateRoleCooldownOption<Forger, AbilityForge>(),
+                CreateRoleCooldownOption<Forger, AbilityForge>(32.5F),
                 CreateRoleCooldownOption<Mafioso, AbilityKill>(),
 
-                CreateRoleCooldownOption<Consigliere, AbilityCheckRole>(),
-                CreateRoleCooldownOption<Consort, AbilityBlock>(),
+                CreateRoleCooldownOption<Consigliere, AbilityCheckRole>(40F),
+                CreateRoleCooldownOption<Consort, AbilityBlock>(27.5F),
 
-                CreateRoleCooldownOption<GuardianAngel, AbilityProtect>(),
-                CreateRoleCooldownOption<Survivor, AbilityVest>()
+                CreateRoleCooldownOption<GuardianAngel, AbilityProtect>(27.5F),
+                CreateRoleCooldownOption<Survivor, AbilityVest>(27.5F)
             };
 
         // private static readonly DictionaryKVP<Type, string> ActionNames = new DictionaryKVP<Type, string>();
@@ -151,20 +155,19 @@ namespace CrewOfSalem
         private static readonly DictionaryKVP<TypePair, CustomNumberOption> RoleDurations =
             new DictionaryKVP<TypePair, CustomNumberOption>
             {
-                // CreateRoleDurationOption<Spy>("Spy"),
-
-                CreateRoleDurationOption<Veteran, AbilityAlert>(),
+                CreateRoleDurationOption<Veteran, AbilityAlert>(7.5F),
 
                 CreateRoleDurationOption<Escort, AbilityBlock>(),
+                CreateRoleDurationOption<Medium, AbilitySeance>(10F),
 
-                CreateRoleDurationOption<Disguiser, AbilityDisguise>(),
+                CreateRoleDurationOption<Disguiser, AbilityDisguise>(10F),
 
-                CreateRoleDurationOption<Forger, AbilityForge>(),
+                CreateRoleDurationOption<Forger, AbilityForge>(10F),
 
                 CreateRoleDurationOption<Consort, AbilityBlock>(),
 
-                CreateRoleDurationOption<GuardianAngel, AbilityProtect>(),
-                CreateRoleDurationOption<Survivor, AbilityVest>()
+                CreateRoleDurationOption<GuardianAngel, AbilityProtect>(7.5F),
+                CreateRoleDurationOption<Survivor, AbilityVest>(7.5F)
             };
 
         // Additional Options
@@ -172,17 +175,20 @@ namespace CrewOfSalem
             CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Max Hint Amount", 3F, 1F, DeadPlayer.Hints.Length, 1F);
 
         public static readonly CustomNumberOption OptionSheriffHintDecreaseInterval =
-            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Hint Decrease Interval", 5F, 0F, 15F, 1F);
+            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Hint Decrease Interval", 8F, 0F, 15F, 1F);
 
         public static readonly CustomNumberOption OptionSheriffMinHintAmount =
-            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Min Hint Amount", 1F, 0F, DeadPlayer.Hints.Length, 1F);
+            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Min Hint Amount", 0F, 0F, DeadPlayer.Hints.Length, 1F);
 
         public static readonly CustomNumberOption OptionBodyguardGuardRange =
-            CustomOption.AddNumber(Role.GetName<Bodyguard>() + ": Guard Range", 0.75F, 0.25F, 2F, 0.25F);
+            CustomOption.AddNumber(Role.GetName<Bodyguard>() + ": Guard Range", 1F, 0.25F, 2F, 0.25F);
 
         public static readonly CustomStringOption OptionDoctorShowShieldedPlayer =
             CustomOption.AddString(Role.GetName<Doctor>() + ": Show Shielded Owner",
                 new[] {"Doctor", "Target", "Doctor & Target", "Everyone"});
+
+        public static readonly CustomToggleOption OptionLookoutSharesCooldown =
+            CustomOption.AddToggle(Role.GetName<Lookout>() + ": Abilities Share Cooldown", true);
 
         public override void Load()
         {
@@ -207,7 +213,7 @@ namespace CrewOfSalem
             OptionPage.CreateOptionPage(new CustomOption[]
             {
                 OptionShowPlayerNames, OptionMafiaSharedKillCooldown, OptionMafiaCustomSharedKillCooldown,
-                OptionMafiaKillStart, OptionMafiaKillAlways, OptionSheriffMaxHintAmount,
+                OptionMafiaKillStart, OptionMafiaKillAlways, OptionLookoutSharesCooldown, OptionSheriffMaxHintAmount,
                 OptionSheriffHintDecreaseInterval, OptionSheriffMinHintAmount, OptionBodyguardGuardRange,
                 OptionDoctorShowShieldedPlayer
             });

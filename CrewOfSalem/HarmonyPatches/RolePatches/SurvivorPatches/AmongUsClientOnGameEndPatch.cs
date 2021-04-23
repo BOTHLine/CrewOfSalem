@@ -1,7 +1,6 @@
 using System.Linq;
 using CrewOfSalem.Roles;
 using HarmonyLib;
-using Il2CppSystem.Collections.Generic;
 using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.SurvivorPatches

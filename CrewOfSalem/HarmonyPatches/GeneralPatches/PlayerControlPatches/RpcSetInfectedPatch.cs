@@ -37,7 +37,8 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 var roleSpawnChances = new List<RoleSpawnChancePair>();
                 foreach (Role possibleRole in possibleRoles)
                 {
-                    roleSpawnChances.Add(new RoleSpawnChancePair(possibleRole, spawnChance += (int) Main.GetRoleSpawnChance(possibleRole.GetType())));
+                    roleSpawnChances.Add(new RoleSpawnChancePair(possibleRole,
+                        spawnChance += (int) Main.GetRoleSpawnChance(possibleRole.GetType())));
                 }
 
                 // IEnumerable<RoleSpawnChancePair> roleSpawnChances = roleSlot.GetFittingRoles(availableRoles).Select(role => new RoleSpawnChancePair(role, spawnChance += (int) Main.GetRoleSpawnChance(role.GetType())));
@@ -95,6 +96,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             }
 
             playerInfos = new Il2CppReferenceArray<GameData.PlayerInfo>(infected.ToArray());
+
             return true;
         }
 

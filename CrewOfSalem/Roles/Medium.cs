@@ -1,3 +1,4 @@
+using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using static CrewOfSalem.CrewOfSalem;
@@ -17,25 +18,15 @@ namespace CrewOfSalem.Roles
             "You can see the dead, but therefore you can't see colors";
 
         // Methods
-        public static void TurnAllPlayersGrey()
-        {
-            CrewOfSalem.TurnAllPlayersGrey();
-        }
-
-        public static void MakeDeadVisible()
-        {
-            foreach (PlayerControl playerControl in AllPlayers)
-            {
-                playerControl.Visible = !playerControl.inVent;
-            }
-        }
-
         protected override void ClearSettingsInternal()
         {
-            ResetPlayerColors();
+            if (Owner == LocalPlayer) ResetPlayerColors();
         }
 
         // Methods Role
-        protected override void InitializeAbilities() { }
+        protected override void InitializeAbilities()
+        {
+            AddAbility<Medium, AbilitySeance>();
+        }
     }
 }

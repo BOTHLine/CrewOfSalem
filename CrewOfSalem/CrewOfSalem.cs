@@ -4,6 +4,7 @@ using HarmonyLib;
 using Hazel;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using CrewOfSalem.Extensions;
 using Reactor.Extensions;
@@ -32,7 +33,12 @@ namespace CrewOfSalem
 
         public static bool gameIsRunning = false;
 
+        private static Sprite logo;
+
         private static Sprite buttonInvestigate;
+        private static Sprite buttonMap;
+        private static Sprite buttonSurveillance;
+        private static Sprite buttonVitals;
 
         private static Sprite buttonAlert;
         private static Sprite buttonKill;
@@ -41,8 +47,12 @@ namespace CrewOfSalem
         private static Sprite buttonShield;
 
         private static Sprite buttonBlock;
+        private static Sprite buttonReveal;
+        private static Sprite buttonSeance;
+        private static Sprite buttonTransport;
 
         private static Sprite buttonDisguise;
+        private static Sprite buttonHypnotize;
 
         private static Sprite buttonSteal;
         private static Sprite buttonForge;
@@ -59,8 +69,15 @@ namespace CrewOfSalem
         public static GameData.PlayerInfo        LocalData   => LocalPlayer?.Data;
         public static Role                       LocalRole   => LocalPlayer?.GetRole();
 
-        public static Sprite ButtonInvestigate =>
-            buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png");
+        public static Sprite Logo => logo ??= LoadSpriteFromResources("CrewOfSalem.png", 450);
+
+        public static Sprite ButtonInvestigate => buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png");
+
+        public static Sprite ButtonMap => buttonMap ??= LoadSpriteFromResources("ButtonMap.png");
+
+        public static Sprite ButtonSurveillance => buttonSurveillance ??= LoadSpriteFromResources("ButtonSurveillance.png");
+
+        public static Sprite ButtonVitals => buttonVitals ??= LoadSpriteFromResources("ButtonVitals.png");
 
         public static Sprite ButtonAlert => buttonAlert ??= LoadSpriteFromResources("ButtonAlert.png");
         public static Sprite ButtonKill  => buttonKill ??= LoadSpriteFromResources("ButtonKill.png");
@@ -68,9 +85,13 @@ namespace CrewOfSalem
         public static Sprite ButtonGuard  => buttonGuard ??= LoadSpriteFromResources("ButtonGuard.png");
         public static Sprite ButtonShield => buttonShield ??= LoadSpriteFromResources("ButtonShield.png");
 
-        public static Sprite ButtonBlock => buttonBlock ??= LoadSpriteFromResources("ButtonBlock.png");
+        public static Sprite ButtonBlock     => buttonBlock ??= LoadSpriteFromResources("ButtonBlock.png");
+        public static Sprite ButtonReveal    => buttonReveal ??= LoadSpriteFromResources("ButtonReveal.png");
+        public static Sprite ButtonSeance    => buttonSeance ??= LoadSpriteFromResources("ButtonSeance.png");
+        public static Sprite ButtonTransport => buttonTransport ??= LoadSpriteFromResources("ButtonTransport.png");
 
-        public static Sprite ButtonDisguise => buttonDisguise ??= LoadSpriteFromResources("ButtonDisguise.png");
+        public static Sprite ButtonDisguise  => buttonDisguise ??= LoadSpriteFromResources("ButtonDisguise.png");
+        public static Sprite ButtonHypnotize => buttonHypnotize ??= LoadSpriteFromResources("ButtonHypnotize.png");
 
         public static Sprite ButtonSteal => buttonSteal ??= LoadSpriteFromResources("ButtonSteal.png");
         public static Sprite ButtonForge => buttonForge ??= LoadSpriteFromResources("ButtonForge.png");
@@ -93,10 +114,13 @@ namespace CrewOfSalem
 
             if (AssignedRoles.ContainsKey(role.Owner.PlayerId))
             {
+                AssignedRoles[role.Owner.PlayerId].ClearSettings();
                 AssignedRoles.Remove(role.Owner.PlayerId);
             }
 
             AssignedRoles.Add(role.Owner.PlayerId, role);
+
+            // role.SetRoleTask();
         }
 
         public static void AddRole(Role role, PlayerControl player)
@@ -162,9 +186,15 @@ namespace CrewOfSalem
             PlayerNames.Clear();
         }
 
+        public static string MultiColorText(params Tuple<string, Color>[] textColorPairs)
+        {
+            return textColorPairs.Aggregate("",
+                (current, textColorPair) => current + ColorizedText(textColorPair.Item1, textColorPair.Item2));
+        }
+
         public static string ColorizedText(string text, Color color)
         {
-            return $"[{ColorToHex(color)}]{text}[]";
+            return $"<color=#{ColorToHex(color)}>{text}</color>";
         }
 
         private static string ColorToHex(Color color)
@@ -219,7 +249,7 @@ namespace CrewOfSalem
         {
             foreach (PlayerControl player in AllPlayers)
             {
-                player.nameText.Text = "";
+                player.nameText.text = "";
                 player.myRend.material.SetColor(ShaderBackColor, Color.grey);
                 player.myRend.material.SetColor(ShaderBodyColor, Color.grey);
                 player.HatRenderer.SetHat(0, 0);

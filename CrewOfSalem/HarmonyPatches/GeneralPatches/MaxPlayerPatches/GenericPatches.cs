@@ -94,7 +94,7 @@ namespace CrowdedMod.Patches
         {
             public static void Postfix(PingTracker __instance)
             {
-                __instance.text.Text += "\n[FFB793FF]> CrowdedMod <";
+                __instance.text.text += "\n[FFB793FF]> CrowdedMod <";
             }
         }
 

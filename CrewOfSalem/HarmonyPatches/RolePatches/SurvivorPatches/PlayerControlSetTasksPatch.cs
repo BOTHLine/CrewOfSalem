@@ -11,7 +11,7 @@ namespace CrewOfSalem.HarmonyPatches.SurvivorPatches
         {
             if (__instance.GetRole() is Survivor survivor)
             {
-                survivor.Owner?.ClearTasks();
+                survivor.Owner?.ClearTasksCustom();
             }
         }
     }

@@ -8,7 +8,7 @@ namespace CrewOfSalem.Roles.Abilities
     public class AbilityForge : AbilityDuration
     {
         // Fields
-        private PlayerControl currentSample;
+        public PlayerControl currentSample;
 
         // Properties Ability
         protected override Sprite Sprite => currentSample == null ? ButtonSteal : ButtonForge;
@@ -27,51 +27,20 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods
         public void ForgeStart(PlayerControl target)
         {
+            CurrentDuration = Duration;
             currentSample = target;
             Forge();
         }
 
         public void Forge()
         {
-            owner.Owner.nameText.Text = currentSample.Data.PlayerName;
-            owner.Owner.myRend.material.SetColor(ShaderBackColor, currentSample.GetShadowColor());
-            owner.Owner.myRend.material.SetColor(ShaderBodyColor, currentSample.GetPlayerColor());
-            owner.Owner.HatRenderer.SetHat(currentSample.Data.HatId, currentSample.Data.ColorId);
-            owner.Owner.nameText.transform.localPosition =
-                new Vector3(0F, currentSample.Data.HatId == 0U ? 0.7F : 1.05F, -0.5F);
-
-            if (owner.Owner.MyPhysics.Skin.skin.ProdId !=
-                HatManager.Instance.AllSkins.ToArray()[(int) currentSample.Data.SkinId].ProdId)
-            {
-                SetSkinWithAnim(owner.Owner.MyPhysics, currentSample.Data.SkinId);
-            }
-
-            if (owner.Owner.CurrentPet == null ||
-                owner.Owner.CurrentPet.ProdId !=
-                HatManager.Instance.AllPets.ToArray()[(int) currentSample.Data.PetId].ProdId)
-            {
-                if (owner.Owner.CurrentPet) Object.Destroy(owner.Owner.CurrentPet.gameObject);
-                owner.Owner.CurrentPet =
-                    Object.Instantiate(HatManager.Instance.AllPets.ToArray()[(int) currentSample.Data.PetId]);
-                owner.Owner.CurrentPet.transform.position = owner.Owner.transform.position;
-                owner.Owner.CurrentPet.Source = owner.Owner;
-                owner.Owner.CurrentPet.Visible = owner.Owner.Visible;
-                PlayerControl.SetPlayerMaterialColors(currentSample.Data.ColorId, owner.Owner.CurrentPet.rend);
-            } else if (owner.Owner.CurrentPet)
-            {
-                PlayerControl.SetPlayerMaterialColors(currentSample.Data.ColorId, owner.Owner.CurrentPet.rend);
-            }
+            owner.Owner.SetVisuals(currentSample);
         }
 
         private void ForgeEnd()
         {
             currentSample = null;
-            owner.Owner.SetName(owner.Owner.Data.PlayerName);
-            owner.Owner.SetHat(owner.Owner.Data.HatId, owner.Owner.Data.ColorId);
-            SetSkinWithAnim(owner.Owner.MyPhysics, owner.Owner.Data.SkinId);
-            owner.Owner.SetPet(owner.Owner.Data.PetId);
-            owner.Owner.CurrentPet.Visible = owner.Owner.Visible;
-            owner.Owner.SetColor(owner.Owner.Data.ColorId);
+            owner.Owner?.SetVisuals(owner.Owner);
         }
 
         // Methods Ability
@@ -101,6 +70,7 @@ namespace CrewOfSalem.Roles.Abilities
         {
             if (currentSample != null)
             {
+                Button.renderer.sprite = Sprite;
                 Button.renderer.color = currentSample.GetPlayerColor();
             } else
             {

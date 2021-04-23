@@ -22,7 +22,7 @@ namespace CrewOfSalem.Roles.Abilities
         private static readonly Func<Ability, PlayerControl, bool> UseOnAlerted = (source, target) =>
         {
             if (source is AbilityProtect) return true;
-            
+
             AbilityAlert abilityAlert = GetAllAbilities<AbilityAlert>()
                .FirstOrDefault(alert => alert.owner.Owner == target && alert.HasDurationLeft);
             if (abilityAlert == null) return true;
@@ -44,8 +44,6 @@ namespace CrewOfSalem.Roles.Abilities
         }
 
         // Methods Ability Duration
-        protected override void EffectEndInternal()
-        {
-        }
+        protected override void EffectEndInternal() { }
     }
 }

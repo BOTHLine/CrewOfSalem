@@ -21,13 +21,13 @@ namespace CrowdedMod.Patches
                 foreach (StringNames color in Palette.ShortColorNames) //Palette.ShortColorNames
                 {
                     VitalsPanel[] colorFiltered =
-                        vitalsPanels.Where(panel => panel.Text.Text.Equals(color.ToString())).ToArray();
+                        vitalsPanels.Where(panel => panel.Text.text.Equals(color.ToString())).ToArray();
                     if (colorFiltered.Length <= 1)
                         continue;
                     int i = 1;
                     foreach (VitalsPanel panel in colorFiltered)
                     {
-                        panel.Text.Text += i;
+                        panel.Text.text += i;
                         i++;
                     }
                 }

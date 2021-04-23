@@ -7,7 +7,7 @@ namespace CrewOfSalem.HarmonyPatches.VersionShowerPatches
     {
         public static void Postfix(VersionShower __instance)
         {
-            __instance.text.Text += $"   -   {Main.Name} {Main.Version}   -   by BothLine";
+            __instance.text.text += $"   -   {Main.Name} {Main.Version}   -   by BothLine";
         }
     }
 }

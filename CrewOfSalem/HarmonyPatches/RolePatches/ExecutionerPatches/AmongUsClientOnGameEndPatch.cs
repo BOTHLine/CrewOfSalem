@@ -21,6 +21,7 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                 TempData.winners.Add(executionerWinner);
             } else if (TempData.DidHumansWin(gameOverReason))
             {
+                executioner.Owner.Data.IsImpostor = true;
                 executionerWinner = TempData.winners.ToArray()
                    .FirstOrDefault(winner => winner.Name.Equals(executioner.Owner.Data.PlayerName));
                 TempData.winners.Remove(executionerWinner);

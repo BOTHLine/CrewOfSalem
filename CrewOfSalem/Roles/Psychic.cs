@@ -19,8 +19,7 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Investigative;
 
-        public override string Description =>
-            "You get 3 or 2 in an alternating pattern. Within 3 names AT LEAST 1 person is evil, within 2 names AT LEAST 1 person is good";
+        public override string Description => "You get 3 or 2 in an alternating pattern. Within 3 names AT LEAST 1 person is evil, within 2 names AT LEAST 1 person is good";
 
         // Methods
         public void StartMeeting(GameData.PlayerInfo info)

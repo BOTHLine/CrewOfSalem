@@ -5,7 +5,7 @@
     {
         public static void Postfix(HudManager __instance)
         {
-            __instance.GameSettings.scale = 0.45F;
+            __instance.GameSettings.fontSize = 0.45F;
         }
     }
 }

@@ -4,8 +4,12 @@ using CrewOfSalem.HarmonyPatches.GeneralPatches;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Factions;
+using UnhollowerBaseLib;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
+using Object = UnityEngine.Object;
+
+// TODO: Add "GetName" which sets the name if in vision. Depends on Disguiser/Forger etc.
 
 namespace CrewOfSalem.Extensions
 {
@@ -19,8 +23,7 @@ namespace CrewOfSalem.Extensions
             WriteRPC(RPC.Kill, killer.PlayerId, target.PlayerId, killerAnimation.PlayerId);
         }
 
-        public static void KillPlayer(this PlayerControl killer, PlayerControl target,
-            PlayerControl killerAnimation)
+        public static void KillPlayer(this PlayerControl killer, PlayerControl target, PlayerControl killerAnimation)
         {
             DeadPlayers.Add(new DeadPlayer(target, killerAnimation, DateTime.UtcNow));
             KillOverlayShowOnePatch.killerAnimation = killerAnimation.Data;
@@ -47,9 +50,73 @@ namespace CrewOfSalem.Extensions
             }
         }
 
-        public static void RpcStartMeetingCustom(this PlayerControl playerControl, GameData.PlayerInfo info)
+        public static void SetVisuals(this PlayerControl player, PlayerControl targetVisual)
         {
-            if (AmongUsClient.Instance.AmClient) playerControl.StartMeetingCustom(info);
+            // if (targetVisual.Data.ColorId == -1) return;
+            // if (targetVisual.MyPhysics.Skin.skin == null) return;
+
+            Il2CppArrayBase<SkinData> allSkins = HatManager.Instance.AllSkins.ToArray();
+            // if (targetVisual.Data.SkinId >= allSkins.Length) return;
+
+            Il2CppArrayBase<PetBehaviour> allPets = HatManager.Instance.AllPets.ToArray();
+            // if (targetVisual.Data.PetId >= allPets.Length) return;
+
+            player.nameText.text = targetVisual.Data.PlayerName;
+            player.myRend.material.SetColor(ShaderBodyColor, targetVisual.GetPlayerColor());
+            player.myRend.material.SetColor(ShaderBackColor, targetVisual.GetShadowColor());
+            player.HatRenderer.SetHat(targetVisual.Data.HatId, targetVisual.Data.ColorId);
+            player.nameText.transform.localPosition =
+                new Vector3(0F, targetVisual.Data.HatId == 0U ? 0.7F : 1.05F, -0.5F);
+            if (player.MyPhysics.Skin.skin.ProdId != allSkins[(int) targetVisual.Data.SkinId].ProdId)
+            {
+                SetSkinWithAnim(player.MyPhysics, targetVisual.Data.SkinId);
+            }
+
+            if (player.CurrentPet == null || player.CurrentPet.ProdId != allPets[(int) targetVisual.Data.PetId].ProdId)
+            {
+                if (player.CurrentPet) Object.Destroy(player.CurrentPet.gameObject);
+                player.CurrentPet = Object.Instantiate(allPets[(int) targetVisual.Data.PetId]);
+                player.CurrentPet.transform.position = player.transform.position;
+                player.CurrentPet.Source = player;
+                player.CurrentPet.Visible = player.Visible;
+                PlayerControl.SetPlayerMaterialColors(targetVisual.Data.ColorId, player.CurrentPet.rend);
+            } else if (player.CurrentPet != null)
+            {
+                PlayerControl.SetPlayerMaterialColors(targetVisual.Data.ColorId, player.CurrentPet.rend);
+            }
+
+            Role role = player.GetRole();
+            Color color = Color.white;
+
+            if (LocalRole?.Faction == Faction.Mafia && role?.Faction == Faction.Mafia)
+            {
+                color = role!.Color;
+            } else if (LocalRole is Executioner executioner && executioner.VoteTarget == player)
+            {
+                color = role!.Color;
+            }
+
+            player.nameText.color = color;
+
+            int showPlayerNames = Main.OptionShowPlayerNames.GetValue();
+            if (showPlayerNames != 1) return;
+            Vector2 fromPosition = LocalPlayer.GetTruePosition();
+
+            if (player == LocalPlayer) return;
+
+            Vector2 distanceVector = player.GetTruePosition() - fromPosition;
+            float distance = distanceVector.magnitude;
+
+            if (!LocalPlayer.Data.IsDead && PhysicsHelpers.AnyNonTriggersBetween(fromPosition,
+                distanceVector.normalized, distance, Constants.ShipOnlyMask))
+            {
+                player.nameText.text = "";
+            }
+        }
+
+        public static void RpcStartMeetingCustom(this PlayerControl player, GameData.PlayerInfo info)
+        {
+            if (AmongUsClient.Instance.AmClient) player.StartMeetingCustom(info);
             WriteRPC(RPC.StartMeetingCustom, info?.PlayerId ?? byte.MaxValue);
         }
 
@@ -75,12 +142,11 @@ namespace CrewOfSalem.Extensions
             if (LocalRole is Psychic psychic) psychic.StartMeeting(info);
         }
 
-        public static void ClearTasks(this PlayerControl playerControl, bool keepSabotageTasks = true)
-
+        public static void ClearTasksCustom(this PlayerControl playerControl, bool keepSabotageTasks = true)
         {
             for (int i = playerControl.myTasks.Count - 1; i >= 0; i--)
             {
-                PlayerTask task = playerControl.myTasks[i];
+                PlayerTask task = playerControl.myTasks.ToArray()[i];
 
                 if (keepSabotageTasks && (task.TaskType == TaskTypes.FixComms ||
                                           task.TaskType == TaskTypes.ResetReactor ||
@@ -89,7 +155,7 @@ namespace CrewOfSalem.Extensions
 
                 task.OnRemove();
                 playerControl.RemoveTask(task);
-                UnityEngine.Object.Destroy(task.gameObject);
+                Object.Destroy(task.gameObject);
             }
         }
 
@@ -134,7 +200,7 @@ namespace CrewOfSalem.Extensions
         public static void RpcSoloWin(this PlayerControl winner)
         {
             if (AmongUsClient.Instance.AmClient) WinSolo(winner);
-            
+
             WriteRPC(RPC.SoloWin, winner.Data.PlayerId);
         }
 
@@ -143,7 +209,6 @@ namespace CrewOfSalem.Extensions
             foreach (PlayerControl player in AllPlayers)
             {
                 if (player == winner) continue;
-                player.RemoveInfected();
                 player.Die(DeathReason.Exile);
                 player.Data.IsDead = true;
                 player.Data.IsImpostor = false;

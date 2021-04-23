@@ -31,6 +31,8 @@ namespace CrewOfSalem.Roles
 
         public PlayerControl Owner { get; set; }
 
+        private bool hasSetTasks = false;
+
         // Methods
         private static byte GetRoleID<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetRoleID();
         public static string GetName<T>() where T : RoleGeneric<T>, new() => RoleGeneric<T>.GetName();
@@ -70,50 +72,20 @@ namespace CrewOfSalem.Roles
             InitializeAbilities();
         }
 
-        public void SetMeetingHudNameColor()
-        {
-            if (MeetingHud.Instance != null)
-            {
-                foreach (PlayerVoteArea playerVoteArea in MeetingHud.Instance.playerStates)
-                {
-                    if (Owner.PlayerId == playerVoteArea.TargetPlayerId)
-                    {
-                        playerVoteArea.NameText.Color = Color;
-                    }
-                }
-            } else
-            {
-                Owner.nameText.Color = Color;
-            }
-        }
-
-        public void SetMeetingHudRoleName()
-        {
-            if (MeetingHud.Instance != null)
-            {
-                foreach (PlayerVoteArea playerVoteArea in MeetingHud.Instance.playerStates)
-                {
-                    if (Owner.PlayerId == playerVoteArea.TargetPlayerId)
-                    {
-                        playerVoteArea.NameText.Text = $"{Owner.Data.PlayerName}\n({Name})";
-                        playerVoteArea.NameText.scale = 0.8F;
-                    }
-                }
-            }
-        }
-
         public void SetRoleTask()
         {
+            if (Owner.myTasks.Count <= 1) return;
+            if (hasSetTasks) return;
             if (Owner != LocalPlayer) return;
 
-            if (Owner.Data.IsImpostor && Owner.myTasks.Count > 0)
-            {
-                Owner.myTasks.RemoveAt(0);
-            }
+            hasSetTasks = true;
+
+            Owner.myTasks.Remove(Owner.myTasks.ToArray()
+               .FirstOrDefault(task => task.GetComponent<ImportantTextTask>() != null));
 
             var roleDescription = new GameObject("roleTask").AddComponent<ImportantTextTask>();
             roleDescription.transform.SetParent(Owner.transform, false);
-            roleDescription.Text = $"{ColorizedText(Name, Color)}: {RoleTask}";
+            roleDescription.Text = $"<color=\"white\">{ColorizedText(Name, Color)}: {RoleTask}</color>";
             Owner.myTasks.Insert(0, roleDescription);
         }
 
@@ -122,6 +94,7 @@ namespace CrewOfSalem.Roles
         public void ClearSettings()
         {
             Owner = null;
+            hasSetTasks = false;
             ClearAbilities();
             ClearSettingsInternal();
         }
@@ -154,11 +127,18 @@ namespace CrewOfSalem.Roles
             RefreshAbilityOffsets();
         }
 
+        public void RemoveAbility(Ability ability)
+        {
+            abilities.Remove(ability);
+
+            RefreshAbilityOffsets();
+        }
+
         private void RefreshAbilityOffsets()
         {
             for (var i = 0; i < abilities.Count; i++)
             {
-                abilities[i].Offset = Vector3.left * i;
+                abilities[i].Offset = Vector3.left * (i + 1);
             }
         }
 
@@ -188,6 +168,8 @@ namespace CrewOfSalem.Roles
 
         public void UpdateAbilities(float deltaTime)
         {
+            SetRoleTask();
+
             foreach (Ability ability in abilities)
             {
                 ability.Update(deltaTime);
@@ -196,14 +178,15 @@ namespace CrewOfSalem.Roles
 
         protected virtual void SetConfigSettingsInternal() { }
 
-        public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
+        public virtual void SetIntro(IntroCutscene.Nested_0 instance)
         {
-            instance.__this.Title.Text = Name;
-            instance.__this.Title.Color = Color;
-            instance.__this.Title.render?.material.SetColor(ShaderOutlineColor, OutlineColor);
+            instance.__this.Title.text = Name;
+            instance.__this.Title.color = Color;
+            instance.__this.Title.renderer?.material.SetColor(ShaderOutlineColor, OutlineColor);
             instance.__this.Title.transform.localScale = TitleScale;
-            instance.c = Color;
-            instance.__this.ImpostorText.Text = RoleTask;
+            instance._c_5__2 = Color;        // TODO Which to use?
+            instance._impColor_5__4 = Color; // TODO Which to use?
+            instance.__this.ImpostorText.text = RoleTask;
             instance.__this.BackgroundBar.material.color = Color;
         }
 

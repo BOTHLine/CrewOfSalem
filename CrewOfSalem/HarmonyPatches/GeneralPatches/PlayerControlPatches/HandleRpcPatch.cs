@@ -112,6 +112,11 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 case (byte) RPC.DisguiseEnd:
                     __instance.EndAbility<AbilityDisguise>();
                     break;
+                
+                case (byte) RPC.Hypnotize:
+                    target = reader.ReadPlayerControl();
+                    __instance.UseAbility<AbilityHypnotize>(target);
+                    break;
 
                 case (byte) RPC.ForgeStart:
                     target = reader.ReadPlayerControl();

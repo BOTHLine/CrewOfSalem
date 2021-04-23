@@ -58,6 +58,8 @@ namespace CrewOfSalem
 
         Block,
         BlockEnd,
+        
+        Reveal,
 
         DisguiseStart,
         DisguiseEnd,

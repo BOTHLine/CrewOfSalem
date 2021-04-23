@@ -61,9 +61,9 @@ namespace CrewOfSalem.Roles.Abilities
 
                 case Lookout _:
                 case Forger _:
+                    // case Juggernaut _:
+                    // case CovenLeader _:
                     return new[] {Lookout.GetName(), Forger.GetName()};
-                // case Juggernaut _:
-                // case CovenLeader _:
 
                 case Escort _:
                 case Transporter _:

@@ -44,6 +44,20 @@ namespace CrewOfSalem.Roles.Abilities
             set
             {
                 currentCooldown = value;
+                if (Button == null)
+                {
+                    ConsoleTools.Error("Button is null in: " + GetType().Name);
+                    return;
+                } else if (Button.renderer == null)
+                {
+                    ConsoleTools.Error("Button.renderer is null in: " + GetType().Name);
+                    return;
+                } else if (Button.TimerText == null)
+                {
+                    ConsoleTools.Error("Button.TimerText is null in: " + GetType().Name);
+                    return;
+                }
+
                 UpdateButtonCooldown();
             }
         }
@@ -65,7 +79,7 @@ namespace CrewOfSalem.Roles.Abilities
 
             HudManager hudManager = HudManager.Instance;
             button = Object.Instantiate(hudManager.KillButton, hudManager.transform);
-            var buttonClick = button.GetComponent<PassiveButton>();
+            var buttonClick = Button.GetComponent<PassiveButton>();
             buttonClick.transform.position = hudManager.KillButton.transform.position;
             buttonClick.OnClick = new Button.ButtonClickedEvent();
             buttonClick.OnClick.AddListener((UnityAction) TryUse);
@@ -77,9 +91,9 @@ namespace CrewOfSalem.Roles.Abilities
 
             SetActive(false);
 
-            foreach (PlayerControl playerControl in AllPlayers)
+            foreach (PlayerControl player in AllPlayers)
             {
-                playerControl.GetComponent<SpriteRenderer>().material.SetFloat(ShaderOutline, 0F);
+                player.GetComponent<SpriteRenderer>().material.SetFloat(ShaderOutline, 0F);
             }
         }
 
@@ -96,7 +110,7 @@ namespace CrewOfSalem.Roles.Abilities
 
         protected virtual bool ShouldShowButton()
         {
-            return !owner.Owner.Data.IsDead;
+            return !owner.Owner.Data.IsDead && MeetingHud.Instance == null;
         }
 
         protected virtual bool CanUse()
@@ -106,7 +120,7 @@ namespace CrewOfSalem.Roles.Abilities
             if (Minigame.Instance) return false;
             if (Button == null)
             {
-                ConsoleTools.Error("Button is Null!");
+                ConsoleTools.Error("Button is null in " + GetType().Name);
                 return false;
             }
 
@@ -153,6 +167,7 @@ namespace CrewOfSalem.Roles.Abilities
         public void Update(float deltaTime)
         {
             if (Button == null) return;
+            SetActive(ShouldShowButton());
             if (MeetingHud.Instance || ExileController.Instance) return;
             if (LocalData == null)
             {
@@ -160,7 +175,6 @@ namespace CrewOfSalem.Roles.Abilities
                 return;
             }
 
-            SetActive(ShouldShowButton());
             UpdateCooldown(deltaTime);
             UpdateTarget();
             UpdateButtonSprite();
@@ -211,7 +225,8 @@ namespace CrewOfSalem.Roles.Abilities
 
             Button.TimerText.gameObject.SetActive(Button.isCoolingDown);
             */
-            Button.SetCoolDown(CurrentCooldown, Cooldown);
+            if (Button == null || Button.renderer == null) return;
+            Button?.SetCoolDown(CurrentCooldown, Cooldown);
         }
 
         protected virtual void UpdateButtonSprite()
@@ -224,7 +239,7 @@ namespace CrewOfSalem.Roles.Abilities
                 Button.renderer.material.SetFloat(ShaderDesat, 0F);
             } else
             {
-                Button.renderer.color = Palette.DisabledColor;
+                Button.renderer.color = Palette.DisabledClear;
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             }
         }
@@ -238,9 +253,9 @@ namespace CrewOfSalem.Roles.Abilities
 
         private void UpdatePosition()
         {
-            if (Button.transform.position != HudManager.Instance.KillButton.transform.position) return;
+            // if (Button.transform.position != HudManager.Instance.KillButton.transform.position) return;
 
-            Button.transform.position = HudManager.Instance.KillButton.transform.position + Offset;
+            Button.transform.position = HudManager.Instance.UseButton.transform.position + Offset;
         }
 
         protected virtual void UpdateInternal(float deltaTime) { }
@@ -284,7 +299,7 @@ namespace CrewOfSalem.Roles.Abilities
 
         public virtual void Destroy()
         {
-            Object.Destroy(Button);
+            if (Button != null && Button.gameObject != null) Object.Destroy(Button.gameObject);
             AllAbilities[GetType()].Remove(this);
         }
     }

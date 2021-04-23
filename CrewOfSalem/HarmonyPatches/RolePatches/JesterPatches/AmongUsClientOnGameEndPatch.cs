@@ -21,7 +21,8 @@ namespace CrewOfSalem.HarmonyPatches.JesterPatches
                 TempData.winners = new List<WinningPlayerData>(0);
                 TempData.winners.Add(jesterWinner);
             } else if (TempData.DidHumansWin(gameOverReason))
-            {
+            {               
+                jester.Owner.Data.IsImpostor = true;
                 jesterWinner = TempData.winners.ToArray()
                    .FirstOrDefault(winner => winner.Name.Equals(jester.Owner.Data.PlayerName));
                 TempData.winners.Remove(jesterWinner);

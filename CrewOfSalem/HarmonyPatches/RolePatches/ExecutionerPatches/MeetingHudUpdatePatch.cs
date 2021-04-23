@@ -18,9 +18,9 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
             {
                 if (executioner.VoteTarget.PlayerId != playerVoteArea.TargetPlayerId) continue;
 
-                playerVoteArea.NameText.Text = $"{executioner.VoteTarget.Data.PlayerName}\n(Target)";
-                playerVoteArea.NameText.Color = executioner.VoteTarget.GetRole().Color;
-                playerVoteArea.NameText.scale = 0.8F;
+                playerVoteArea.NameText.text = $"{executioner.VoteTarget.Data.PlayerName}\n(Target)";
+                playerVoteArea.NameText.color = executioner.VoteTarget.GetRole().Color;
+                playerVoteArea.NameText.fontSize = 0.8F;
             }
         }
     }

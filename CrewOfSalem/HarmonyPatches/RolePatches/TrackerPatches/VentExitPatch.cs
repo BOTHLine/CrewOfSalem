@@ -4,7 +4,7 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.TrackerPatches
 {
-    [HarmonyPatch(typeof(Vent), nameof(Vent.Method_1))]
+    [HarmonyPatch(typeof(Vent), nameof(Vent.ExitVent))]
     public static class VentExitPatch
     {
         public static void Postfix()

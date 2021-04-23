@@ -43,7 +43,7 @@ namespace CrewOfSalem.Roles.Abilities
 
         protected override bool CanUse()
         {
-            return CurrentCooldown <= 0F && CurrentDuration <= 0F;
+            return CurrentCooldown <= 0F && CurrentDuration <= 0F && !ProtectTarget.Data.IsDead;
         }
 
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)

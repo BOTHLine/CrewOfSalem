@@ -94,6 +94,7 @@ namespace CrewOfSalem.Roles.Abilities
         {
             if (HasDurationLeft)
             {
+                Button.renderer.sprite = Sprite;
                 Button.renderer.color = owner.Owner.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             } else

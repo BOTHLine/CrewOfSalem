@@ -32,9 +32,9 @@ namespace CrowdedMod.Patches
                 else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.mouseScrollDelta.y < 0f)
                     currentPage = Mathf.Clamp(currentPage + 1, 0, MAXPages - 1);
 
-                if (__instance.TimerText.Text != lastTimerText)
-                    __instance.TimerText.Text =
-                        (lastTimerText = __instance.TimerText.Text + $" ({currentPage + 1}/{MAXPages})");
+                if (__instance.TimerText.text != lastTimerText)
+                    __instance.TimerText.text =
+                        (lastTimerText = __instance.TimerText.text + $" ({currentPage + 1}/{MAXPages})");
 
                 PlayerVoteArea[] playerButtons = __instance.playerStates.OrderBy(x => x.isDead).ToArray();
                 int i = 0;
@@ -182,7 +182,7 @@ namespace CrowdedMod.Patches
 
             private static void PopulateResults(MeetingHud __instance, byte[] states, byte[] votes)
             {
-                __instance.TitleText.Text = "Voting Results";
+                __instance.TitleText.text = "Voting Results";
                 int num = 0;
                 for (int i = 0; i < __instance.playerStates.Length; i++)
                 {

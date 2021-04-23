@@ -3,10 +3,10 @@ using HarmonyLib;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.ForgerPatches
 {
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+    //[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class HudManagerUpdatePatch
     {
-        [HarmonyPriority(Priority.Low)]
+        [HarmonyPriority(Priority.LowerThanNormal)]
         public static void Postfix()
         {
             AbilityForge[] forgeAbilities = Ability.GetAllAbilities<AbilityForge>();

@@ -47,7 +47,7 @@ namespace CrewOfSalem.Roles
             ClearSettings();
             AddRole(Jester.Instance, player);
 
-            player.ClearTasks();
+            player.ClearTasksCustom();
             Jester.Instance.SetRoleTask();
         }
 

@@ -12,7 +12,7 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
         {
             if (__instance.GetRole() is Executioner executioner)
             {
-                executioner.Owner?.ClearTasks();
+                executioner.Owner?.ClearTasksCustom();
             }
         }
     }

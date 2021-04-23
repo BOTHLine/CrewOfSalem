@@ -35,7 +35,8 @@ namespace CrewOfSalem.Roles.Abilities
             if (!(source is AbilityKill)) return true;
 
             AbilityGuard abilityGuard = GetAllAbilities<AbilityGuard>().FirstOrDefault(guard =>
-                guard.IsGuarding && PlayerTools.IsPlayerInRange(guard.owner.Owner, target, Main.OptionBodyguardGuardRange.GetValue()));
+                guard.IsGuarding && target != guard.owner.Owner && PlayerTools.IsPlayerInRange(guard.owner.Owner,
+                    target, Main.OptionBodyguardGuardRange.GetValue()));
             if (abilityGuard == null) return true;
 
             abilityGuard.owner.Owner.RpcKillPlayer(source.owner.Owner);
@@ -88,7 +89,7 @@ namespace CrewOfSalem.Roles.Abilities
                     Button.renderer.material.SetFloat(ShaderDesat, 1F);
                 } else
                 {
-                    Button.renderer.color = Palette.DisabledColor;
+                    Button.renderer.color = Palette.DisabledClear;
                     Button.renderer.material.SetFloat(ShaderDesat, 1F);
                 }
             }

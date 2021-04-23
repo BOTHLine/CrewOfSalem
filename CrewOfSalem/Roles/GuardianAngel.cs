@@ -37,8 +37,11 @@ namespace CrewOfSalem.Roles
             ClearSettings();
             AddRole(Survivor.Instance, player);
 
-            player.ClearTasks();
+            Survivor.Instance.InitializeRole();
+            
+            player.ClearTasksCustom();
             Survivor.Instance.SetRoleTask();
+            Survivor.Instance.ClearAbilities();
 
             WriteRPC(RPC.SetRole, Survivor.GetRoleID(), player.PlayerId);
         }

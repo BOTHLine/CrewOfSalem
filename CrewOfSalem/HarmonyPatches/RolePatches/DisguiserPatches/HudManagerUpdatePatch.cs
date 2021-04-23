@@ -4,10 +4,10 @@ using HarmonyLib;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.DisguiserPatches
 {
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+    //[HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class HudManagerUpdatePatch
     {
-        [HarmonyPriority(Priority.VeryLow)]
+        [HarmonyPriority(Priority.Low)]
         public static void Postfix()
         {
             AbilityDisguise[] disguiseAbilities = Ability.GetAllAbilities<AbilityDisguise>();

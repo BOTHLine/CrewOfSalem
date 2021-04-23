@@ -12,7 +12,7 @@ namespace CrewOfSalem.HarmonyPatches.JesterPatches
         {
             if (__instance.GetRole() is Jester jester)
             {
-                jester.Owner?.ClearTasks();
+                jester.Owner?.ClearTasksCustom();
             }
         }
     }

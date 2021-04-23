@@ -9,7 +9,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.EscortPatches
     // [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
     public static class VentCanUsePatch
     {
-        [HarmonyPriority(Priority.HigherThanNormal)]
+    [HarmonyPriority(Priority.HigherThanNormal)]
         public static bool Prefix([HarmonyArgument(1)] ref bool canUse, [HarmonyArgument(2)] ref bool couldUse)
         {
             AbilityBlock[] blockAbilities = Ability.GetAllAbilities<AbilityBlock>();

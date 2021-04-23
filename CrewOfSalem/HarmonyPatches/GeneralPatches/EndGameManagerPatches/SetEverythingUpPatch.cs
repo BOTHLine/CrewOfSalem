@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CrewOfSalem.Roles;
 using HarmonyLib;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
@@ -35,9 +36,13 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.EndGameManagerPatches
                 {
                     if (poolablePlayer.transform.localPosition.Equals(winningPlayerPositions[i]))
                     {
-                        poolablePlayer.NameText.Text = $"{winners[i].Name}\n({PlayerNames[winners[i].Name].Name})";
-                        poolablePlayer.NameText.Color = PlayerNames[winners[i].Name].Color;
-                        poolablePlayer.NameText.scale *= 0.8F;
+                        if (PlayerNames.TryGetValue(winners[i].Name, out Role role))
+                        {
+                            poolablePlayer.NameText.text = $"{winners[i].Name}\n({role.Name})";
+                            poolablePlayer.NameText.color = PlayerNames[winners[i].Name].Color;
+                        }
+
+                        poolablePlayer.NameText.fontSize *= 0.8F;
                         poolablePlayer.NameText.gameObject.SetActive(true);
                     }
                 }

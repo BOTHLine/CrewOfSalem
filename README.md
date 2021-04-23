@@ -1,11 +1,17 @@
 # CrewOfSalem
 
+Diese Mod versucht (alle) Rollen aus dem Spiel *Town of Salem* in Among Us zu bringen. Das Ziel hierbei ist, den Rollen so originalgetreu wie nur möglich zu sein. Natürlich ist es nicht immer zu 100% möglich, da sich das Spielprinzip doch sehr stark von Among Us unterscheidet.  
+  
+In Town Of Salem gibt es insgesamt 4 verschiedene Fraktionen: Town, Mafia, Neutral, Coven.  
+Diese Fraktionen lassen sich noch einmal in ihre Gesinnungen unterscheiden (Investigative, Killing, Benign etc.).
+Jede Rolle gehört einer Fraktion sowie einer untergeordneten Gesinnung zu. (Dies ist eigentlich nur für die Lobby Einstellungen relevant, da man dort die Zusammensetzung der mitspielenden Rollen einstellen kann).
+
 ## Crew
 
 ### Crew Investigate
 
 #### Psychic
-Erhält bei jedem Body Report abwechselnd 2 oder 3 Namen von noch lebenden Mitspielenr (Sich selbst ausgeschlossen).  
+Erhält bei jedem Body Report abwechselnd 3 oder 2 Namen von noch lebenden Mitspielenr (Sich selbst ausgeschlossen).  
 Erhält der Psychic 3 Namen, so ist MINDESTENS einer davon böse.  
 Erhält der Psychic 2 Namen, so ist MINDESTENS einer davon gut.  
 Gut sind alle Mitglieder der Crew sowohl Neutral Benign (Amnesiac, Guardian Angel, Survivor).  

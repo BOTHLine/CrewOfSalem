@@ -13,6 +13,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
 
         public static bool Prefix(TextBoxTMP __instance, [HarmonyArgument(0)] ref string input)
         {
+            if (HudManager.Instance?.Chat?.TextArea == null) return true;
             if (__instance != HudManager.Instance.Chat.TextArea) return true;
             
             AbilityBlackmail[] blackmailAbilities = Ability.GetAllAbilities<AbilityBlackmail>();
