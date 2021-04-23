@@ -71,7 +71,7 @@ Kann sich selber jederzeit innerhalb einer Runde revealen. Ab dem nächsten Meet
 Sobald der Mayor sich revealed hat, zählen seine Votes in einem Meeting doppelt so viel.
 
 #### Medium
-Das Medium kann seine Seance nutzen, um für eine gewisse Zeit alle Gesiter zu sehen.
+Das Medium kann seine Seance nutzen, um für eine gewisse Zeit alle Geister zu sehen.
 
 ## Mafia
 
