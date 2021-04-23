@@ -73,7 +73,8 @@ namespace CrewOfSalem
 
         Blackmail,
 
-        Protect,
+        ProtectStart,
+        ProtectEnd,
 
         VestStart,
         VestEnd,

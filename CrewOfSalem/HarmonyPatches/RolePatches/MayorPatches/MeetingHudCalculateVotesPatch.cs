@@ -13,8 +13,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.MayorPatches
 
         public static void Postfix(MeetingHud __instance, ref Il2CppStructArray<byte> __result)
         {
-            if (!TryGetSpecialRole(out Mayor mayor)) return;
-            if (!mayor.GetAbility<AbilityReveal>()?.hasRevealed ?? true) return;
+            if (!TryGetSpecialRole(out Mayor mayor) || !mayor.hasRevealed) return;
 
             foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
             {

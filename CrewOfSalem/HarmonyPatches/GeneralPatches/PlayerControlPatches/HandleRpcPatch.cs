@@ -105,6 +105,10 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     __instance.EndAbility<AbilityBlock>();
                     break;
 
+                case (byte) RPC.Reveal:
+                    __instance.UseAbility<AbilityReveal>(null);
+                    break;
+
                 case (byte) RPC.DisguiseStart:
                     __instance.UseAbility<AbilityDisguise>(null);
                     break;
@@ -112,7 +116,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 case (byte) RPC.DisguiseEnd:
                     __instance.EndAbility<AbilityDisguise>();
                     break;
-                
+
                 case (byte) RPC.Hypnotize:
                     target = reader.ReadPlayerControl();
                     __instance.UseAbility<AbilityHypnotize>(target);
@@ -132,6 +136,17 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     __instance.UseAbility<AbilityBlackmail>(target);
                     break;
 
+                case (byte) RPC.ProtectStart:
+                    target = reader.ReadPlayerControl();
+                    var protect = __instance.GetAbility<AbilityProtect>();
+                    protect.ProtectTarget = target;
+                    protect.Use(null, out bool _);
+                    break;
+
+                case (byte) RPC.ProtectEnd:
+                    __instance.EndAbility<AbilityProtect>();
+                    break;
+
                 case (byte) RPC.VestStart:
                     __instance.UseAbility<AbilityVest>(null);
                     break;
@@ -144,7 +159,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     target = reader.ReadPlayerControl();
                     AbilityBite.ConvertVampire(target);
                     break;
-                
+
                 case (byte) RPC.GuardianAngelTarget:
                     target = reader.ReadPlayerControl();
                     if (TryGetSpecialRole(out GuardianAngel guardianAngel)) guardianAngel.ProtectTarget = target;

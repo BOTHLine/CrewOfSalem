@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CrewOfSalem.Extensions;
 using UnityEngine;
@@ -29,6 +30,12 @@ namespace CrewOfSalem.Roles.Abilities
         protected override Sprite Sprite      => ButtonProtect;
         protected override bool   NeedsTarget => false;
 
+        protected override RPC               RpcAction => RPC.ProtectStart;
+        protected override IEnumerable<byte> RpcData => new[] {ProtectTarget.PlayerId};
+
+        protected override RPC               RpcEndAction => RPC.ProtectEnd;
+        protected override IEnumerable<byte> RpcEndData   => new byte[0];
+
         // Constructors
         public AbilityProtect(Role owner, float cooldown, float duration) : base(owner, cooldown, duration)
         {
@@ -38,7 +45,7 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods Ability
         protected override bool ShouldShowButton()
         {
-            return true;
+            return MeetingHud.Instance == null && ExileController.Instance == null;
         }
 
         protected override bool CanUse()

@@ -41,6 +41,7 @@
         <EmbeddedResource Include="Resources\ButtonGuard.png" />
         <EmbeddedResource Include="Resources\ButtonShield.png" />
         <EmbeddedResource Include="Resources\ButtonBlock.png" />
+        <EmbeddedResource Include="Resources\ButtonReveal.png" />
         <EmbeddedResource Include="Resources\ButtonSeance.png" />
         <EmbeddedResource Include="Resources\ButtonTransport.png" />
         <EmbeddedResource Include="Resources\ButtonDisguise.png" />

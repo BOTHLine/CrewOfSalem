@@ -6,6 +6,9 @@ namespace CrewOfSalem.Roles
 {
     public class Mayor : RoleGeneric<Mayor>
     {
+        // Fields
+        public bool hasRevealed = false;
+
         // Properties Role
         public override byte   RoleID => 222;
         public override string Name   => nameof(Mayor);
@@ -19,6 +22,11 @@ namespace CrewOfSalem.Roles
         protected override void InitializeAbilities()
         {
             AddAbility<Mayor, AbilityReveal>();
+        }
+
+        protected override void ClearSettingsInternal()
+        {
+            hasRevealed = false;
         }
     }
 }

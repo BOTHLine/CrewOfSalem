@@ -21,9 +21,11 @@ namespace CrewOfSalem.Roles
         public override Alignment Alignment => Alignment.Benign;
         public override Color     Color     => Color.white;
 
-        public override string RoleTask => $"Protect {ColorizedText(ProtectTarget.name, ProtectTarget.GetPlayerColor())}";
+        public override string RoleTask =>
+            $"Protect {ColorizedText(ProtectTarget.name, ProtectTarget.GetPlayerColor())}";
 
-        public override string Description => "You can protect your target to prevent the next attack within a given time. You win if they live until they end";
+        public override string Description =>
+            "You can protect your target to prevent the next attack within a given time. You win if they live until they end";
 
         // Methods
         public void TurnIntoSurvivor()
@@ -38,7 +40,7 @@ namespace CrewOfSalem.Roles
             AddRole(Survivor.Instance, player);
 
             Survivor.Instance.InitializeRole();
-            
+
             player.ClearTasksCustom();
             Survivor.Instance.SetRoleTask();
             Survivor.Instance.ClearAbilities();

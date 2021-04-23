@@ -8,7 +8,7 @@ namespace CrewOfSalem.Roles.Abilities
     public class AbilityReveal : Ability
     {
         // Properties
-        public bool hasRevealed { get; private set; }
+        public bool hasRevealed { get; private set; } = false;
 
         // Properties Ability
         protected override Sprite Sprite      => ButtonReveal;

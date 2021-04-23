@@ -27,7 +27,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
                 {
                     PlayerVoteArea playerVoteArea2 = MeetingHud.Instance.playerStates[j];
                     // Blackmailer Skip Vote
-                    if (blackmailAbilities.Any(blackmail => blackmail.BlackmailedPlayer.PlayerId == playerVoteArea2.TargetPlayerId)) continue;
+                    if (blackmailAbilities.Any(blackmail => blackmail.BlackmailedPlayer?.PlayerId == playerVoteArea2.TargetPlayerId)) continue;
 
                     byte self = states[playerVoteArea2.TargetPlayerId];
                     if (global::Extensions.HasAnyBit(self, (byte) 128)) continue;
@@ -75,7 +75,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
                     }
 
                     // Mayor Add Extra Vote
-                    if (!TryGetSpecialRole(out Mayor mayor) || (!mayor.GetAbility<AbilityReveal>()?.hasRevealed ?? true) || playerVoteArea2.TargetPlayerId != (sbyte) mayor.Owner.PlayerId || hasShownMayorVote) continue;
+                    if (!TryGetSpecialRole(out Mayor mayor) || !mayor.hasRevealed || playerVoteArea2.TargetPlayerId != (sbyte) mayor.Owner.PlayerId || hasShownMayorVote) continue;
 
                     hasShownMayorVote = true;
                     j--;

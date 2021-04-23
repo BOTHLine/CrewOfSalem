@@ -70,6 +70,9 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
                     {
                         player.nameText.color = role.Color;
                     }
+                } else if (role is Mayor {hasRevealed: true} mayor)
+                {
+                    player.nameText.color = mayor.Color;
                 } else if (LocalRole?.Faction == Faction.Mafia && role?.Faction == Faction.Mafia)
                 {
                     player.nameText.color = Faction.Mafia.Color;
