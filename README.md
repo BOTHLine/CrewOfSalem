@@ -10,6 +10,9 @@ Jede Rolle gehört einer Fraktion sowie einer untergeordneten Gesinnung zu. (Die
 
 ### Crew Investigate
 
+#### Lookout
+Kann wichtige Informationen von überall auf der Karte abrufen (Admin, Vitals, Cams).
+
 #### Psychic
 Erhält bei jedem Body Report abwechselnd 3 oder 2 Namen von noch lebenden Mitspielenr (Sich selbst ausgeschlossen).  
 Erhält der Psychic 3 Namen, so ist MINDESTENS einer davon böse.  
@@ -63,8 +66,12 @@ Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser auf andere Art 
 #### Escort
 Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Vents benutzen.
 
+#### Mayor
+Kann sich selber jederzeit innerhalb einer Runde revealen. Ab dem nächsten Meeting ist dies auch für alle anderen Spieler ersichtlich (Name und Rolle werden angezeigt).
+Sobald der Mayor sich revealed hat, zählen seine Votes in einem Meeting doppelt so viel.
+
 #### Medium
-Das Medium kann Geister sehen. (Aktuell keine Nachteile)
+Das Medium kann seine Seance nutzen, um für eine gewisse Zeit alle Gesiter zu sehen.
 
 ## Mafia
 
@@ -72,6 +79,9 @@ Das Medium kann Geister sehen. (Aktuell keine Nachteile)
 
 #### Disguiser
 Kann alle Spieler für X Sekunden grau erscheinen lassen und alle Namen verschleiern.
+
+#### Hypnotist
+Kann einen Spieler pro runde "hypnotizen". Diese Person nimmt in der Runde nach dem nächsten Meeting das Aussehen und die Namen aller Spieler willkürlich vertauscht wahr.
 
 ### Mafia Killing
 
