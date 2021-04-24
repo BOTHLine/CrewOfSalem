@@ -6,18 +6,18 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
 {
-    [HarmonyPatch(typeof(TextBoxTMP), nameof(TextBoxTMP.SetText))]
+    // [HarmonyPatch(typeof(TextBoxTMP), nameof(TextBoxTMP.SetText))]
     public static class TextBoxTMPSetTextPatch
     {
         private const string BlackmailedString = "I am Blackmailed.";
 
-        public static bool Prefix(TextBoxTMP __instance, [HarmonyArgument(0)] ref string input)
+        public static void Prefix(TextBoxTMP __instance, [HarmonyArgument(0)] ref string input)
         {
-            if (HudManager.Instance?.Chat?.TextArea == null) return true;
-            if (__instance != HudManager.Instance.Chat.TextArea) return true;
+            if (HudManager.Instance?.Chat?.TextArea == null) return;
+            if (__instance != HudManager.Instance.Chat.TextArea) return;
             
             AbilityBlackmail[] blackmailAbilities = Ability.GetAllAbilities<AbilityBlackmail>();
-            if (blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != LocalPlayer)) return true;
+            if (blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != LocalPlayer)) return;
 
             var lastChar = ' ';
             foreach (char c in input) lastChar = c;
@@ -33,8 +33,6 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
                 default: input = BlackmailedString.Substring(0, Mathf.Min(input.Length, BlackmailedString.Length));
                     break;
             }
-
-            return true;
         }
     }
 }

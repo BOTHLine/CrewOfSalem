@@ -14,6 +14,8 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.EndGameManagerPatches
     {
         public static void Postfix(EndGameManager __instance)
         {
+            var benchmark = new Benchmark(nameof(EndGameManager.SetEverythingUp));
+
             WinningPlayerData[] winners = TempData.winners.ToArray().OrderBy(b => b.IsYou ? -1 : 0).ToArray();
             List<PoolablePlayer> poolablePlayers = Object.FindObjectsOfType<PoolablePlayer>()
                .OrderBy(player => player.transform.localPosition.x).ToList();
@@ -55,6 +57,7 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.EndGameManagerPatches
             }
 
             ResetValues();
+            benchmark.End();
         }
     }
 }

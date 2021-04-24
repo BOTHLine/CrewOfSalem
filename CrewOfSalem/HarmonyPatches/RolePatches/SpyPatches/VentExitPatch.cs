@@ -9,8 +9,6 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SpyPatches
     {
         public static void Postfix()
         {
-            if (!(LocalRole is Spy spy)) return;
-
             PlayerVentTimeUtility.SetLastVent(LocalPlayer.PlayerId);
         }
     }

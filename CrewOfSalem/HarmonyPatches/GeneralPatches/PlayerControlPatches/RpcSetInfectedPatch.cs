@@ -13,7 +13,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetInfected))]
     public static class RpcSetInfectedPatch
     {
-        public static bool Prefix([HarmonyArgument(0)] ref Il2CppReferenceArray<GameData.PlayerInfo> playerInfos)
+        public static void Prefix([HarmonyArgument(0)] ref Il2CppReferenceArray<GameData.PlayerInfo> playerInfos)
         {
             List<Role> assignedRoles = AssignedRoles.Values.ToList();
 
@@ -96,8 +96,6 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             }
 
             playerInfos = new Il2CppReferenceArray<GameData.PlayerInfo>(infected.ToArray());
-
-            return true;
         }
 
         public static void Postfix([HarmonyArgument(0)] Il2CppReferenceArray<GameData.PlayerInfo> playerInfos)
@@ -107,10 +105,10 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             CloseWriter(writer);
         }
 
-        private struct RoleSpawnChancePair
+        private readonly struct RoleSpawnChancePair
         {
-            public Role Role;
-            public int  SpawnChance;
+            public readonly Role Role;
+            public readonly int  SpawnChance;
 
             public RoleSpawnChancePair(Role role, int spawnChance)
             {

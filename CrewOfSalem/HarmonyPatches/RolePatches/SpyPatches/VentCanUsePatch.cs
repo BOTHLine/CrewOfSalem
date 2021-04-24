@@ -15,13 +15,17 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SpyPatches
             var distance = float.MaxValue;
             PlayerControl player = pc.Object;
 
-            couldUse = !player.Data.IsDead && (player.Data.IsImpostor || player.GetRole() is Spy);
+            couldUse = !player.Data.IsDead && (player.Data.IsImpostor || player.GetRole() is Spy) &&
+                       (player.CanMove || player.inVent);
             canUse = false;
 
-            if ((DateTime.UtcNow - PlayerVentTimeUtility.GetLastVent(player.PlayerId)).TotalMilliseconds > 100F)
+            if ((DateTime.UtcNow - PlayerVentTimeUtility.GetLastVent(player.PlayerId)).TotalMilliseconds > 550F)
             {
-                distance = Vector2.Distance(player.GetTruePosition(), __instance.transform.position);
-                canUse = couldUse & distance <= __instance.UsableDistance;
+                Vector2 truePosition = player.GetTruePosition();
+                Vector3 position = __instance.transform.position;
+                distance = Vector2.Distance(truePosition, position);
+                canUse = couldUse & distance <= __instance.UsableDistance &&
+                         !PhysicsHelpers.AnythingBetween(truePosition, position, Constants.ShipOnlyMask, false);
             }
 
             __result = distance;

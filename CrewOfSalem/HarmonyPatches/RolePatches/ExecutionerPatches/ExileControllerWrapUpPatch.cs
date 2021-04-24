@@ -5,13 +5,11 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
 {
-    [HarmonyPatch(typeof(UnityEngine.Object), nameof(UnityEngine.Object.Destroy), new[] {typeof(UnityEngine.Object)})]
-    public static class OnExileEndPatch
+    [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]
+    public static class ExileControllerWrapUpPatch
     {
-        public static bool Prefix(UnityEngine.Object obj)
+        public static void Postfix()
         {
-            if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return true;
-            
             if (TryGetSpecialRole(out Executioner executioner))
             {
                 /*
@@ -41,8 +39,6 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                     executioner.TurnIntoJester();
                 }
             }
-
-            return true;
         }
     }
 }

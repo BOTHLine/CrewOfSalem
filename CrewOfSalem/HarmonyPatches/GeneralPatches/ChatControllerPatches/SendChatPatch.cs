@@ -8,6 +8,7 @@ namespace CrewOfSalem.HarmonyPatches.ChatControllerPatches
     {
         public static bool Prefix(ChatController __instance)
         {
+            if (ShipStatus.Instance == null) return true;
             if (!__instance.TextArea.text.Equals("-help")) return true;
 
             __instance.AddChat(LocalPlayer, LocalRole.Description);

@@ -5,19 +5,16 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.JesterPatches
 {
-    [HarmonyPatch(typeof(UnityEngine.Object), nameof(UnityEngine.Object.Destroy), new[] {typeof(UnityEngine.Object)})]
+    [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]
     public static class OnExileEndPatch
     {
-        public static bool Prefix(UnityEngine.Object obj)
+        public static void Postfix()
         {
-            if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return true;
-            
-            if (TryGetSpecialRole(out Jester jester) && jester.Owner.PlayerId == ExileController.Instance.exiled?.PlayerId)
+            if (TryGetSpecialRole(out Jester jester) &&
+                jester.Owner.PlayerId == ExileController.Instance.exiled?.PlayerId)
             {
                 jester.Owner.WinSolo();
             }
-
-            return true;
         }
     }
 }

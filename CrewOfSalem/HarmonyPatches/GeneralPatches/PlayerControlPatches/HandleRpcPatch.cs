@@ -7,6 +7,7 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 {
+    // TODO: Start- und Endscreen laden zu lange.
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     public static class HandleRpcPatch
     {
@@ -15,10 +16,9 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             return PlayerTools.GetPlayerById(reader.ReadByte());
         }
 
-        public static bool Prefix([HarmonyArgument(0)] byte data)
+        public static void Prefix([HarmonyArgument(0)] byte data)
         {
-            // ConsoleTools.Info("Reading RPC: " + (RPC) data);
-            return true;
+            ConsoleTools.Info("Reading RPC: " + (RPC) data);
         }
 
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] byte data,

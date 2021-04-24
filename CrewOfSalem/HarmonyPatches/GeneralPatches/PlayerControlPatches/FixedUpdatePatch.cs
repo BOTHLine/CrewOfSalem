@@ -9,6 +9,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     {
         public static void Postfix(PlayerControl __instance)
         {
+            if (ShipStatus.Instance == null) return;
             if (LocalPlayer != __instance) return;
 
             LocalRole?.UpdateAbilities(Time.deltaTime);

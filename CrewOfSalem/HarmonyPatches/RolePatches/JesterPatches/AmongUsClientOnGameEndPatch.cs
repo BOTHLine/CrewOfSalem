@@ -10,10 +10,10 @@ namespace CrewOfSalem.HarmonyPatches.JesterPatches
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public static class AmongUsClientOnGameEndPatch
     {
-        public static bool Prefix([HarmonyArgument(0)] GameOverReason gameOverReason)
+        public static void Prefix([HarmonyArgument(0)] GameOverReason gameOverReason)
         {
-            if (!TryGetSpecialRole(out Jester jester)) return true;
-            
+            if (!TryGetSpecialRole(out Jester jester)) return;
+
             WinningPlayerData jesterWinner;
             if (jester.Owner.Data.IsImpostor)
             {
@@ -21,14 +21,12 @@ namespace CrewOfSalem.HarmonyPatches.JesterPatches
                 TempData.winners = new List<WinningPlayerData>(0);
                 TempData.winners.Add(jesterWinner);
             } else if (TempData.DidHumansWin(gameOverReason))
-            {               
+            {
                 jester.Owner.Data.IsImpostor = true;
                 jesterWinner = TempData.winners.ToArray()
                    .FirstOrDefault(winner => winner.Name.Equals(jester.Owner.Data.PlayerName));
                 TempData.winners.Remove(jesterWinner);
             }
-
-            return true;
         }
     }
 }

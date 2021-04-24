@@ -8,10 +8,9 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BodyguardPatches
     [HarmonyPatch(typeof(Minigame), nameof(Minigame.Begin))]
     public static class MinigameBeginPatch
     {
-        public static bool Prefix()
+        public static void Prefix()
         {
             LocalPlayer.GetAbility<AbilityGuard>()?.RpcToggleInTask(true);
-            return true;
         }
     }
 }

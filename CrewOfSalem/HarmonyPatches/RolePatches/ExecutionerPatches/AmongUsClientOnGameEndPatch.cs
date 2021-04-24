@@ -9,9 +9,9 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public static class AmongUsClientOnGameEndPatch
     {
-        public static bool Prefix([HarmonyArgument(0)] GameOverReason gameOverReason)
+        public static void Prefix([HarmonyArgument(0)] GameOverReason gameOverReason)
         {
-            if (!TryGetSpecialRole(out Executioner executioner)) return true;
+            if (!TryGetSpecialRole(out Executioner executioner)) return;
             
             WinningPlayerData executionerWinner;
             if (executioner.Owner.Data.IsImpostor)
@@ -26,8 +26,6 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
                    .FirstOrDefault(winner => winner.Name.Equals(executioner.Owner.Data.PlayerName));
                 TempData.winners.Remove(executionerWinner);
             }
-
-            return true;
         }
     }
 }

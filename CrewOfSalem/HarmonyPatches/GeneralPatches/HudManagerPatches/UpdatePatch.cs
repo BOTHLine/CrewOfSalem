@@ -12,16 +12,6 @@ namespace CrewOfSalem.HarmonyPatches.HudManagerPatches
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
 
             AbilityShield.CheckShowShieldedPlayers();
-
-            // Add Mafia / Coven / Lover Chat
-            // if (role?.Faction == Faction.Mafia || role?.Faction == Faction.Coven || role is Investigator || role is Spy)
-            if (MeetingHud.Instance == null && ExileController.Instance == null)
-            {
-                if (!__instance.Chat.isActiveAndEnabled)
-                {
-                    __instance.Chat.SetVisible(true);
-                }
-            }
         }
     }
 }
