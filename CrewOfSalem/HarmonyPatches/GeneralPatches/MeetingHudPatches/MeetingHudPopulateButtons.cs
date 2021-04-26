@@ -16,7 +16,7 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
             SetMeetingHudNameColor();
         }
 
-        public static void SetMeetingHudRoleName()
+        private static void SetMeetingHudRoleName()
         {
             if (MeetingHud.Instance == null) return;
             Role localRole = LocalRole;
@@ -34,7 +34,7 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
             }
         }
 
-        public static void SetMeetingHudNameColor()
+        private static void SetMeetingHudNameColor()
         {
             if (MeetingHud.Instance == null) return;
             Role localRole = LocalRole;

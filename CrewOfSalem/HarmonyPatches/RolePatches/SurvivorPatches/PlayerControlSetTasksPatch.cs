@@ -4,7 +4,7 @@ using HarmonyLib;
 
 namespace CrewOfSalem.HarmonyPatches.SurvivorPatches
 {
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetTasks))]
+    // [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetTasks))]
     public static class PlayerControlSetTasksPatch
     {
         public static void Postfix(PlayerControl __instance)

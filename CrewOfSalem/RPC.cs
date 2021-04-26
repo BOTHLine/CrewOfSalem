@@ -36,11 +36,12 @@ namespace CrewOfSalem
 
         // --- Custom RPCs --- TODO:
         None,
+        RequestSyncLobbyTime,
+        SyncLobbyTime,
         ForceEnd,
         SetRole,
         AddKillAbility,
         SetLocalPlayers,
-        StartMeetingCustom,
         SoloWin,
 
         Kill,
@@ -51,12 +52,15 @@ namespace CrewOfSalem
         ToggleGuard,
         ToggleInTask,
 
-        Shield,
-        ShieldBreak,
+        ShieldStart,
+        ShieldEnd,
 
         CrusaderGuard,
+        
+        BlockAOEStart,
+        BlockAOEEnd,
 
-        Block,
+        BlockStart,
         BlockEnd,
         
         Reveal,

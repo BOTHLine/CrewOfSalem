@@ -5,8 +5,8 @@ using UnhollowerBaseLib;
 
 namespace CrewOfSalem.HarmonyPatches.TranslationControllerPatches
 {
-    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames),
-        typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
+    // TODO?
+    //[HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
     public static class GetStringPatch
     {
         public static void Postfix(ref string __result, [HarmonyArgument(0)] StringNames id,

@@ -10,7 +10,7 @@ namespace CrewOfSalem.DebugPatches
     {
         public static void Postfix()
         {
-            if (!Input.GetKeyDown(KeyCode.L) || LobbyBehaviour.Instance != null) return;
+            if (!Input.GetKeyDown(KeyCode.L) || ShipStatus.Instance == null) return;
 
             RpcForceEnd();
         }

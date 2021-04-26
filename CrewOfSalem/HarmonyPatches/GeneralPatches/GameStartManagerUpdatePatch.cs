@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.GeneralPatches
 {
@@ -8,9 +9,23 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches
     {
         private static DateTime? lobbyCreationTime;
 
+        public static byte[] TimeBytes
+        {
+            get => lobbyCreationTime != null ? BitConverter.GetBytes(lobbyCreationTime.Value.Ticks) : new byte[0];
+            set => lobbyCreationTime = new DateTime(BitConverter.ToInt64(value));
+        }
+
         public static void Postfix(GameStartManager __instance)
         {
-            lobbyCreationTime ??= DateTime.UtcNow;
+            if (AmongUsClient.Instance.AmHost)
+            {
+                lobbyCreationTime ??= DateTime.UtcNow;
+            } else if (lobbyCreationTime == null && AmongUsClient.Instance != null && LocalPlayer != null)
+            {
+                WriteRPC(RPC.RequestSyncLobbyTime);
+            }
+
+            if (lobbyCreationTime == null) return;
 
             TimeSpan time = new TimeSpan(0, 10, 0) - (DateTime.UtcNow - lobbyCreationTime.Value);
 

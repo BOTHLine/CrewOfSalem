@@ -17,7 +17,7 @@ namespace CrewOfSalem.Roles
 
         public override string Description => "You can kill your target without moving. Even out of Vents";
 
-        private static readonly Func<Ability, PlayerControl, bool> OnKill = (source, target) =>
+        private static readonly Func<Ability, PlayerControl, bool> UseKillAsAmbusher = (source, target) =>
         {
             if (!(source.owner is Ambusher)) return true;
             target.RpcKillPlayer(target, source.owner.Owner);
@@ -29,7 +29,12 @@ namespace CrewOfSalem.Roles
         protected override void InitializeAbilities()
         {
             AddAbility<Ambusher, AbilityKill>();
-            Ability.AddOnBeforeUse(OnKill, 100);
+            Ability.AddOnBeforeUse(UseKillAsAmbusher, 100);
+        }
+
+        protected override void ClearSettingsInternal()
+        {
+            Ability.RemoveOnBeforeUse(UseKillAsAmbusher);
         }
     }
 }

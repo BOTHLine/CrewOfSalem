@@ -1,3 +1,5 @@
+Discord: [https://discord.gg/GzY2WhhCnN](https://discord.gg/GzY2WhhCnN)
+
 # CrewOfSalem
 
 Diese Mod versucht (alle) Rollen aus dem Spiel *Town of Salem* in Among Us zu bringen. Das Ziel hierbei ist, den Rollen so originalgetreu wie nur möglich zu sein. Natürlich ist es nicht immer zu 100% möglich, da sich das Spielprinzip doch sehr stark von Among Us unterscheidet.  

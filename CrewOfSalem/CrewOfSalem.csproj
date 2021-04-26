@@ -33,6 +33,7 @@
     <ItemGroup>
         <EmbeddedResource Include="Resources\CrewOfSalem.png" />
         <EmbeddedResource Include="Resources\ButtonInvestigate.png" />
+        <EmbeddedResource Include="Resources\ButtoNWatch.png" />
         <EmbeddedResource Include="Resources\ButtonMap.png" />
         <EmbeddedResource Include="Resources\ButtonSurveillance.png" />
         <EmbeddedResource Include="Resources\ButtonVitals.png" />

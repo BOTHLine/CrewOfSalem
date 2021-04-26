@@ -19,14 +19,14 @@ namespace CrewOfSalem.Roles.Abilities
         protected override Sprite Sprite      => ButtonShield;
         protected override bool   NeedsTarget => true;
 
-        protected override RPC               RpcAction => RPC.Shield;
+        protected override RPC               RpcAction => RPC.ShieldStart;
         protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
 
+        protected override Func<Ability, PlayerControl, bool> OnBeforeUse         => UseOnShielded;
+        protected override int                                OnBeforeUsePriority => 30;
+
         // Constructors
-        public AbilityShield(Role owner, float cooldown) : base(owner, cooldown)
-        {
-            AddOnBeforeUse(UseOnShielded, 30);
-        }
+        public AbilityShield(Role owner, float cooldown) : base(owner, cooldown) { }
 
         private static readonly Func<Ability, PlayerControl, bool> UseOnShielded = (source, target) =>
         {
@@ -49,9 +49,10 @@ namespace CrewOfSalem.Roles.Abilities
             {
                 BreakShield();
             }
-            WriteRPC(RPC.ShieldBreak, owner.Owner.PlayerId);
+
+            WriteRPC(RPC.ShieldEnd, owner.Owner.PlayerId);
         }
-        
+
         public void BreakShield()
         {
             UnshowShieldedPlayer();
@@ -92,7 +93,7 @@ namespace CrewOfSalem.Roles.Abilities
         {
             if (shieldedPlayer == null) return;
             if (shieldedPlayer.myRend.material.GetColor(ShaderVisorColor) != ModdedPalette.shieldedColor) return;
-            
+
             shieldedPlayer.myRend.material.SetColor(ShaderVisorColor, Palette.VisorColor);
             shieldedPlayer.myRend.material.SetFloat(ShaderOutline, 0F);
         }

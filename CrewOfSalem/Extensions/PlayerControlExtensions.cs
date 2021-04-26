@@ -114,14 +114,11 @@ namespace CrewOfSalem.Extensions
             }
         }
 
-        public static void RpcStartMeetingCustom(this PlayerControl player, GameData.PlayerInfo info)
+        // TODO: When to call?
+        public static void StartMeeting(this PlayerControl reporter, GameData.PlayerInfo target)
         {
-            if (AmongUsClient.Instance.AmClient) player.StartMeetingCustom(info);
-            WriteRPC(RPC.StartMeetingCustom, info?.PlayerId ?? byte.MaxValue);
-        }
-
-        public static void StartMeetingCustom(this PlayerControl playerControl, GameData.PlayerInfo info)
-        {
+            ConsoleTools.Info("Start Meeting");
+            
             foreach (PlayerControl player in AllPlayers)
             {
                 IReadOnlyList<Ability> abilities = player.GetAbilities();
@@ -139,7 +136,9 @@ namespace CrewOfSalem.Extensions
                 }
             }
 
-            if (LocalRole is Psychic psychic) psychic.StartMeeting(info);
+            if (LocalRole is Psychic psychic) psychic.StartMeeting(target);
+
+            if (target == null) MeetingHud.Instance.SkipVoteButton.gameObject.SetActive(false);
         }
 
         public static void ClearTasksCustom(this PlayerControl playerControl, bool keepSabotageTasks = true)

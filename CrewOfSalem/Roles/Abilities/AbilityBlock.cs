@@ -17,7 +17,7 @@ namespace CrewOfSalem.Roles.Abilities
         protected override Sprite Sprite      => ButtonBlock;
         protected override bool   NeedsTarget => true;
 
-        protected override RPC               RpcAction => RPC.Block;
+        protected override RPC               RpcAction => RPC.BlockStart;
         protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
 
         protected override RPC               RpcEndAction => RPC.BlockEnd;

@@ -79,7 +79,9 @@ namespace CrewOfSalem.Roles
             if (Owner != LocalPlayer) return;
 
             hasSetTasks = true;
-
+            
+            SetRoleTaskInternal();
+            
             Owner.myTasks.Remove(Owner.myTasks.ToArray()
                .FirstOrDefault(task => task.GetComponent<ImportantTextTask>() != null));
 
@@ -88,6 +90,8 @@ namespace CrewOfSalem.Roles
             roleDescription.Text = $"<color=\"white\">{ColorizedText(Name, Color)}: {RoleTask}</color>";
             Owner.myTasks.Insert(0, roleDescription);
         }
+
+        protected virtual void SetRoleTaskInternal() { }
 
         public string EjectMessage(string playerName) => $"{playerName} was the {ColorizedText(Name, Color)}";
 

@@ -111,11 +111,5 @@ namespace CrewOfSalem.Roles.Abilities
             isEffectActive = false;
             RpcEffectEnd();
         }
-
-        public override void Destroy()
-        {
-            base.Destroy();
-            if (HasDurationLeft) EffectEnd();
-        }
     }
 }

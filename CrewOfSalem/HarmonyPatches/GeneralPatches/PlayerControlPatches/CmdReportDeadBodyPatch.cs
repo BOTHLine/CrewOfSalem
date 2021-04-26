@@ -8,7 +8,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     {
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
         {
-            __instance.RpcStartMeetingCustom(target);
+            __instance.StartMeeting(target);
         }
     }
 }

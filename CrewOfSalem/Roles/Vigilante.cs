@@ -35,5 +35,10 @@ namespace CrewOfSalem.Roles
             AddAbility<Vigilante, AbilityKill>();
             Ability.AddOnBeforeUse(UseKillAsVigilante, 100);
         }
+
+        protected override void ClearSettingsInternal()
+        {
+            Ability.RemoveOnBeforeUse(UseKillAsVigilante);
+        }
     }
 }

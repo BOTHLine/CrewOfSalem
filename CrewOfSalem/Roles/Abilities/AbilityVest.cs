@@ -32,11 +32,11 @@ namespace CrewOfSalem.Roles.Abilities
         protected override RPC               RpcEndAction => RPC.VestEnd;
         protected override IEnumerable<byte> RpcEndData   => new byte[0];
 
+        protected override Func<Ability, PlayerControl, bool> OnBeforeUse         => UseOnVested;
+        protected override int                                OnBeforeUsePriority => 20;
+
         // Constructors
-        public AbilityVest(Role owner, float cooldown, float duration) : base(owner, cooldown, duration)
-        {
-            AddOnBeforeUse(UseOnVested, 20);
-        }
+        public AbilityVest(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
 
         // Methods Ability
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)

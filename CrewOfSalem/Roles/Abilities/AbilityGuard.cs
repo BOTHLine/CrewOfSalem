@@ -25,10 +25,10 @@ namespace CrewOfSalem.Roles.Abilities
         protected override RPC               RpcAction => RPC.ToggleGuard;
         protected override IEnumerable<byte> RpcData   => new byte[0];
 
-        public AbilityGuard(Role owner, float cooldown) : base(owner, cooldown)
-        {
-            AddOnBeforeUse(UseOnGuarded, 10);
-        }
+        protected override Func<Ability, PlayerControl, bool> OnBeforeUse         => UseOnGuarded;
+        protected override int                                OnBeforeUsePriority => 10;
+
+        public AbilityGuard(Role owner, float cooldown) : base(owner, cooldown) { }
 
         private static readonly Func<Ability, PlayerControl, bool> UseOnGuarded = (source, target) =>
         {
@@ -93,15 +93,6 @@ namespace CrewOfSalem.Roles.Abilities
                     Button.renderer.material.SetFloat(ShaderDesat, 1F);
                 }
             }
-
-            // TODO: Show when ability is on/off. Text doesn't work because of font.
-            /*
-            if (CurrentCooldown <= 0F)
-            {
-                Button.TimerText.Text = isGuarding ? "On" : "Off";
-                Button.TimerText.gameObject.SetActive(true);
-            }
-            */
         }
     }
 }

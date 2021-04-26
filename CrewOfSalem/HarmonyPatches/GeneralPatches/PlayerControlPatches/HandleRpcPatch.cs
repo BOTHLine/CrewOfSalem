@@ -2,6 +2,7 @@
 using HarmonyLib;
 using Hazel;
 using CrewOfSalem.Extensions;
+using CrewOfSalem.HarmonyPatches.GeneralPatches;
 using CrewOfSalem.Roles.Abilities;
 using static CrewOfSalem.CrewOfSalem;
 
@@ -28,6 +29,19 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
             switch (data /*Packet ID*/)
             {
+                case (byte) RPC.RequestSyncLobbyTime:
+                    if (!AmongUsClient.Instance.AmHost) return;
+                    MessageWriter writer = GetWriter(RPC.SyncLobbyTime);
+                    writer.WriteBytesAndSize(GameStartManagerUpdatePatch.TimeBytes);
+                    CloseWriter(writer);
+                    break;
+
+                case (byte) RPC.SyncLobbyTime:
+                    if (AmongUsClient.Instance.AmHost) return;
+                    byte[] bytes = reader.ReadBytesAndSize();
+                    GameStartManagerUpdatePatch.TimeBytes = bytes;
+                    break;
+
                 case (byte) RPC.SetInfected:
                     foreach (Role role in AssignedRoles.Values)
                     {
@@ -58,10 +72,6 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     reader.ReadPlayerControl().GetRole().AddAbility<Mafioso, AbilityKill>();
                     break;
 
-                case (byte) RPC.StartMeetingCustom:
-                    __instance.StartMeetingCustom(GameData.Instance.GetPlayerById(reader.ReadByte()));
-                    break;
-
                 // ---------- Special Role Conditions ----------
                 case (byte) RPC.Kill:
                     PlayerControl killer = reader.ReadPlayerControl();
@@ -86,17 +96,17 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     __instance.GetAbility<AbilityGuard>().ToggleInTask();
                     break;
 
-                case (byte) RPC.Shield:
+                case (byte) RPC.ShieldStart:
                     target = reader.ReadPlayerControl();
                     __instance.UseAbility<AbilityShield>(target);
                     break;
 
-                case (byte) RPC.ShieldBreak:
+                case (byte) RPC.ShieldEnd:
                     target = reader.ReadPlayerControl();
                     target.GetAbility<AbilityShield>().BreakShield();
                     break;
 
-                case (byte) RPC.Block:
+                case (byte) RPC.BlockStart:
                     target = reader.ReadPlayerControl();
                     __instance.UseAbility<AbilityBlock>(target);
                     break;

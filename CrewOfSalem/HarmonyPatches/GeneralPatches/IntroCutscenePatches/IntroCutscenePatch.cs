@@ -4,7 +4,7 @@ using static CrewOfSalem.CrewOfSalem;
 namespace CrewOfSalem.HarmonyPatches.IntroCutscenePatches
 {
     [HarmonyPatch(typeof(IntroCutscene.Nested_0), nameof(IntroCutscene.Nested_0.MoveNext))]
-    public static class BeginPatch
+    public static class IntroCutscenePatch
     {
         public static void Prefix(IntroCutscene.Nested_0 __instance)
         {

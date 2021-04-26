@@ -1,4 +1,5 @@
-﻿using CrewOfSalem.Roles.Alignments;
+﻿using CrewOfSalem.Extensions;
+using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
@@ -21,5 +22,10 @@ namespace CrewOfSalem.Roles
 
         // Methods Role
         protected override void InitializeAbilities() { }
+
+        protected override void SetRoleTaskInternal()
+        {
+            Owner.ClearTasksCustom();
+        }
     }
 }

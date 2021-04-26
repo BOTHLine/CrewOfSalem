@@ -31,16 +31,16 @@ namespace CrewOfSalem.Roles.Abilities
         protected override bool   NeedsTarget => false;
 
         protected override RPC               RpcAction => RPC.ProtectStart;
-        protected override IEnumerable<byte> RpcData => new[] {ProtectTarget.PlayerId};
+        protected override IEnumerable<byte> RpcData   => new[] {ProtectTarget.PlayerId};
 
         protected override RPC               RpcEndAction => RPC.ProtectEnd;
         protected override IEnumerable<byte> RpcEndData   => new byte[0];
 
+        protected override Func<Ability, PlayerControl, bool> OnBeforeUse         => UseOnProtected;
+        protected override int                                OnBeforeUsePriority => 20;
+
         // Constructors
-        public AbilityProtect(Role owner, float cooldown, float duration) : base(owner, cooldown, duration)
-        {
-            AddOnBeforeUse(UseOnProtected, 20);
-        }
+        public AbilityProtect(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
 
         // Methods Ability
         protected override bool ShouldShowButton()

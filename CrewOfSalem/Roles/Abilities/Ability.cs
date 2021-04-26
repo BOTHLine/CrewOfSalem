@@ -29,12 +29,14 @@ namespace CrewOfSalem.Roles.Abilities
 
         // TODO: Make Kills to use AbilityKill (Like the one from Bodyguard, so that he/his target can be protected by shield)?
         // TODO: Instead of only returning bool, return a struct with multiple states (doContinue, doSetOnCooldown etc.)
-        private static readonly SortedDictionary<int, Func<Ability, PlayerControl, bool>> OnBeforeUse =
+        private static readonly SortedDictionary<int, Func<Ability, PlayerControl, bool>> OnBeforeUses =
             new SortedDictionary<int, Func<Ability, PlayerControl, bool>>();
 
         // Properties
-        protected          KillButtonManager Button      => button;
-        protected abstract bool              NeedsTarget { get; }
+        protected          KillButtonManager                  Button              => button;
+        protected abstract bool                               NeedsTarget         { get; }
+        protected virtual  Func<Ability, PlayerControl, bool> OnBeforeUse         => null;
+        protected virtual  int                                OnBeforeUsePriority => -1;
 
         public float Cooldown => cooldown;
 
@@ -100,12 +102,21 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods
         public static void AddOnBeforeUse(Func<Ability, PlayerControl, bool> func, int priority)
         {
-            while (OnBeforeUse.ContainsKey(priority))
+            if (func == null) return;
+            if (OnBeforeUses.ContainsValue(func)) return;
+
+            while (OnBeforeUses.ContainsKey(priority))
             {
                 priority++;
             }
 
-            OnBeforeUse.Add(priority, func);
+            OnBeforeUses.Add(priority, func);
+        }
+
+        public static void RemoveOnBeforeUse(Func<Ability, PlayerControl, bool> func)
+        {
+            (int key, _) = OnBeforeUses.FirstOrDefault(p => p.Value == func);
+            if (OnBeforeUses.ContainsKey(key)) OnBeforeUses.Remove(key);
         }
 
         protected virtual bool ShouldShowButton()
@@ -141,9 +152,12 @@ namespace CrewOfSalem.Roles.Abilities
             if (AmongUsClient.Instance.AmClient)
             {
                 PlayerControl target = Button.CurrentTarget;
-                foreach (KeyValuePair<int, Func<Ability, PlayerControl, bool>> keyValuePair in OnBeforeUse)
+                if (target != null)
                 {
-                    if (!keyValuePair.Value.Invoke(this, target)) return;
+                    foreach (KeyValuePair<int, Func<Ability, PlayerControl, bool>> keyValuePair in OnBeforeUses)
+                    {
+                        if (!keyValuePair.Value.Invoke(this, target)) return;
+                    }
                 }
 
                 Use(target, out sendRpc);
@@ -297,7 +311,7 @@ namespace CrewOfSalem.Roles.Abilities
                 : new T[0];
         }
 
-        public virtual void Destroy()
+        public void Destroy()
         {
             if (Button != null && Button.gameObject != null) Object.Destroy(Button.gameObject);
             AllAbilities[GetType()].Remove(this);

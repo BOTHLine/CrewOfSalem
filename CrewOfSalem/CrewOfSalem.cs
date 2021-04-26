@@ -36,6 +36,7 @@ namespace CrewOfSalem
         private static Sprite logo;
 
         private static Sprite buttonInvestigate;
+        private static Sprite buttonWatch;
         private static Sprite buttonMap;
         private static Sprite buttonSurveillance;
         private static Sprite buttonVitals;
@@ -72,11 +73,9 @@ namespace CrewOfSalem
         public static Sprite Logo => logo ??= LoadSpriteFromResources("CrewOfSalem.png", 450);
 
         public static Sprite ButtonInvestigate => buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png");
-
+        public static Sprite ButtonWatch => buttonWatch ??= LoadSpriteFromResources("ButtonWatch.png");
         public static Sprite ButtonMap => buttonMap ??= LoadSpriteFromResources("ButtonMap.png");
-
         public static Sprite ButtonSurveillance => buttonSurveillance ??= LoadSpriteFromResources("ButtonSurveillance.png");
-
         public static Sprite ButtonVitals => buttonVitals ??= LoadSpriteFromResources("ButtonVitals.png");
 
         public static Sprite ButtonAlert => buttonAlert ??= LoadSpriteFromResources("ButtonAlert.png");

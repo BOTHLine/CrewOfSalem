@@ -19,6 +19,9 @@ namespace CrewOfSalem.Roles.Abilities
         protected override RPC               RpcEndAction => RPC.AlertEnd;
         protected override IEnumerable<byte> RpcEndData   => new byte[0];
 
+        protected override Func<Ability, PlayerControl, bool> OnBeforeUse         => UseOnAlerted;
+        protected override int                                OnBeforeUsePriority => 5;
+
         private static readonly Func<Ability, PlayerControl, bool> UseOnAlerted = (source, target) =>
         {
             if (source is AbilityProtect) return true;
@@ -32,10 +35,7 @@ namespace CrewOfSalem.Roles.Abilities
         };
 
         // Constructors
-        public AbilityAlert(Role owner, float cooldown, float duration) : base(owner, cooldown, duration)
-        {
-            AddOnBeforeUse(UseOnAlerted, 0);
-        }
+        public AbilityAlert(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
 
         // Methods Ability
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)

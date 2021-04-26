@@ -21,8 +21,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
                 int num = playerVoteArea.votedFor + 1;
                 if (num < 0 || num >= __result.Length) continue;
 
-                if (blackmailAbilities.Any(blackmail =>
-                    playerVoteArea.TargetPlayerId == blackmail.BlackmailedPlayer?.PlayerId))
+                if (blackmailAbilities.Any(blackmail => playerVoteArea.TargetPlayerId == blackmail.BlackmailedPlayer?.PlayerId))
                 {
                     __result[num] -= (byte) (MayorPatches.MeetingHudCalculateVotesPatch.extraVote == num ? 2 : 1);
                 }

@@ -1,3 +1,4 @@
+using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
@@ -24,6 +25,11 @@ namespace CrewOfSalem.Roles
         protected override void InitializeAbilities()
         {
             AddAbility<Survivor, AbilityVest>();
+        }
+
+        protected override void SetRoleTaskInternal()
+        {
+            Owner.ClearTasksCustom();
         }
     }
 }

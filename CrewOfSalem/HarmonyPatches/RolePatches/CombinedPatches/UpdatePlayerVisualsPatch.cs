@@ -9,13 +9,14 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
 {
+    // TODO: Performance?
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class UpdatePlayerVisualsPatch
     {
         public static void Postfix()
         {
             UpdatePlayerVisuals();
-            UpdatePlayerNameColors();
+            UpdatePlayerNameColors(); // TODO: Get out of Update? Use something like Awake/Start instead?
         }
 
         // TODO: Currently working with PhysicsHelpers.AnyNonTriggersBetween, change to something like "Vision" later?
@@ -25,6 +26,13 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
 
             AbilityDisguise[] disguiseAbilities = Ability.GetAllAbilities<AbilityDisguise>();
             if (disguiseAbilities.Any(disguise => disguise.HasDurationLeft))
+            {
+                TurnAllPlayersGrey();
+                return;
+            }
+
+            AbilitySeance[] seanceAbilities = Ability.GetAllAbilities<AbilitySeance>();
+            if (seanceAbilities.Any(seance => seance.owner.Owner == LocalPlayer && seance.HasDurationLeft))
             {
                 TurnAllPlayersGrey();
                 return;

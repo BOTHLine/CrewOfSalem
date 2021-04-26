@@ -21,8 +21,7 @@ namespace CrewOfSalem.HarmonyPatches.KeyboardJoystickPatches
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.Tab) &&
-                LobbyBehaviour.Instance != null /*&& Object.FindObjectOfType<GameOptionsMenu>() == null*/)
+            if (Input.GetKeyDown(KeyCode.Tab) && LobbyBehaviour.Instance != null)
             {
                 OptionPage.TurnPage();
             }

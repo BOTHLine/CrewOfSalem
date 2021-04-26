@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace CrewOfSalem.HarmonyPatches.PlayerTabPatches
 {
-    [HarmonyPatch(typeof(PlayerTab), nameof(PlayerTab.OnEnable))]
+    // TODO
+    // [HarmonyPatch(typeof(PlayerTab), nameof(PlayerTab.OnEnable))]
     public static class OnEnablePatch
     {
         public static void Postfix(PlayerTab __instance)

@@ -66,6 +66,11 @@ namespace CrewOfSalem.Roles
             WriteRPC(RPC.ExecutionerTarget, VoteTarget.PlayerId);
         }
 
+        protected override void SetRoleTaskInternal()
+        {
+            Owner.ClearTasksCustom();
+        }
+
         protected override void ClearSettingsInternal()
         {
             VoteTarget = null;
