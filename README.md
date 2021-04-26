@@ -1,4 +1,4 @@
-Discord: [https://discord.gg/GzY2WhhCnN](https://discord.gg/GzY2WhhCnN)
+Join our [Discord](https://discord.gg/GzY2WhhCnN)
 
 # CrewOfSalem
 
