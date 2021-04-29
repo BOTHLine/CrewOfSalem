@@ -1,6 +1,7 @@
 Join the [Discord](https://discord.gg/GzY2WhhCnN)
 
-![Crew of Salem](https://github.com/BOTHLine/CrewOfSalem/tree/main/CrewOfSalem/Resources/CrewOfSalemNew.png)
+![CrewOfSalemNew](https://user-images.githubusercontent.com/42834479/116540657-c1131900-a8ea-11eb-824a-c687e9877dab.png)
+
 
 # CrewOfSalem
 
