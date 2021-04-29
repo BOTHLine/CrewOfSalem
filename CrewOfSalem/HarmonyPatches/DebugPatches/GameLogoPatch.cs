@@ -25,7 +25,7 @@ namespace CrewOfSalem.DebugPatches
 
                 var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
                 if (spriteRenderer == null) return;
-                spriteRenderer.sprite = Logo;
+                spriteRenderer.sprite = LogoNew;
                 Bounds bounds = spriteRenderer.bounds;
                 Transform transform = spriteRenderer.transform;
                 Vector3 localScale = transform.localScale;

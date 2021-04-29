@@ -19,9 +19,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Deobfuscate Include="$(AmongUs)\BepInEx\plugins\Reactor-$(GameVersion).dll" />
+        <Deobfuscate Include="$(AmongUs)\BepInEx\plugins\Reactor-$(GameVersion).dll"/>
 
-        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.3.0" />
+        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.3.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -31,31 +31,32 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Resources\CrewOfSalem.png" />
-        <EmbeddedResource Include="Resources\ButtonInvestigate.png" />
-        <EmbeddedResource Include="Resources\ButtoNWatch.png" />
-        <EmbeddedResource Include="Resources\ButtonMap.png" />
-        <EmbeddedResource Include="Resources\ButtonSurveillance.png" />
-        <EmbeddedResource Include="Resources\ButtonVitals.png" />
-        <EmbeddedResource Include="Resources\ButtonAlert.png" />
-        <EmbeddedResource Include="Resources\ButtonKill.png" />
-        <EmbeddedResource Include="Resources\ButtonGuard.png" />
-        <EmbeddedResource Include="Resources\ButtonShield.png" />
-        <EmbeddedResource Include="Resources\ButtonBlock.png" />
-        <EmbeddedResource Include="Resources\ButtonReveal.png" />
-        <EmbeddedResource Include="Resources\ButtonSeance.png" />
-        <EmbeddedResource Include="Resources\ButtonTransport.png" />
-        <EmbeddedResource Include="Resources\ButtonDisguise.png" />
-        <EmbeddedResource Include="Resources\ButtonHypnotize.png" />
-        <EmbeddedResource Include="Resources\ButtonSteal.png" />
-        <EmbeddedResource Include="Resources\ButtonForge.png" />
-        <EmbeddedResource Include="Resources\ButtonBlackmail.png" />
-        <EmbeddedResource Include="Resources\ButtonProtect.png" />
-        <EmbeddedResource Include="Resources\ButtonVest.png" />
-        <EmbeddedResource Include="Resources\ButtonBite.png" />
+        <EmbeddedResource Include="Resources\CrewOfSalem.png"/>
+        <EmbeddedResource Include="Resources\CrewOfSalemNew.png"/>
+        <EmbeddedResource Include="Resources\ButtonInvestigate.png"/>
+        <EmbeddedResource Include="Resources\ButtoNWatch.png"/>
+        <EmbeddedResource Include="Resources\ButtonMap.png"/>
+        <EmbeddedResource Include="Resources\ButtonSurveillance.png"/>
+        <EmbeddedResource Include="Resources\ButtonVitals.png"/>
+        <EmbeddedResource Include="Resources\ButtonAlert.png"/>
+        <EmbeddedResource Include="Resources\ButtonKill.png"/>
+        <EmbeddedResource Include="Resources\ButtonGuard.png"/>
+        <EmbeddedResource Include="Resources\ButtonShield.png"/>
+        <EmbeddedResource Include="Resources\ButtonBlock.png"/>
+        <EmbeddedResource Include="Resources\ButtonReveal.png"/>
+        <EmbeddedResource Include="Resources\ButtonSeance.png"/>
+        <EmbeddedResource Include="Resources\ButtonTransport.png"/>
+        <EmbeddedResource Include="Resources\ButtonDisguise.png"/>
+        <EmbeddedResource Include="Resources\ButtonHypnotize.png"/>
+        <EmbeddedResource Include="Resources\ButtonSteal.png"/>
+        <EmbeddedResource Include="Resources\ButtonForge.png"/>
+        <EmbeddedResource Include="Resources\ButtonBlackmail.png"/>
+        <EmbeddedResource Include="Resources\ButtonProtect.png"/>
+        <EmbeddedResource Include="Resources\ButtonVest.png"/>
+        <EmbeddedResource Include="Resources\ButtonBite.png"/>
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Reobfuscate">
-        <Copy SourceFiles="$(OutputPath)reobfuscated/$(AssemblyName)-$(GameVersion).dll" DestinationFolder="$(AmongUs)/BepInEx/plugins/" Condition="'$(Configuration)' == 'Debug'" />
+        <Copy SourceFiles="$(OutputPath)reobfuscated/$(AssemblyName)-$(GameVersion).dll" DestinationFolder="$(AmongUs)/BepInEx/plugins/" Condition="'$(Configuration)' == 'Debug'"/>
     </Target>
 </Project>

@@ -34,6 +34,7 @@ namespace CrewOfSalem
         public static bool gameIsRunning = false;
 
         private static Sprite logo;
+        private static Sprite logoNew;
 
         private static Sprite buttonInvestigate;
         private static Sprite buttonWatch;
@@ -71,6 +72,7 @@ namespace CrewOfSalem
         public static Role                       LocalRole   => LocalPlayer?.GetRole();
 
         public static Sprite Logo => logo ??= LoadSpriteFromResources("CrewOfSalem.png", 450);
+        public static Sprite LogoNew => logoNew ??= LoadSpriteFromResources("CrewOfSalemNew.png", 450);
 
         public static Sprite ButtonInvestigate => buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png");
         public static Sprite ButtonWatch => buttonWatch ??= LoadSpriteFromResources("ButtonWatch.png");
