@@ -10,7 +10,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.MayorPatches
     {
         public static void Postfix()
         {
-            if (!TryGetSpecialRole(out GuardianAngel guardianAngel) || guardianAngel.Owner != LocalPlayer) return;
+            if (!TryGetSpecialRole(out Mayor _)) return;
 
             if (MeetingHud.Instance == null) return;
 
@@ -23,6 +23,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.MayorPatches
                 playerVoteArea.NameText.enableAutoSizing = false;
 
                 playerVoteArea.NameText.text = $"{mayor.Owner.Data.PlayerName} {mayor.Name}";
+                playerVoteArea.NameText.color = mayor.Color;
             }
         }
     }

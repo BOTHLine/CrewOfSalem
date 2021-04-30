@@ -50,7 +50,6 @@ namespace CrewOfSalem.Roles.Abilities
             {
                 foreach (PlayerControl player in players)
                 {
-                    ConsoleTools.Info("Player: " + player.name);
                     var doContinue = false;
 
                     if (player != target)

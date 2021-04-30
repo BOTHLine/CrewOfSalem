@@ -59,8 +59,7 @@ namespace CrewOfSalem.Roles
             if (Owner != LocalPlayer) return;
 
             PlayerControl[] players = AllPlayers
-               .Where(player => player.GetRole().Faction == Faction.Crew /* && !(role is Mayor || role is Jailor) */)
-               .ToArray();
+               .Where(player => player.GetRole().Faction == Faction.Crew && !(player.GetRole() is Mayor)).ToArray();
             VoteTarget = players[Rng.Next(players.Length)];
 
             WriteRPC(RPC.ExecutionerTarget, VoteTarget.PlayerId);

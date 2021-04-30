@@ -20,7 +20,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
         public static void Prefix([HarmonyArgument(0)] byte data)
         {
-            ConsoleTools.Info("Reading RPC: " + (RPC) data);
+            // ConsoleTools.Info("Reading RPC: " + (RPC) data);
         }
 
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] byte data,

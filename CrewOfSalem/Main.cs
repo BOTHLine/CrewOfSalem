@@ -27,10 +27,12 @@ namespace CrewOfSalem
         public static readonly List<CustomOption> GeneralOptions = new List<CustomOption>()
         {
             CustomOption.AddString("Show Player Names", new[] {"Always", "Line of Sight", "Never"}),
-            CustomOption.AddNumber("Mafia Kill Abilities Start",  2F, 1F, 4F, 1F),
-            CustomOption.AddNumber("Mafia Kill Abilities Min", 1F, 1F, 3F, 1F),
+            CustomOption.AddNumber("Mafia Kill Abilities Start", 2F, 1F, 4F, 1F),
+            CustomOption.AddNumber("Mafia Kill Abilities Min",   1F, 1F, 3F, 1F),
             CustomOption.AddString("Mafia Shared Kill Cooldown", new[] {"None", "Killer", "Self", "Custom"}),
-            CustomOption.AddNumber("Mafia Shared Custom Kill Cooldown", 10F, 0F, 30F, 2.5F)
+            CustomOption.AddNumber("Mafia Shared Custom Kill Cooldown", 10F, 0F, 30F, 2.5F),
+            CustomOption.AddToggle("Remove Medbay Scan Proof", true),
+            CustomOption.AddToggle("Disable Skip on Button",   true)
         };
 
         public static int   OptionShowPlayerNames               => GeneralOptions[0].GetValue<int>();
@@ -38,6 +40,8 @@ namespace CrewOfSalem
         public static float OptionMafiaKillAlways               => GeneralOptions[2].GetValue<float>();
         public static int   OptionMafiaSharedKillCooldown       => GeneralOptions[3].GetValue<int>();
         public static float OptionMafiaCustomSharedKillCooldown => GeneralOptions[4].GetValue<float>();
+        public static bool  OptionRemoveMedbayProof             => GeneralOptions[5].GetValue<bool>();
+        public static bool  OptionDisableSkipOnButton           => GeneralOptions[6].GetValue<bool>();
 
         // public static readonly CustomToggleOption OptionEndScreenShowAllPlayers =
         //    CustomOption.AddToggle("End Screen Show All Players", false);

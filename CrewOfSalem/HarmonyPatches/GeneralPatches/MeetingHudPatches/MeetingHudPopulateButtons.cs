@@ -11,6 +11,7 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateButtons))]
     public static class MeetingHudPopulateButtons
     {
+        [HarmonyPriority(Priority.First)]
         public static void Postfix()
         {
             foreach (PlayerControl player in AllPlayers)
@@ -21,10 +22,18 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
                     ability.MeetingStart();
                 }
             }
+
             SetMeetingHudRoleName();
             SetMeetingHudNameColor();
+
+            if (MeetingRoomManager.Instance.reporter == null) return;
             
             if (TryGetSpecialRole(out Psychic psychic)) psychic.StartMeeting(MeetingRoomManager.Instance.target);
+
+            if (Main.OptionDisableSkipOnButton && MeetingRoomManager.Instance.target == null)
+            {
+                MeetingHud.Instance.SkipVoteButton.gameObject.SetActive(false);
+            }
         }
 
         private static void SetMeetingHudRoleName()
@@ -38,7 +47,7 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
                 playerVoteArea.NameText.autoSizeTextContainer = false;
                 playerVoteArea.NameText.enableAutoSizing = false;
                 playerVoteArea.NameText.fontSize = 1.5F;
-                
+
                 if (localRole.Owner.PlayerId == playerVoteArea.TargetPlayerId)
                 {
                     playerVoteArea.NameText.text = $"{localRole.Owner.Data.PlayerName} {localRole.Name}";
@@ -60,10 +69,7 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
                 } else
                 {
                     Role role = playerVoteArea.TargetPlayerId.ToPlayerControl().GetRole();
-                    if (role is Mayor {hasRevealed: true} mayor)
-                    {
-                        playerVoteArea.NameText.color = mayor.Color;
-                    } else if (LocalRole?.Faction == Faction.Mafia && role?.Faction == Faction.Mafia)
+                    if (LocalRole?.Faction == Faction.Mafia && role?.Faction == Faction.Mafia)
                     {
                         playerVoteArea.NameText.color = Faction.Mafia.Color;
                     } else if (LocalRole?.Faction == Faction.Coven && role?.Faction == Faction.Coven)

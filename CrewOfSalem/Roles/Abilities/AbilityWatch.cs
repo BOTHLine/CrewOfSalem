@@ -45,7 +45,6 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods
         private void RpcAddVisitor(Role visitor)
         {
-            ConsoleTools.Info("RPC Add Visitor: " + visitor.Name);
             if (AmongUsClient.Instance.AmClient)
             {
                 AddVisitor(visitor);
@@ -57,7 +56,6 @@ namespace CrewOfSalem.Roles.Abilities
         public void AddVisitor(Role visitor)
         {
             visitors.Add(visitor);
-            ConsoleTools.Info("Add Visitor: " + visitor.Name);
         }
 
         public void ParseResults()

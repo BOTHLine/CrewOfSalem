@@ -4,8 +4,8 @@ namespace CrewOfSalem
 {
     public class Benchmark
     {
-        private string   name;
-        private DateTime startTime;
+        private readonly string   name;
+        private readonly DateTime startTime;
 
         public Benchmark(string name)
         {

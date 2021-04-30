@@ -30,15 +30,12 @@ namespace CrewOfSalem.Roles.Abilities
 
         private static readonly Func<Ability, PlayerControl, bool> UseOnGuarded = (source, target) =>
         {
-            ConsoleTools.Info("Pre Check OnGuarded");
             if (!(source is AbilityKill)) return true;
 
             AbilityGuard abilityGuard = GetAllAbilities<AbilityGuard>().FirstOrDefault(guard =>
                 guard.HasDurationLeft && target != guard.owner.Owner &&
                 PlayerTools.IsPlayerInUseRange(guard.owner.Owner, target, Main.OptionBodyguardGuardRange));
-            ConsoleTools.Info("Check OnGuarded");
             if (abilityGuard == null) return true;
-            ConsoleTools.Info("Use OnGuarded");
 
             abilityGuard.owner.Owner.RpcKillPlayer(source.owner.Owner);
             abilityGuard.owner.Owner.RpcKillPlayer(abilityGuard.owner.Owner, source.owner.Owner);

@@ -9,6 +9,8 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches
     {
         public static bool Prefix(MedScanSystem __instance, [HarmonyArgument(0)] MessageReader reader)
         {
+            if (!Main.OptionRemoveMedbayProof) return true;
+            
             __instance.UsersList.Clear();
             int num = reader.ReadPackedInt32();
             for (var i = 0; i < num; i++)

@@ -19,12 +19,12 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
             if (blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != LocalPlayer)) return;
 
             blackmailedTextRenderer = Object.Instantiate(__instance.TitleText, __instance.TitleText.transform.parent);
-            ConsoleTools.Info(blackmailedTextRenderer.fontSize);
             blackmailedTextRenderer.text = ColorizedText("You are blackmailed.", Faction.Mafia.Color);
             blackmailedTextRenderer.autoSizeTextContainer = true;
             blackmailedTextRenderer.enableAutoSizing = false;
             blackmailedTextRenderer.fontSize = 8F;
-            blackmailedTextRenderer.transform.position = __instance.TitleText.transform.position + new Vector3(0F, -1.6F, -50F);
+            blackmailedTextRenderer.transform.position =
+                __instance.TitleText.transform.position + new Vector3(0F, -1.6F, -50F);
         }
     }
 }
