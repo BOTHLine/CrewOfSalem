@@ -16,7 +16,7 @@ Jede Rolle gehört einer Fraktion sowie einer untergeordneten Gesinnung zu. (Die
 ### Crew Investigate
 
 #### Lookout
-Kann wichtige Informationen von überall auf der Karte abrufen (Admin, Vitals, Cams).
+Kann einen Spieler pro Runde markieren. Im nächsten Meeting erhält er alle Rollen, welche diesen Spieler ab der Markierung besucht haben.
 
 #### Psychic
 Erhält bei jedem Body Report abwechselnd 3 oder 2 Namen von noch lebenden Mitspielenr (Sich selbst ausgeschlossen).  
@@ -57,9 +57,8 @@ Kann auf andere Spieler schießen. Sollte er einen Spieler der Crew erwischen, s
 ### Crew Protective
 
 #### Bodyguard
-Kann sein **Guard** aktivieren und deaktivieren. Während diese Fähigkeit aktiviert ist, kann kein Spieler in seiner Nähe getötet werden. Sollte ein Spieler dies versuchen, sterben stattdessen der Angreifer und der Bodyguard.  
-Der Bodyguard kann sich nicht selber schützen.  
-Der Bodyguard kann andere Spieler nicht beschützen, während er selber "beschäftigt" ist. (In einer Task, in Kameras, am Admin Table etc..)
+Kann sein **Guard** für X Sekunden aktivieren. Während diese Fähigkeit aktiviert ist, kann kein Spieler in seiner Nähe getötet werden. Sollte ein Spieler dies versuchen, sterben stattdessen der Angreifer und der Bodyguard.  
+Der Bodyguard kann sich nicht selber schützen.
 
 #### Doctor
 Kann einem anderen Spieler einen Schild geben, welcher bis zum nächsten Meeting hält. Der erste Angriff auf das geschildete Ziel macht den Schild kaputt.
@@ -69,24 +68,26 @@ Wenn der Doctor stirbt, verschwindet der Schild nicht, da dieser auf andere Art 
 ### Crew Support
 
 #### Escort
-Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Vents benutzen.
+Kann alle Spieler um sich herum "blockieren" und dadurch den Cooldown aller Fähigkeiten von all diesen Spielern erhöhen.
+Alle Fähigkeiten, welche einen gewissen Zeitraum halten (In Sekunden definiert, nicht zum Beispiel "bis zum nächsten Meeting") enden sofort.
 
 #### Mayor
 Kann sich selber jederzeit innerhalb einer Runde revealen. Ab dem nächsten Meeting ist dies auch für alle anderen Spieler ersichtlich (Name und Rolle werden angezeigt).
 Sobald der Mayor sich revealed hat, zählen seine Votes in einem Meeting doppelt so viel.
 
 #### Medium
-Das Medium kann seine Seance nutzen, um für eine gewisse Zeit alle Geister zu sehen.
+Das Medium kann seine Seance nutzen, um für X Sekunden alle Geister zu sehen. Während die Seance aktiv ist, sieht das Medium alle Spieler in grau und ohne Namen.
 
 ## Mafia
 
 ### Mafia Deception
 
 #### Disguiser
-Kann alle Spieler für X Sekunden grau erscheinen lassen und alle Namen verschleiern.
+Kann alle Spieler in einer gewissen Reichweite für X Sekunden als grau erscheinen lassen und deren Namen verschleiern.
 
 #### Hypnotist
-Kann einen Spieler pro runde "hypnotizen". Diese Person nimmt in der Runde nach dem nächsten Meeting das Aussehen und die Namen aller Spieler willkürlich vertauscht wahr.
+Kann einen Spieler pro runde **hynpotizen**. Diese Person nimmt in der Runde nach dem nächsten Meeting das Aussehen und die Namen aller Spieler für X Sekunden willkürlich vertauscht wahr.
+Der Hypnotist kann seine Fähigkeit in der nächsten Runde erst nutzen, sobald der vorher hypnotisierte Spieler wieder alles normal sieht.
 
 ### Mafia Killing
 
@@ -94,7 +95,7 @@ Kann einen Spieler pro runde "hypnotizen". Diese Person nimmt in der Runde nach 
 Kann töten, ohne dabei auf die Leiche zu springen. Kann außerdem aus einem Vent heraus töten, ohne diesen zu verlassen.
 
 #### Forger
-Kann von anderen Spielern das Aussehen klauen und sich anschließend in diesen verwandeln.
+Kann von anderen Spielern das Aussehen klauen und sich anschließend in diese verwandeln.
 
 ### Mafia Support
 
@@ -105,7 +106,8 @@ Kann einen Spieler pro Runde "blackmailen". Diese Person darf in dem nächsten M
 Kann einen Spieler untersuchen und die exakte Rolle herausfinden.
 
 #### Consort
-Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner Fähigkeiten erhöhen. Zusätzlich kann dieser Spieler für die selbe Dauer keine Tasks machen.
+Kann alle Spieler (die nicht der Mafia angehören) um sich herum "blockieren" und dadurch den Cooldown aller Fähigkeiten von all diesen Spielern erhöhen.
+Alle Fähigkeiten, welche einen gewissen Zeitraum halten (In Sekunden definiert, nicht zum Beispiel "bis zum nächsten Meeting") enden sofort.
 
 ## Neutral
 
@@ -114,7 +116,7 @@ Kann einen anderen Spieler "blockieren" und dadurch den Cooldown aller seiner F�
 #### Guardian Angel
 Bekommt am Anfang der Runde ein Ziel zuegewiesen, welches jede Rolle außer Guardian Angel, Executioner oder Jester sein kann. Der Guardian Angel gewinnt, solange sein Ziel bis zum Ende überlebt, auch wenn er selber bereits tot ist.  
 Kann sein Ziel für X Sekunden schützen. Alle Kill-Versuche innerhalb dieser Zeit auf das Ziel des Guardian Angels bringen nur den Kill auf Cooldown, töten es aber nicht. Kann auch aus dem Tod heraus genutzt werden.  
-Sollte das Ziel vor dem Guardian Angel sterben, so wird der Guardian Angel zum Survivor.
+Sollte das Ziel vor dem Guardian Angel sterben, so wird der Guardian Angel zum Survivor ohne Fähigkeiten.
 
 #### Survivor
 Möchte nur bis zum Ende überleben. Kann sowohl mit der Crew als auch mit der Mafia gewinnen, solange er bis zum Ende überlebt. Außer wenn die Mafia durch Sabotage (Reactor, Oxygen) gewinnt.  

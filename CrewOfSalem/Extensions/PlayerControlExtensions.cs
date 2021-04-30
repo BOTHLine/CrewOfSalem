@@ -32,7 +32,7 @@ namespace CrewOfSalem.Extensions
             if (killerAnimation.GetRole().Faction != Faction.Mafia || LocalRole.Faction != Faction.Mafia ||
                 killerAnimation == LocalPlayer) return;
 
-            switch (Main.OptionMafiaSharedKillCooldown.GetValue())
+            switch (Main.OptionMafiaSharedKillCooldown)
             {
                 case 0: // None
                     break;
@@ -44,7 +44,7 @@ namespace CrewOfSalem.Extensions
                     LocalPlayer.GetAbility<AbilityKill>()?.SetOnCooldown();
                     break;
                 case 3: // Custom
-                    float cooldown = Main.OptionMafiaCustomSharedKillCooldown.GetValue();
+                    float cooldown = Main.OptionMafiaCustomSharedKillCooldown;
                     LocalPlayer.GetAbility<AbilityKill>()?.SetCooldown(cooldown);
                     break;
             }
@@ -98,7 +98,7 @@ namespace CrewOfSalem.Extensions
 
             player.nameText.color = color;
 
-            int showPlayerNames = Main.OptionShowPlayerNames.GetValue();
+            int showPlayerNames = Main.OptionShowPlayerNames;
             if (showPlayerNames != 1) return;
             Vector2 fromPosition = LocalPlayer.GetTruePosition();
 
@@ -114,31 +114,14 @@ namespace CrewOfSalem.Extensions
             }
         }
 
-        // TODO: When to call?
-        public static void StartMeeting(this PlayerControl reporter, GameData.PlayerInfo target)
+        public static void TurnGrey(this PlayerControl player)
         {
-            ConsoleTools.Info("Start Meeting");
-            
-            foreach (PlayerControl player in AllPlayers)
-            {
-                IReadOnlyList<Ability> abilities = player.GetAbilities();
-                foreach (Ability ability in abilities)
-                {
-                    switch (ability)
-                    {
-                        case AbilityDuration {HasDurationLeft: true} abilityDuration:
-                            abilityDuration.EffectEnd();
-                            break;
-                        case AbilityShield abilityShield when abilityShield.ShieldedPlayer != null:
-                            abilityShield.BreakShield();
-                            break;
-                    }
-                }
-            }
-
-            if (LocalRole is Psychic psychic) psychic.StartMeeting(target);
-
-            if (target == null) MeetingHud.Instance.SkipVoteButton.gameObject.SetActive(false);
+            player.nameText.text = "";
+            player.myRend.material.SetColor(ShaderBackColor, Color.grey);
+            player.myRend.material.SetColor(ShaderBodyColor, Color.grey);
+            player.HatRenderer.SetHat(0, 0);
+            SetSkinWithAnim(player.MyPhysics, 0);
+            if (player.CurrentPet) Object.Destroy(player.CurrentPet.gameObject);
         }
 
         public static void ClearTasksCustom(this PlayerControl playerControl, bool keepSabotageTasks = true)

@@ -8,7 +8,7 @@ namespace CrewOfSalem.Roles.Abilities
     public class AbilityReveal : Ability
     {
         // Properties
-        public bool hasRevealed { get; private set; } = false;
+        public bool HasRevealed { get; private set; } = false;
 
         // Properties Ability
         protected override Sprite Sprite      => ButtonReveal;
@@ -23,25 +23,33 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods Ability
         protected override bool CanUse()
         {
-            return base.CanUse() && !hasRevealed;
+            return base.CanUse() && !HasRevealed;
         }
 
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
-            hasRevealed = true;
+            HasRevealed = true;
             sendRpc = true;
             setCooldown = false;
         }
 
         protected override void UpdateButtonSprite()
         {
-            if (!hasRevealed)
+            if (!HasRevealed)
             {
                 base.UpdateButtonSprite();
             } else
             {
                 Button.renderer.color = owner.Owner.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            }
+        }
+
+        protected override void MeetingStartInternal()
+        {
+            if (owner is Mayor mayor)
+            {
+                mayor.hasRevealed = HasRevealed;
             }
         }
     }

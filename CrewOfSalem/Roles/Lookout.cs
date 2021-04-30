@@ -18,9 +18,10 @@ namespace CrewOfSalem.Roles
         // Method Role
         protected override void InitializeAbilities()
         {
-            AddAbility<Lookout, AbilityMap>();
-            AddAbility<Lookout, AbilitySurveillance>();
-            AddAbility<Lookout, AbilityVitals>();
+            // AddAbility<Lookout, AbilityMap>();
+            // AddAbility<Lookout, AbilitySurveillance>();
+            // AddAbility<Lookout, AbilityVitals>();
+            AddAbility<Lookout, AbilityWatch>();
         }
     }
 }

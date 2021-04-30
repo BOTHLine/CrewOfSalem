@@ -64,7 +64,7 @@ namespace CrewOfSalem.Roles.Abilities
         {
             if (shieldedPlayer == null) return;
 
-            switch (Main.OptionDoctorShowShieldedPlayer.GetValue())
+            switch (Main.OptionDoctorShowShieldedPlayer)
             {
                 case 0:
                     if (LocalPlayer == owner.Owner) ShowShieldedPlayer(); // Doctor
@@ -121,6 +121,11 @@ namespace CrewOfSalem.Roles.Abilities
             CheckShowShieldedPlayer();
             sendRpc = true;
             setCooldown = false;
+        }
+
+        protected override void MeetingStartInternal()
+        {
+            BreakShield();
         }
 
         // Methods AbilityDuration

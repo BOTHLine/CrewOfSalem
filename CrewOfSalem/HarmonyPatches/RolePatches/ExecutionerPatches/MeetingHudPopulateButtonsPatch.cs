@@ -5,8 +5,8 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
 {
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
-    public static class MeetingHudUpdatePatch
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateButtons))]
+    public static class MeetingHudPopulateButtonsPatch
     {
         public static void Postfix()
         {
@@ -18,9 +18,11 @@ namespace CrewOfSalem.HarmonyPatches.ExecutionerPatches
             {
                 if (executioner.VoteTarget.PlayerId != playerVoteArea.TargetPlayerId) continue;
 
-                playerVoteArea.NameText.text = $"{executioner.VoteTarget.Data.PlayerName}\n(Target)";
+                playerVoteArea.NameText.autoSizeTextContainer = false;
+                playerVoteArea.NameText.enableAutoSizing = false;
+                
+                playerVoteArea.NameText.text = $"{executioner.VoteTarget.Data.PlayerName}\nTarget";
                 playerVoteArea.NameText.color = executioner.VoteTarget.GetRole().Color;
-                playerVoteArea.NameText.fontSize = 0.8F;
             }
         }
     }

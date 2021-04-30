@@ -60,6 +60,11 @@ namespace CrewOfSalem.Roles.Abilities
             }
         }
 
+        protected override void ExileEndInternal()
+        {
+            if (currentSample?.Data.IsDead ?? false) currentSample = null;
+        }
+
         // Methods AbilityDuration
         protected override void EffectEndInternal()
         {

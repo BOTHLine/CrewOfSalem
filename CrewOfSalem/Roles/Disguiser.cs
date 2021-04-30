@@ -13,7 +13,7 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Mafia;
         public override Alignment Alignment => Alignment.Deception;
 
-        public override string Description => "You can disguise everyone to make them look the same";
+        public override string Description => "You can disguise everyone in your range to make them look the same";
 
         // Methods Role
         protected override void InitializeAbilities()

@@ -31,7 +31,7 @@ namespace CrewOfSalem
 
         public static readonly System.Random Rng = new System.Random((int) DateTime.Now.Ticks);
 
-        public static bool gameIsRunning = false;
+        public static DateTime? lobbyCreationTime;
 
         private static Sprite logo;
         private static Sprite logoNew;
@@ -71,13 +71,18 @@ namespace CrewOfSalem
         public static GameData.PlayerInfo        LocalData   => LocalPlayer?.Data;
         public static Role                       LocalRole   => LocalPlayer?.GetRole();
 
-        public static Sprite Logo => logo ??= LoadSpriteFromResources("CrewOfSalem.png", 450);
+        public static Sprite Logo    => logo ??= LoadSpriteFromResources("CrewOfSalem.png",       450);
         public static Sprite LogoNew => logoNew ??= LoadSpriteFromResources("CrewOfSalemNew.png", 450);
 
-        public static Sprite ButtonInvestigate => buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png");
+        public static Sprite ButtonInvestigate =>
+            buttonInvestigate ??= LoadSpriteFromResources("ButtonInvestigate.png");
+
         public static Sprite ButtonWatch => buttonWatch ??= LoadSpriteFromResources("ButtonWatch.png");
-        public static Sprite ButtonMap => buttonMap ??= LoadSpriteFromResources("ButtonMap.png");
-        public static Sprite ButtonSurveillance => buttonSurveillance ??= LoadSpriteFromResources("ButtonSurveillance.png");
+        public static Sprite ButtonMap   => buttonMap ??= LoadSpriteFromResources("ButtonMap.png");
+
+        public static Sprite ButtonSurveillance =>
+            buttonSurveillance ??= LoadSpriteFromResources("ButtonSurveillance.png");
+
         public static Sprite ButtonVitals => buttonVitals ??= LoadSpriteFromResources("ButtonVitals.png");
 
         public static Sprite ButtonAlert => buttonAlert ??= LoadSpriteFromResources("ButtonAlert.png");
@@ -185,6 +190,8 @@ namespace CrewOfSalem
             AssignedRoles.Clear();
             DeadPlayers.Clear();
             PlayerNames.Clear();
+
+            lobbyCreationTime = null;
         }
 
         public static string MultiColorText(params Tuple<string, Color>[] textColorPairs)
@@ -250,12 +257,7 @@ namespace CrewOfSalem
         {
             foreach (PlayerControl player in AllPlayers)
             {
-                player.nameText.text = "";
-                player.myRend.material.SetColor(ShaderBackColor, Color.grey);
-                player.myRend.material.SetColor(ShaderBodyColor, Color.grey);
-                player.HatRenderer.SetHat(0, 0);
-                SetSkinWithAnim(player.MyPhysics, 0);
-                if (player.CurrentPet) UnityEngine.Object.Destroy(player.CurrentPet.gameObject);
+                player.TurnGrey();
             }
         }
 

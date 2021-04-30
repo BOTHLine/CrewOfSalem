@@ -79,9 +79,9 @@ namespace CrewOfSalem.Roles
             if (Owner != LocalPlayer) return;
 
             hasSetTasks = true;
-            
+
             SetRoleTaskInternal();
-            
+
             Owner.myTasks.Remove(Owner.myTasks.ToArray()
                .FirstOrDefault(task => task.GetComponent<ImportantTextTask>() != null));
 
@@ -192,6 +192,10 @@ namespace CrewOfSalem.Roles
             instance._impColor_5__4 = Color; // TODO Which to use?
             instance.__this.ImpostorText.text = RoleTask;
             instance.__this.BackgroundBar.material.color = Color;
+
+            instance.__this.Title.autoSizeTextContainer = false;
+            instance.__this.Title.enableAutoSizing = false;
+            instance.__this.Title.fontSize = 10F;
         }
 
         protected virtual void InitializeRoleInternal() { }

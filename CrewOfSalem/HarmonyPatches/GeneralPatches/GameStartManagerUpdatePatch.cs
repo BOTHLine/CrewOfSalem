@@ -7,7 +7,6 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     public static class GameStartManagerUpdatePatch
     {
-        private static DateTime? lobbyCreationTime;
 
         public static byte[] TimeBytes
         {

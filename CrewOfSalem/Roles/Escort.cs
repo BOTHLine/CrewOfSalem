@@ -18,7 +18,8 @@ namespace CrewOfSalem.Roles
         // Methods Role
         protected override void InitializeAbilities()
         {
-            AddAbility<Escort, AbilityBlock>();
+            // AddAbility<Escort, AbilityBlock>();
+            AddAbility<Escort, AbilityBlockAOE>();
         }
     }
 }

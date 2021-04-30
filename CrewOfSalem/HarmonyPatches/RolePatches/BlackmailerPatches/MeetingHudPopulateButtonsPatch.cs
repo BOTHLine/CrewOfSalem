@@ -8,23 +8,23 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.BlackmailerPatches
 {
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
-    public static class MeetingHudUpdatePatch
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateButtons))]
+    public static class MeetingHudPopulateButtonsPatch
     {
         private static TextMeshPro blackmailedTextRenderer;
 
         public static void Postfix(MeetingHud __instance)
         {
-            if (blackmailedTextRenderer != null || __instance?.TitleText == null) return;
-
             AbilityBlackmail[] blackmailAbilities = Ability.GetAllAbilities<AbilityBlackmail>();
             if (blackmailAbilities.All(blackmailAbility => blackmailAbility.BlackmailedPlayer != LocalPlayer)) return;
 
             blackmailedTextRenderer = Object.Instantiate(__instance.TitleText, __instance.TitleText.transform.parent);
+            ConsoleTools.Info(blackmailedTextRenderer.fontSize);
             blackmailedTextRenderer.text = ColorizedText("You are blackmailed.", Faction.Mafia.Color);
-            blackmailedTextRenderer.fontSize = 12F;
-            blackmailedTextRenderer.transform.position =
-                __instance.TitleText.transform.position + new Vector3(0F, -1.6F, -50F);
+            blackmailedTextRenderer.autoSizeTextContainer = true;
+            blackmailedTextRenderer.enableAutoSizing = false;
+            blackmailedTextRenderer.fontSize = 8F;
+            blackmailedTextRenderer.transform.position = __instance.TitleText.transform.position + new Vector3(0F, -1.6F, -50F);
         }
     }
 }

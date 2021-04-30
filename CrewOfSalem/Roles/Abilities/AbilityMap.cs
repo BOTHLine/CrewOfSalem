@@ -28,7 +28,7 @@ namespace CrewOfSalem.Roles.Abilities
             sendRpc = false;
             setCooldown = true;
 
-            if (!Main.OptionLookoutSharesCooldown.GetValue()) return;
+            if (!Main.OptionLookoutSharesCooldown) return;
 
             foreach (Ability ability in owner.GetAllAbilities())
             {

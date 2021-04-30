@@ -14,7 +14,7 @@ namespace CrewOfSalem.Roles
 
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Killing;
-
+        
         public override string Description =>
             "You can shoot a person. But if they are good, you will kill yourself instead";
 

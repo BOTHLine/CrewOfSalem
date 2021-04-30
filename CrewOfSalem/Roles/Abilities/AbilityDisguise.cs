@@ -20,27 +20,18 @@ namespace CrewOfSalem.Roles.Abilities
         public AbilityDisguise(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
 
         // Methods
-        public static void Disguise()
+        public bool IsPlayerInRange(PlayerControl player)
         {
-            TurnAllPlayersGrey();
-        }
-
-        private static void DisguiseEnd()
-        {
-            ResetPlayerColors();
+            return PlayerTools.IsPlayerInRange(owner.Owner, player, Main.OptionDisguiserRange);
         }
 
         // Methods Ability
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
-            Disguise();
             sendRpc = setCooldown = true;
         }
 
         // Methods AbilityDuration
-        protected override void EffectEndInternal()
-        {
-            DisguiseEnd();
-        }
+        protected override void EffectEndInternal() { }
     }
 }

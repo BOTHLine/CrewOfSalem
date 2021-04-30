@@ -42,9 +42,9 @@ namespace CrewOfSalem.Roles.Abilities
         // Methods
         public void RpcEffectEnd()
         {
+            if (AmongUsClient.Instance.AmClient) EffectEnd();
             if (RpcEndAction == RPC.None) return;
             WriteRPC(RpcEndAction, RpcEndData.ToArray());
-            if (AmongUsClient.Instance.AmClient) EffectEnd();
         }
 
         public void EffectEnd()
@@ -110,6 +110,11 @@ namespace CrewOfSalem.Roles.Abilities
 
             isEffectActive = false;
             RpcEffectEnd();
+        }
+
+        protected override void MeetingStartInternal()
+        {
+            EffectEnd();
         }
     }
 }

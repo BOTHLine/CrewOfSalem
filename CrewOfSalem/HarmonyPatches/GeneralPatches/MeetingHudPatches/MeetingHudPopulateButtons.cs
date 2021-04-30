@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.Roles;
 using CrewOfSalem.Roles.Abilities;
@@ -12,8 +13,18 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
     {
         public static void Postfix()
         {
+            foreach (PlayerControl player in AllPlayers)
+            {
+                IReadOnlyList<Ability> abilities = player.GetAbilities();
+                foreach (Ability ability in abilities)
+                {
+                    ability.MeetingStart();
+                }
+            }
             SetMeetingHudRoleName();
             SetMeetingHudNameColor();
+            
+            if (TryGetSpecialRole(out Psychic psychic)) psychic.StartMeeting(MeetingRoomManager.Instance.target);
         }
 
         private static void SetMeetingHudRoleName()
@@ -24,12 +35,13 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
 
             foreach (PlayerVoteArea playerVoteArea in MeetingHud.Instance.playerStates)
             {
+                playerVoteArea.NameText.autoSizeTextContainer = false;
+                playerVoteArea.NameText.enableAutoSizing = false;
+                playerVoteArea.NameText.fontSize = 1.5F;
+                
                 if (localRole.Owner.PlayerId == playerVoteArea.TargetPlayerId)
                 {
-                    playerVoteArea.NameText.text = $"{localRole.Owner.Data.PlayerName} ({localRole.Name})";
-                } else if (playerVoteArea.TargetPlayerId.ToPlayerControl().GetRole() is Mayor {hasRevealed: true} mayor)
-                {
-                    playerVoteArea.NameText.text = $"{mayor.Owner.Data.PlayerName} ({mayor.Name})";
+                    playerVoteArea.NameText.text = $"{localRole.Owner.Data.PlayerName} {localRole.Name}";
                 }
             }
         }

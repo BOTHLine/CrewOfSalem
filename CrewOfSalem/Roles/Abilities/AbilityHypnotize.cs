@@ -6,7 +6,7 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.Roles.Abilities
 {
-    public class AbilityHypnotize : Ability
+    public class AbilityHypnotize : AbilityDuration
     {
         // Properties
         public          PlayerControl          HypnotizeTarget  { get; set; }
@@ -17,11 +17,14 @@ namespace CrewOfSalem.Roles.Abilities
         protected override Sprite Sprite      => ButtonHypnotize;
         protected override bool   NeedsTarget => true;
 
-        protected override RPC               RpcAction => RPC.Hypnotize;
+        protected override RPC               RpcAction => RPC.HypnotizeStart;
         protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
 
+        protected override RPC               RpcEndAction => RPC.HypnotizeEnd;
+        protected override IEnumerable<byte> RpcEndData   => new byte[0];
+
         // Constructors
-        public AbilityHypnotize(Role owner, float cooldown) : base(owner, cooldown) { }
+        public AbilityHypnotize(Role owner, float cooldown, float duration) : base(owner, cooldown, duration) { }
 
         // Methods
         private void PrepareHypnotize(PlayerControl target)
@@ -31,6 +34,8 @@ namespace CrewOfSalem.Roles.Abilities
 
         public void Hypnotize()
         {
+            CurrentDuration = Duration;
+            isEffectActive = true;
             HypnotizedPlayer = HypnotizeTarget;
             HypnotizeTarget = null;
             playerMappings.Clear();
@@ -64,20 +69,37 @@ namespace CrewOfSalem.Roles.Abilities
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
             PrepareHypnotize(target);
+            isEffectActive = false;
+            CurrentDuration = 0F;
             sendRpc = true;
             setCooldown = false;
         }
 
+        protected override void EffectEndInternal()
+        {
+            HypnotizedPlayer = null;
+            playerMappings.Clear();
+        }
+
         protected override void UpdateButtonSprite()
         {
-            if (HypnotizeTarget == null)
+            if (HypnotizedPlayer != null)
             {
-                base.UpdateButtonSprite();
-            } else
+                Button.renderer.color = HypnotizedPlayer.GetPlayerColor();
+                Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            } else if (HypnotizeTarget != null)
             {
                 Button.renderer.color = HypnotizeTarget.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
+            } else
+            {
+                base.UpdateButtonSprite();
             }
+        }
+
+        protected override void ExileEndInternal()
+        {
+            Hypnotize();
         }
     }
 }

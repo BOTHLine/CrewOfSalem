@@ -6,6 +6,7 @@ using Essentials.Options;
 using CrewOfSalem.Roles;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using CrewOfSalem.Roles.Abilities;
 using CrewOfSalem.Roles.Alignments;
 using CrewOfSalem.Roles.Factions;
@@ -19,24 +20,24 @@ namespace CrewOfSalem
     {
         private const string  Id      = "gg.reactor.crewofsalem";
         public const  string  Name    = "Crew Of Salem";
-        public const  string  Version = "1.0";
+        public const  string  Version = "1.1";
         private       Harmony Harmony { get; } = new Harmony(Id);
 
         // General Game Options
-        public static readonly CustomStringOption OptionShowPlayerNames =
-            CustomOption.AddString("Show Player Names", new[] {"Always", "Line of Sight", "Never"});
+        public static readonly List<CustomOption> GeneralOptions = new List<CustomOption>()
+        {
+            CustomOption.AddString("Show Player Names", new[] {"Always", "Line of Sight", "Never"}),
+            CustomOption.AddNumber("Mafia Kill Abilities Start",  2F, 1F, 4F, 1F),
+            CustomOption.AddNumber("Mafia Kill Abilities Min", 1F, 1F, 3F, 1F),
+            CustomOption.AddString("Mafia Shared Kill Cooldown", new[] {"None", "Killer", "Self", "Custom"}),
+            CustomOption.AddNumber("Mafia Shared Custom Kill Cooldown", 10F, 0F, 30F, 2.5F)
+        };
 
-        public static readonly CustomNumberOption OptionMafiaKillStart =
-            CustomOption.AddNumber("Mafia Kill Abilities Start", 2F, 1F, 4F, 1F);
-
-        public static readonly CustomNumberOption OptionMafiaKillAlways =
-            CustomOption.AddNumber("Mafia Kill Abilities Always", 1F, 1F, 3F, 1F);
-
-        public static readonly CustomStringOption OptionMafiaSharedKillCooldown =
-            CustomOption.AddString("Mafia Shared Kill Cooldown", new[] {"None", "Killer", "Self", "Custom"});
-
-        public static readonly CustomNumberOption OptionMafiaCustomSharedKillCooldown =
-            CustomOption.AddNumber("Mafia Shared Custom Kill Cooldown", 10F, 0F, 30F, 2.5F);
+        public static int   OptionShowPlayerNames               => GeneralOptions[0].GetValue<int>();
+        public static float OptionMafiaKillStart                => GeneralOptions[1].GetValue<float>();
+        public static float OptionMafiaKillAlways               => GeneralOptions[2].GetValue<float>();
+        public static int   OptionMafiaSharedKillCooldown       => GeneralOptions[3].GetValue<int>();
+        public static float OptionMafiaCustomSharedKillCooldown => GeneralOptions[4].GetValue<float>();
 
         // public static readonly CustomToggleOption OptionEndScreenShowAllPlayers =
         //    CustomOption.AddToggle("End Screen Show All Players", false);
@@ -130,9 +131,11 @@ namespace CrewOfSalem
                 CreateRoleCooldownOption<Veteran, AbilityAlert>(27.5F),
                 CreateRoleCooldownOption<Vigilante, AbilityKill>(32.5F),
 
+                CreateRoleCooldownOption<Bodyguard, AbilityGuard>(32.5F),
                 CreateRoleCooldownOption<Doctor, AbilityShield>(27.5F),
 
                 CreateRoleCooldownOption<Escort, AbilityBlock>(27.5F),
+                CreateRoleCooldownOption<Escort, AbilityBlockAOE>(27.5F),
                 CreateRoleCooldownOption<Medium, AbilitySeance>(),
 
                 CreateRoleCooldownOption<Disguiser, AbilityDisguise>(32.5F),
@@ -144,6 +147,7 @@ namespace CrewOfSalem
 
                 CreateRoleCooldownOption<Consigliere, AbilityCheckRole>(40F),
                 CreateRoleCooldownOption<Consort, AbilityBlock>(27.5F),
+                CreateRoleCooldownOption<Consort, AbilityBlockAOE>(27.5F),
 
                 CreateRoleCooldownOption<GuardianAngel, AbilityProtect>(27.5F),
                 CreateRoleCooldownOption<Survivor, AbilityVest>(27.5F)
@@ -157,38 +161,43 @@ namespace CrewOfSalem
             {
                 CreateRoleDurationOption<Veteran, AbilityAlert>(7.5F),
 
+                CreateRoleDurationOption<Bodyguard, AbilityGuard>(7.5F),
+
                 CreateRoleDurationOption<Escort, AbilityBlock>(),
+                CreateRoleDurationOption<Escort, AbilityBlockAOE>(),
                 CreateRoleDurationOption<Medium, AbilitySeance>(10F),
 
                 CreateRoleDurationOption<Disguiser, AbilityDisguise>(10F),
+                CreateRoleDurationOption<Hypnotist, AbilityHypnotize>(30F),
 
                 CreateRoleDurationOption<Forger, AbilityForge>(10F),
 
                 CreateRoleDurationOption<Consort, AbilityBlock>(),
+                CreateRoleDurationOption<Consort, AbilityBlockAOE>(),
 
                 CreateRoleDurationOption<GuardianAngel, AbilityProtect>(7.5F),
                 CreateRoleDurationOption<Survivor, AbilityVest>(7.5F)
             };
 
         // Additional Options
-        public static readonly CustomNumberOption OptionSheriffMaxHintAmount =
-            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Max Hint Amount", 3F, 1F, DeadPlayer.Hints.Length, 1F);
+        private static readonly DictionaryKVP<CustomOption, Type> RoleOptions = new DictionaryKVP<CustomOption, Type>()
+        {
+            CreateToggleRoleOption<Lookout>("Abilities Share Cooldown", true),
+            CreateNumberRoleOption<Sheriff>("Max Hint Amount",        3F, 1F, DeadPlayer.Hints.Length, 1F),
+            CreateNumberRoleOption<Sheriff>("Hint Decrease Interval", 8F, 0F, 15F,                     1F),
+            CreateNumberRoleOption<Sheriff>("Min Hint Amount",        0F, 0F, DeadPlayer.Hints.Length, 1F),
+            CreateNumberRoleOption<Bodyguard>("Guard Range", 1F, 0.25F, 2F, 0.25F),
+            CreateStringRoleOption<Doctor>("Show Shielded", "Doctor", "Target", "Doctor & Target", "Everyone"),
+            CreateNumberRoleOption<Disguiser>("Range", 30F, 15F, 60F, 2.5F)
+        };
 
-        public static readonly CustomNumberOption OptionSheriffHintDecreaseInterval =
-            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Hint Decrease Interval", 8F, 0F, 15F, 1F);
-
-        public static readonly CustomNumberOption OptionSheriffMinHintAmount =
-            CustomOption.AddNumber(Role.GetName<Sheriff>() + ": Min Hint Amount", 0F, 0F, DeadPlayer.Hints.Length, 1F);
-
-        public static readonly CustomNumberOption OptionBodyguardGuardRange =
-            CustomOption.AddNumber(Role.GetName<Bodyguard>() + ": Guard Range", 1F, 0.25F, 2F, 0.25F);
-
-        public static readonly CustomStringOption OptionDoctorShowShieldedPlayer =
-            CustomOption.AddString(Role.GetName<Doctor>() + ": Show Shielded Owner",
-                new[] {"Doctor", "Target", "Doctor & Target", "Everyone"});
-
-        public static readonly CustomToggleOption OptionLookoutSharesCooldown =
-            CustomOption.AddToggle(Role.GetName<Lookout>() + ": Abilities Share Cooldown", true);
+        public static bool  OptionLookoutSharesCooldown       => RoleOptions.Keys.ToArray()[0].GetValue<bool>();
+        public static float OptionSheriffMaxHintAmount        => RoleOptions.Keys.ToArray()[1].GetValue<float>();
+        public static float OptionSheriffHintDecreaseInterval => RoleOptions.Keys.ToArray()[2].GetValue<float>();
+        public static float OptionSheriffMinHintAmount        => RoleOptions.Keys.ToArray()[3].GetValue<float>();
+        public static float OptionBodyguardGuardRange         => RoleOptions.Keys.ToArray()[4].GetValue<float>();
+        public static int   OptionDoctorShowShieldedPlayer    => RoleOptions.Keys.ToArray()[5].GetValue<int>();
+        public static float OptionDisguiserRange              => RoleOptions.Keys.ToArray()[6].GetValue<float>();
 
         public override void Load()
         {
@@ -210,17 +219,12 @@ namespace CrewOfSalem
             }
 
 
-            OptionPage.CreateOptionPage(new CustomOption[]
-            {
-                OptionShowPlayerNames, OptionMafiaSharedKillCooldown, OptionMafiaCustomSharedKillCooldown,
-                OptionMafiaKillStart, OptionMafiaKillAlways, OptionLookoutSharesCooldown, OptionSheriffMaxHintAmount,
-                OptionSheriffHintDecreaseInterval, OptionSheriffMinHintAmount, OptionBodyguardGuardRange,
-                OptionDoctorShowShieldedPlayer
-            });
+            OptionPage.CreateOptionPage(GeneralOptions);
             OptionPage.CreateOptionPage(RoleSlots);
             OptionPage.CreateOptionPage(RoleSpawnChances.Values);
             OptionPage.CreateOptionPage(RoleCooldowns.Values);
             OptionPage.CreateOptionPage(RoleDurations.Values);
+            OptionPage.CreateOptionPage(RoleOptions.Keys);
 
             // Disable the https://github.com/DorCoMaNdO/Reactor-Essentials watermark.
             // The code said that you were allowed, as long as you provided credit elsewhere. 
@@ -372,10 +376,33 @@ namespace CrewOfSalem
                 : 0F;
         }
 
-        public struct TypePair
+        private static KeyValuePair<CustomOption, Type> CreateToggleRoleOption<TRole>(string name, bool value)
+            where TRole : RoleGeneric<TRole>, new()
         {
-            public Type type1;
-            public Type type2;
+            return new KeyValuePair<CustomOption, Type>(
+                CustomOption.AddToggle(Role.GetName<TRole>() + ": " + name, value), typeof(TRole));
+        }
+
+        private static KeyValuePair<CustomOption, Type> CreateStringRoleOption<TRole>(string name,
+            params string[] values)
+            where TRole : RoleGeneric<TRole>, new()
+        {
+            return new KeyValuePair<CustomOption, Type>(
+                CustomOption.AddString(Role.GetName<TRole>() + ": " + name, values), typeof(TRole));
+        }
+
+        private static KeyValuePair<CustomOption, Type> CreateNumberRoleOption<TRole>(string name, float value,
+            float min, float max, float increment)
+            where TRole : RoleGeneric<TRole>, new()
+        {
+            return new KeyValuePair<CustomOption, Type>(
+                CustomOption.AddNumber(Role.GetName<TRole>() + ": " + name, value, min, max, increment), typeof(TRole));
+        }
+
+        private struct TypePair
+        {
+            private Type type1;
+            private Type type2;
 
             public TypePair(Type type1, Type type2)
             {

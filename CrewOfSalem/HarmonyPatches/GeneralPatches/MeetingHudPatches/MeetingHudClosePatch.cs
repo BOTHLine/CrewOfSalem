@@ -4,10 +4,10 @@ using CrewOfSalem.Roles.Abilities;
 using HarmonyLib;
 using static CrewOfSalem.CrewOfSalem;
 
-namespace CrewOfSalem.HarmonyPatches.GeneralPatches
+namespace CrewOfSalem.HarmonyPatches.GeneralPatches.MeetingHudPatches
 {
-    [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]
-    public static class ExileControllerWrapUpPatch
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]
+    public static class MeetingHudClosePatch
     {
         public static void Postfix()
         {
@@ -16,7 +16,7 @@ namespace CrewOfSalem.HarmonyPatches.GeneralPatches
                 IReadOnlyList<Ability> abilities = player.GetAbilities();
                 foreach (Ability ability in abilities)
                 {
-                    ability.ExileEnd();
+                    ability.MeetingEnd();
                 }
             }
         }

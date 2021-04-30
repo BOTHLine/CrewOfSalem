@@ -45,5 +45,10 @@ namespace CrewOfSalem.Roles.Abilities
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             }
         }
+
+        protected override void MeetingEndInternal()
+        {
+            BlackmailedPlayer = null;
+        }
     }
 }

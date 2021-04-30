@@ -1,4 +1,5 @@
-﻿using CrewOfSalem.Roles;
+﻿using System.Collections.Generic;
+using CrewOfSalem.Roles;
 using HarmonyLib;
 using Hazel;
 using CrewOfSalem.Extensions;
@@ -26,6 +27,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             [HarmonyArgument(                                                 1)] MessageReader reader)
         {
             PlayerControl target;
+            byte roleId;
 
             switch (data /*Packet ID*/)
             {
@@ -55,7 +57,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     break;
 
                 case (byte) RPC.SetRole:
-                    byte roleId = reader.ReadByte();
+                    roleId = reader.ReadByte();
                     target = reader.ReadPlayerControl();
 
                     foreach (Role role in Main.Roles)
@@ -80,6 +82,25 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     killer.KillPlayer(target, animation);
                     break;
 
+                case (byte) RPC.Watch:
+                    target = reader.ReadPlayerControl();
+                    __instance.UseAbility<AbilityWatch>(target);
+                    break;
+
+                case (byte) RPC.WatchVisitor:
+                    target = reader.ReadPlayerControl();
+                    roleId = reader.ReadByte();
+
+                    foreach (Role role in Main.Roles)
+                    {
+                        if (role.RoleID == roleId)
+                        {
+                            target.GetAbility<AbilityWatch>().AddVisitor(role);
+                        }
+                    }
+
+                    break;
+
                 case (byte) RPC.AlertStart:
                     __instance.UseAbility<AbilityAlert>(null);
                     break;
@@ -88,12 +109,12 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     __instance.EndAbility<AbilityAlert>();
                     break;
 
-                case (byte) RPC.ToggleGuard:
+                case (byte) RPC.GuardStart:
                     __instance.UseAbility<AbilityGuard>(null);
                     break;
 
-                case (byte) RPC.ToggleInTask:
-                    __instance.GetAbility<AbilityGuard>().ToggleInTask();
+                case (byte) RPC.GuardEnd:
+                    __instance.EndAbility<AbilityGuard>();
                     break;
 
                 case (byte) RPC.ShieldStart:
@@ -104,6 +125,20 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 case (byte) RPC.ShieldEnd:
                     target = reader.ReadPlayerControl();
                     target.GetAbility<AbilityShield>().BreakShield();
+                    break;
+
+                case (byte) RPC.BlockAoeStart:
+                    int blockedAmount = reader.ReadByte();
+                    var targets = new List<PlayerControl>();
+                    for (var i = 0; i < blockedAmount; i++)
+                    {
+                        targets.Add(reader.ReadPlayerControl());
+                    }
+
+                    __instance.GetAbility<AbilityBlockAOE>().BlockPlayers(targets);
+                    break;
+
+                case (byte) RPC.BlockAoeEnd:
                     break;
 
                 case (byte) RPC.BlockStart:
@@ -127,9 +162,13 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                     __instance.EndAbility<AbilityDisguise>();
                     break;
 
-                case (byte) RPC.Hypnotize:
+                case (byte) RPC.HypnotizeStart:
                     target = reader.ReadPlayerControl();
                     __instance.UseAbility<AbilityHypnotize>(target);
+                    break;
+
+                case (byte) RPC.HypnotizeEnd:
+                    __instance.EndAbility<AbilityHypnotize>();
                     break;
 
                 case (byte) RPC.ForgeStart:

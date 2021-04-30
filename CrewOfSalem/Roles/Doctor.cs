@@ -13,7 +13,7 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Crew;
         public override Alignment Alignment => Alignment.Protective;
 
-        public override string Description => "You can shield your target to prevent the next attack within a given time";
+        public override string Description => "You can shield your target to prevent the next attack until the next meeting";
 
         // Methods Role
         protected override void InitializeAbilities()

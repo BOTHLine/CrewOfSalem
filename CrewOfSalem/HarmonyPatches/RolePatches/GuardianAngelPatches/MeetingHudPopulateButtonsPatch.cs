@@ -4,8 +4,8 @@ using static CrewOfSalem.CrewOfSalem;
 
 namespace CrewOfSalem.HarmonyPatches.RolePatches.GuardianAngelPatches
 {
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
-    public static class MeetingHudUpdatePatch
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateButtons))]
+    public static class MeetingHudPopulateButtonsPatch
     {
         public static void Postfix()
         {
@@ -17,8 +17,10 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.GuardianAngelPatches
             {
                 if (guardianAngel.ProtectTarget.PlayerId != playerVoteArea.TargetPlayerId) continue;
 
-                playerVoteArea.NameText.text = $"{guardianAngel.ProtectTarget.Data.PlayerName}\n(Target)";
-                playerVoteArea.NameText.m_max_numberOfLines = 2;
+                playerVoteArea.NameText.autoSizeTextContainer = false;
+                playerVoteArea.NameText.enableAutoSizing = false;
+
+                playerVoteArea.NameText.text = $"{guardianAngel.ProtectTarget.Data.PlayerName}\nTarget";
             }
         }
     }

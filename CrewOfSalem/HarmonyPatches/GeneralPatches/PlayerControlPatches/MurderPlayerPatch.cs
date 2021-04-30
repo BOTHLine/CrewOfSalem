@@ -27,7 +27,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
             if (AssignedRoles.Values.Count(role =>
                     role.Faction == Faction.Mafia && !role.Owner.Data.IsDead &&
                     role.GetAbility<AbilityKill>() != null) >=
-                Main.OptionMafiaKillAlways.GetValue()) return;
+                Main.OptionMafiaKillAlways) return;
 
             Role[] mafiaWithoutKill = AssignedRoles.Values.Where(role =>
                     role.Faction == Faction.Mafia && !role.Owner.Data.IsDead && role.GetAbility<AbilityKill>() == null)

@@ -12,7 +12,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     public class AbilityBite : Ability
     {
         // Fields
-        private static readonly List<PlayerControl> vampires = new List<PlayerControl>();
+        private static readonly List<PlayerControl> Vampires = new List<PlayerControl>();
 
         // Properties Ability
         protected override Sprite Sprite      => ButtonBite;
@@ -31,7 +31,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
         public static void ConvertVampire(PlayerControl target)
         {
-            vampires.Insert(0, target);
+            Vampires.Insert(0, target);
             Role targetRole = target.GetRole();
             targetRole.ClearAbilities();
             targetRole.AddAbility<Vampire, AbilityBite>();
@@ -40,19 +40,19 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
         public static bool IsVampire(PlayerControl localPlayer)
         {
-            return vampires.Contains(localPlayer);
+            return Vampires.Contains(localPlayer);
         }
 
         // Methods Ability
         protected override bool CanUse()
         {
-            return base.CanUse() && vampires.FirstOrDefault(vampire => !vampire.Data.IsDead) == owner.Owner;
+            return base.CanUse() && Vampires.FirstOrDefault(vampire => !vampire.Data.IsDead) == owner.Owner;
         }
 
         protected override void UpdateTarget()
         {
             Button.SetTarget(LocalPlayer == owner.Owner
-                ? PlayerTools.FindClosestTarget(owner.Owner, player => !vampires.Contains(player))
+                ? PlayerTools.FindClosestTarget(owner.Owner, player => !Vampires.Contains(player))
                 : null);
         }
 

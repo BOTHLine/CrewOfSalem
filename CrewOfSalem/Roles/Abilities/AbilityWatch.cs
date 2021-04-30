@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.CoreScripts;
 using CrewOfSalem.Extensions;
 using UnityEngine;
 using static CrewOfSalem.CrewOfSalem;
@@ -11,7 +12,7 @@ namespace CrewOfSalem.Roles.Abilities
     {
         // Fields
         private          PlayerControl watchedPlayer;
-        private readonly List<Ability> targetedAbilities = new List<Ability>();
+        private readonly List<Role>    visitors = new List<Role>();
 
         // Properties Ability
         protected override Sprite Sprite      => ButtonWatch;
@@ -20,43 +21,74 @@ namespace CrewOfSalem.Roles.Abilities
         protected override Func<Ability, PlayerControl, bool> OnBeforeUse         => UseOnWatched;
         protected override int                                OnBeforeUsePriority => 0;
 
+        protected override RPC               RpcAction => RPC.Watch;
+        protected override IEnumerable<byte> RpcData   => new[] {Button.CurrentTarget.PlayerId};
+
         // Constructors
         public AbilityWatch(Role owner, float cooldown) : base(owner, cooldown) { }
 
         private static readonly Func<Ability, PlayerControl, bool> UseOnWatched = (source, target) =>
         {
-            if (source is AbilityProtect) return true; // TODO: Show Guardian Angel on Target?
+            if (source is AbilityProtect) return true;
 
             IEnumerable<AbilityWatch> watchAbilities =
                 GetAllAbilities<AbilityWatch>().Where(watch => watch.watchedPlayer == target);
 
             foreach (AbilityWatch watch in watchAbilities)
             {
-                watch.AddTargetedAbility(source);
+                watch.RpcAddVisitor(source.owner);
             }
 
-            AbilityAlert abilityAlert = GetAllAbilities<AbilityAlert>()
-               .FirstOrDefault(alert => alert.owner.Owner == target && alert.HasDurationLeft);
-            if (abilityAlert == null) return true;
-
-            source.owner.Owner.RpcKillPlayer(source.owner.Owner, abilityAlert.owner.Owner);
-            return false;
+            return true;
         };
 
         // Methods
-        private void AddTargetedAbility(Ability ability)
+        private void RpcAddVisitor(Role visitor)
         {
-            targetedAbilities.Add(ability);
+            ConsoleTools.Info("RPC Add Visitor: " + visitor.Name);
+            if (AmongUsClient.Instance.AmClient)
+            {
+                AddVisitor(visitor);
+            }
+
+            WriteRPC(RPC.WatchVisitor, owner.Owner.PlayerId, visitor.RoleID);
+        }
+
+        public void AddVisitor(Role visitor)
+        {
+            visitors.Add(visitor);
+            ConsoleTools.Info("Add Visitor: " + visitor.Name);
         }
 
         public void ParseResults()
         {
-            foreach (Ability ability in targetedAbilities)
+            if (watchedPlayer == null) return;
+
+            string result = watchedPlayer.name + ": ";
+            for (var i = 0; i < visitors.Count; i++)
             {
-                HudManager.Instance.Chat.AddChat(owner.Owner, ability.GetType().Name);
+                result += visitors[i].Name;
+                if (i == visitors.Count - 2)
+                {
+                    result += " and ";
+                } else if (i != visitors.Count - 1)
+                {
+                    result += ", ";
+                }
             }
 
-            targetedAbilities.Clear();
+            if (AmongUsClient.Instance.AmClient)
+            {
+                HudManager.Instance?.Chat.AddChat(owner.Owner, result);
+            }
+
+            if (result.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Telemetry.Instance?.SendWho();
+            }
+
+            visitors.Clear();
+            watchedPlayer = null;
         }
 
         // Methods Ability
@@ -68,7 +100,8 @@ namespace CrewOfSalem.Roles.Abilities
         protected override void UseInternal(PlayerControl target, out bool sendRpc, out bool setCooldown)
         {
             watchedPlayer = target;
-            sendRpc = setCooldown = false;
+            sendRpc = true;
+            setCooldown = false;
         }
 
         protected override void UpdateButtonSprite()
@@ -81,6 +114,11 @@ namespace CrewOfSalem.Roles.Abilities
                 Button.renderer.color = watchedPlayer.GetPlayerColor();
                 Button.renderer.material.SetFloat(ShaderDesat, 1F);
             }
+        }
+
+        protected override void MeetingStartInternal()
+        {
+            ParseResults();
         }
     }
 }

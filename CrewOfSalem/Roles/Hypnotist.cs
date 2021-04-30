@@ -13,7 +13,7 @@ namespace CrewOfSalem.Roles
         public override Faction   Faction   => Faction.Mafia;
         public override Alignment Alignment => Alignment.Deception;
 
-        public override string Description => "Hypnotize the Crew to shuffle their perception of other players";
+        public override string Description => "Hypnotize the Crew to randomly shuffle their perception of other players";
 
         // Properties Role
         protected override void InitializeAbilities()

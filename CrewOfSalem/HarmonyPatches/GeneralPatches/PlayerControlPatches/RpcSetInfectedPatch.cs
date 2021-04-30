@@ -13,7 +13,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetInfected))]
     public static class RpcSetInfectedPatch
     {
-        public static void Prefix([HarmonyArgument(0)] ref Il2CppReferenceArray<GameData.PlayerInfo> playerInfos)
+        public static void Prefix([HarmonyArgument(0)] out Il2CppReferenceArray<GameData.PlayerInfo> playerInfos)
         {
             List<Role> assignedRoles = AssignedRoles.Values.ToList();
 
@@ -45,13 +45,13 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 int spawnValue = Rng.Next(spawnChance);
                 foreach (RoleSpawnChancePair roleSpawnChance in roleSpawnChances)
                 {
-                    if (roleSpawnChance.SpawnChance > spawnValue)
+                    if (roleSpawnChance.spawnChance > spawnValue)
                     {
-                        roles.Add(roleSpawnChance.Role);
+                        roles.Add(roleSpawnChance.role);
                         PlayerControl player = availablePlayers[Rng.Next(availablePlayers.Count)];
-                        Role.RpcSetRole(roleSpawnChance.Role, player);
+                        Role.RpcSetRole(roleSpawnChance.role, player);
 
-                        availableRoles.Remove(roleSpawnChance.Role);
+                        availableRoles.Remove(roleSpawnChance.role);
                         availablePlayers.Remove(player);
                         if (roleSlots[i].IsInfected)
                         {
@@ -81,7 +81,7 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
                 role.InitializeRole();
             }
 
-            int killAbilitiesToAdd = (int) Main.OptionMafiaKillStart.GetValue() - roles.Count(role =>
+            int killAbilitiesToAdd = (int) Main.OptionMafiaKillStart - roles.Count(role =>
                 role.Faction == Faction.Mafia && role.GetAbility<AbilityKill>() != null);
 
             // TODO: Randomize order of adding killAbilities, so you don't have an advantage if you log into lobby earlier than another one
@@ -107,13 +107,13 @@ namespace CrewOfSalem.HarmonyPatches.PlayerControlPatches
 
         private readonly struct RoleSpawnChancePair
         {
-            public readonly Role Role;
-            public readonly int  SpawnChance;
+            public readonly Role role;
+            public readonly int  spawnChance;
 
             public RoleSpawnChancePair(Role role, int spawnChance)
             {
-                Role = role;
-                SpawnChance = spawnChance;
+                this.role = role;
+                this.spawnChance = spawnChance;
             }
         }
     }

@@ -45,20 +45,23 @@ namespace CrewOfSalem
         SoloWin,
 
         Kill,
+        
+        Watch,
+        WatchVisitor,
 
         AlertStart,
         AlertEnd,
 
-        ToggleGuard,
-        ToggleInTask,
+        GuardStart,
+        GuardEnd,
 
         ShieldStart,
         ShieldEnd,
 
         CrusaderGuard,
         
-        BlockAOEStart,
-        BlockAOEEnd,
+        BlockAoeStart,
+        BlockAoeEnd,
 
         BlockStart,
         BlockEnd,
@@ -70,7 +73,8 @@ namespace CrewOfSalem
 
         Frame,
 
-        Hypnotize,
+        HypnotizeStart,
+        HypnotizeEnd,
 
         ForgeStart,
         ForgeEnd,

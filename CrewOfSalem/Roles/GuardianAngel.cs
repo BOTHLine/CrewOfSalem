@@ -25,7 +25,7 @@ namespace CrewOfSalem.Roles
             $"Protect {ColorizedText(ProtectTarget.name, ProtectTarget.GetPlayerColor())}";
 
         public override string Description =>
-            "You can protect your target to prevent the next attack within a given time. You win if they live until they end";
+            "You can protect your target to prevent the next attack within a given time. You win if they live until the end, even if you died yourself.";
 
         // Methods
         public void TurnIntoSurvivor()

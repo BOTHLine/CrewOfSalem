@@ -26,12 +26,12 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SheriffPatches
 
             List<string> hints = deadPlayer.hintMessages.ToList();
 
-            var hintAmount = (int) (Main.OptionSheriffMaxHintAmount.GetValue() -
+            var hintAmount = (int) (Main.OptionSheriffMaxHintAmount -
                                     (int) (deadPlayer.KillAge / 1000F /
-                                           Main.OptionSheriffHintDecreaseInterval.GetValue()));
+                                           Main.OptionSheriffHintDecreaseInterval));
 
-            if (hintAmount < Main.OptionSheriffMinHintAmount.GetValue())
-                hintAmount = (int) Main.OptionSheriffMinHintAmount.GetValue();
+            if (hintAmount < Main.OptionSheriffMinHintAmount)
+                hintAmount = (int) Main.OptionSheriffMinHintAmount;
 
             for (var i = 0; i < hintAmount; i++)
             {
@@ -40,14 +40,14 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.SheriffPatches
 
                 if (string.IsNullOrWhiteSpace(hint)) return;
 
-                if (AmongUsClient.Instance.AmClient && HudManager.Instance)
+                if (AmongUsClient.Instance.AmClient)
                 {
-                    HudManager.Instance.Chat.AddChat(LocalPlayer, $"{deadPlayer.Victim.Data.PlayerName}: {hint}");
+                    HudManager.Instance?.Chat.AddChat(LocalPlayer, $"{deadPlayer.Victim.Data.PlayerName}: {hint}");
                 }
 
                 if (hint.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    Telemetry.Instance.SendWho();
+                    Telemetry.Instance?.SendWho();
                 }
             }
         }

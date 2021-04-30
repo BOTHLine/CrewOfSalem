@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using CrewOfSalem.Extensions;
 using CrewOfSalem.HarmonyPatches.PlayerControlPatches;
@@ -13,6 +14,8 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class UpdatePlayerVisualsPatch
     {
+        private static readonly List<byte> GreyPlayerIds = new List<byte>();
+
         public static void Postfix()
         {
             UpdatePlayerVisuals();
@@ -24,12 +27,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
         {
             if (ShipStatus.Instance == null) return;
 
-            AbilityDisguise[] disguiseAbilities = Ability.GetAllAbilities<AbilityDisguise>();
-            if (disguiseAbilities.Any(disguise => disguise.HasDurationLeft))
-            {
-                TurnAllPlayersGrey();
-                return;
-            }
+            GreyPlayerIds.Clear();
 
             AbilitySeance[] seanceAbilities = Ability.GetAllAbilities<AbilitySeance>();
             if (seanceAbilities.Any(seance => seance.owner.Owner == LocalPlayer && seance.HasDurationLeft))
@@ -38,13 +36,30 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
                 return;
             }
 
+            AbilityDisguise[] disguiseAbilities = Ability.GetAllAbilities<AbilityDisguise>();
+            foreach (AbilityDisguise disguise in disguiseAbilities)
+            {
+                if (!disguise.HasDurationLeft) continue;
+                
+                foreach (PlayerControl player in AllPlayers)
+                {
+                    if (GreyPlayerIds.Contains(player.PlayerId)) continue;
+                    if (!disguise.IsPlayerInRange(player)) continue;
+
+                    GreyPlayerIds.Add(player.PlayerId);
+                    player.TurnGrey();
+                }
+            }
+
+
             AbilityForge[] forgeAbilities = Ability.GetAllAbilities<AbilityForge>();
             AbilityHypnotize[] hypnotizeAbilities = Ability.GetAllAbilities<AbilityHypnotize>();
 
             foreach (PlayerControl player in AllPlayers)
             {
+                if (GreyPlayerIds.Contains(player.PlayerId)) continue;
                 if (!player.Visible) continue;
-
+                
                 byte targetVisualId = player.PlayerId;
                 foreach (AbilityForge forge in forgeAbilities)
                 {
@@ -63,6 +78,7 @@ namespace CrewOfSalem.HarmonyPatches.RolePatches.CombinedPatches
                     }
                 }
 
+                // TODO: Check if visuals to set match the current visuals, then skip
                 player.SetVisuals(targetVisualId.ToPlayerControl());
             }
         }

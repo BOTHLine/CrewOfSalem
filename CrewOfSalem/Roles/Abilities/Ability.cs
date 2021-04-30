@@ -29,7 +29,7 @@ namespace CrewOfSalem.Roles.Abilities
 
         // TODO: Make Kills to use AbilityKill (Like the one from Bodyguard, so that he/his target can be protected by shield)?
         // TODO: Instead of only returning bool, return a struct with multiple states (doContinue, doSetOnCooldown etc.)
-        private static readonly SortedDictionary<int, Func<Ability, PlayerControl, bool>> OnBeforeUses =
+        protected static readonly SortedDictionary<int, Func<Ability, PlayerControl, bool>> OnBeforeUses =
             new SortedDictionary<int, Func<Ability, PlayerControl, bool>>();
 
         // Properties
@@ -97,6 +97,8 @@ namespace CrewOfSalem.Roles.Abilities
             {
                 player.GetComponent<SpriteRenderer>().material.SetFloat(ShaderOutline, 0F);
             }
+
+            if (OnBeforeUse != null) AddOnBeforeUse(OnBeforeUse, OnBeforeUsePriority);
         }
 
         // Methods
@@ -274,6 +276,29 @@ namespace CrewOfSalem.Roles.Abilities
 
         protected virtual void UpdateInternal(float deltaTime) { }
 
+        public void MeetingStart()
+        {
+            MeetingStartInternal();
+        }
+
+        protected virtual void MeetingStartInternal() { }
+
+        public void MeetingEnd()
+        {
+            MeetingEndInternal();
+        }
+
+        protected virtual void MeetingEndInternal() { }
+
+        public void ExileEnd()
+        {
+            SetOnCooldown();
+
+            ExileEndInternal();
+        }
+
+        protected virtual void ExileEndInternal() { }
+
         public void AddCooldown(float addedTime)
         {
             CurrentCooldown += addedTime;
@@ -314,6 +339,7 @@ namespace CrewOfSalem.Roles.Abilities
         public void Destroy()
         {
             if (Button != null && Button.gameObject != null) Object.Destroy(Button.gameObject);
+            if (OnBeforeUse != null) RemoveOnBeforeUse(OnBeforeUse);
             AllAbilities[GetType()].Remove(this);
         }
     }
